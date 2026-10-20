@@ -35,6 +35,13 @@ python3 -m http.server -d docs 8000   # 本地預覽 http://localhost:8000
 - 新增章節：在 `build.py` 的 `PAGES` 清單加一行。
 - 樣式與互動：`docs/assets/style.css`、`docs/assets/site.js`（深色模式、手機選單、目錄高亮）。
 
+## 站內問答
+
+每一頁右下角有「問答」按鈕（`docs/assets/qa.js`）：
+
+- **站內檢索（預設，免金鑰）**：`build.py` 會把每頁依 h2/h3 切段、名詞速查逐列切開，輸出 `docs/assets/search-index.js`；瀏覽器端用中文二字組 + 英文詞的 BM25 找出最相關段落，附連結與摘錄。
+- **Claude 生成（選用）**：讀者在 ⚙ 填入自己的 Anthropic API 金鑰後，會把檢索到的段落交給 Claude 整理成有 [編號] 出處的回答。金鑰只存在該瀏覽器的 localStorage，直接送到 api.anthropic.com，網站本身不保存任何金鑰。
+
 ## 部署
 
 GitHub Pages 從 `main` 分支的 `/docs` 資料夾發布。修改後執行 `python3 build.py` 再 commit，推上 `main` 即自動更新。

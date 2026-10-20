@@ -5,6 +5,7 @@
 需要：pip install markdown
 """
 import html
+import json
 import re
 from pathlib import Path
 
@@ -78,15 +79,51 @@ def nav_html(current: str) -> str:
     return '<ul class="nav">' + ''.join(rows) + '</ul>'
 
 
+def strip_tags(frag: str) -> str:
+    frag = re.sub(r'>\s+<', '><', frag)
+    frag = re.sub(r'<(marker|defs).*?</\1>', ' ', frag, flags=re.S)
+    frag = re.sub(r'</text>', ' ', frag)
+    frag = re.sub(r'<a class="headerlink".*?</a>', '', frag, flags=re.S)
+    frag = re.sub(r'</(p|li|tr|h[1-6]|figcaption|div)>', '\n', frag)
+    frag = re.sub(r'</t[dh]>', '｜', frag)
+    frag = re.sub(r'<[^>]+>', '', frag)
+    frag = html.unescape(frag)
+    frag = re.sub(r'[ \t]+', ' ', frag)
+    return re.sub(r'\n\s*\n+', '\n', frag).strip()
+
+
+def sections(slug: str, title: str, body: str):
+    """把一頁切成以 h2/h3 為單位的段落，給站內問答檢索用。"""
+    parts = re.split(r'(<h[23] id="[^"]+">.*?</h[23]>)', body, flags=re.S)
+    out = [{'p': slug, 't': title, 's': title, 'a': '', 'x': strip_tags(parts[0])}]
+    for i in range(1, len(parts), 2):
+        m = re.match(r'<h[23] id="([^"]+)">(.*?)</h[23]>', parts[i], flags=re.S)
+        out.append({'p': slug, 't': title, 's': strip_tags(m.group(2)), 'a': m.group(1),
+                    'x': strip_tags(parts[i + 1])})
+    if slug == 'glossary':
+        # 名詞速查：每一列各自成一筆，問「X 是什麼」時能直接命中
+        rows = []
+        for o in out:
+            for line in o['x'].split('\n'):
+                cells = [c.strip() for c in line.split('｜') if c.strip()]
+                if len(cells) >= 2 and cells[0] not in ('名詞', '代號'):
+                    rows.append({'p': slug, 't': title, 's': cells[0], 'a': o['a'], 'x': '：'.join(cells[:2])})
+        return rows
+    return [o for o in out if o['x']]
+
+
 TEMPLATE = (ROOT / 'template.html').read_text(encoding='utf-8')
 
 
 def build():
     OUT.mkdir(exist_ok=True)
+    index = []
     for i, (slug, num, title, desc) in enumerate(PAGES):
         src = (CONTENT / f'{slug}.md').read_text(encoding='utf-8')
         md = markdown.Markdown(extensions=MD_EXT, extension_configs=MD_CFG)
         body = postprocess(md.convert(src))
+        if slug != 'references':
+            index.extend(sections(slug, title, body))
         toc = toc_html(flat_tokens(md.toc_tokens))
         prev_ = PAGES[i - 1] if i > 0 else None
         next_ = PAGES[i + 1] if i + 1 < len(PAGES) else None
@@ -110,6 +147,11 @@ def build():
         (OUT / f'{slug}.html').write_text(out, encoding='utf-8')
         print('built', slug)
     (OUT / '.nojekyll').write_text('')
+    # 用 .js 而不是 .json：直接開本機檔案（file://）也能載入
+    (OUT / 'assets' / 'search-index.js').write_text(
+        'window.SITE_INDEX=' + json.dumps(index, ensure_ascii=False, separators=(',', ':')) + ';\n',
+        encoding='utf-8')
+    print('indexed', len(index), 'sections')
 
 
 if __name__ == '__main__':
