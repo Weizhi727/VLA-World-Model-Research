@@ -17,8 +17,9 @@
 | 07 | 具身基礎模型與合成資料 | `content/synthetic-data.md` |
 | 08 | 業界產品盤點 | `content/industry.md` |
 | 09 | 案例：智平方 | `content/ai2-robotics.md` |
-| 10 | 名詞速查 | `content/glossary.md` |
-| 11 | 參考資料 | `content/references.md` |
+| 10 | 經典世界模型論文精讀 | `content/classic-world-models.md` |
+| 11 | 名詞速查 | `content/glossary.md` |
+| 12 | 參考資料 | `content/references.md` |
 
 ## 怎麼修改與重建
 

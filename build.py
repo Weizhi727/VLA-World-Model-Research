@@ -30,8 +30,9 @@ PAGES = [
     ('synthetic-data', '07', '具身基礎模型與合成資料', '「融合」是什麼意思、生成影片怎麼把關物理'),
     ('industry', '08', '業界產品盤點', '機器人與自駕公司各自怎麼做'),
     ('ai2-robotics', '09', '案例：智平方', '產品分類、競品比較、類腦與 SNN'),
-    ('glossary', '10', '名詞速查', '常見術語一句話解釋'),
-    ('references', '11', '參考資料', '論文、官方頁與本專案原始產出'),
+    ('classic-world-models', '10', '經典世界模型論文精讀', 'World Models、MuZero、DreamerV3、GAIA-1、UniSim、Genie、Cosmos、V-JEPA 2'),
+    ('glossary', '11', '名詞速查', '常見術語一句話解釋'),
+    ('references', '12', '參考資料', '論文、官方頁與本專案原始產出'),
 ]
 
 MD_EXT = ['tables', 'toc', 'admonition', 'attr_list', 'md_in_html', 'fenced_code', 'sane_lists', 'def_list']

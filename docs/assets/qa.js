@@ -11,7 +11,8 @@
     '世界模型在推論時真的有用到嗎？',
     '合成資料怎麼確保物理正確？',
     'π0 是怎麼訓練的？',
-    '智平方的 FiS-VLA 有什麼特別？'
+    '智平方的 FiS-VLA 有什麼特別？',
+    'Genie 怎麼從沒有動作標籤的影片學會控制？'
   ];
   // 中英混用的常見同義詞，檢索前先展開
   var ALIAS = [
@@ -156,7 +157,7 @@
 
   function welcome() {
     var chips = SUGGEST.map(function (s) { return '<button type="button" class="qa-chip">' + esc(s) + '</button>'; }).join('');
-    add('bot', '<p>我會在這個網站的 11 個章節裡找答案，並附上段落連結。可以先試試：</p><div class="qa-chips">' + chips + '</div>');
+    add('bot', '<p>我會在這個網站的 12 個章節裡找答案，並附上段落連結。可以先試試：</p><div class="qa-chips">' + chips + '</div>');
   }
 
   function sourcesHtml(hits, withSnippet) {

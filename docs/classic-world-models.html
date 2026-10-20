@@ -1,0 +1,1191 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>經典世界模型論文精讀 · VLA × 世界模型 調研</title>
+<meta name="description" content="World Models、MuZero、DreamerV3、GAIA-1、UniSim、Genie、Cosmos、V-JEPA 2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body data-page="classic-world-models">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead"/>
+    </marker>
+    <marker id="arr-wm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead wm"/>
+    </marker>
+    <marker id="arr-vla" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead vla"/>
+    </marker>
+  </defs>
+</svg>
+<header class="top">
+  <button class="menu" aria-label="開啟目錄" aria-expanded="false">☰</button>
+  <a class="brand" href="index.html"><span class="dot vla"></span><span class="dot wm"></span>VLA × 世界模型 調研</a>
+  <button class="theme" aria-label="切換深淺色">◐</button>
+</header>
+<div class="shell">
+  <aside class="side">
+    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li><a href="origins.html"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="architectures.html"><span class="num">02</span><span>主流模型架構</span></a></li><li><a href="taxonomy.html"><span class="num">03</span><span>流派怎麼分</span></a></li><li><a href="training.html"><span class="num">04</span><span>訓練、資料與評估</span></a></li><li><a href="world-model-roles.html"><span class="num">05</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">06</span><span>訓練時 vs 推論時</span></a></li><li><a href="synthetic-data.html"><span class="num">07</span><span>具身基礎模型與合成資料</span></a></li><li><a href="industry.html"><span class="num">08</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html"><span class="num">09</span><span>案例：智平方</span></a></li><li><a href="classic-world-models.html" class="on"><span class="num">10</span><span>經典世界模型論文精讀</span></a></li><li><a href="glossary.html"><span class="num">11</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">12</span><span>參考資料</span></a></li></ul>
+    <p class="side-note">整理日期：2026-10-20<br>面向技術人員的科普整理</p>
+  </aside>
+  <main>
+    <article class="doc">
+      <h1 id="_1">經典世界模型論文精讀<a class="headerlink" href="#_1" title="連到此段">#</a></h1>
+<p class="lede">挑出 8 篇定義了世界模型這個領域的論文，每篇用同一個框架拆解：背景、要解決的問題、核心解法、模型結構、資料怎麼建、怎麼評估、作者自己承認的局限，最後說明它對 VLA 的意義。數字都取自論文原文，連結附在每篇開頭。</p>
+
+<div class="admonition key">
+<p class="admonition-title">8 篇論文的一條主線</p>
+<p><strong>世界模型一直在回答同一個問題：「要預測未來的什麼？」</strong>
+World Models 和 DreamerV3 預測壓縮後的<strong>潛狀態</strong>；MuZero 更極端，只預測<strong>規劃需要的價值與獎勵</strong>；GAIA-1、UniSim、Genie、Cosmos 直接預測<strong>畫面</strong>，換來可以當模擬器用；V-JEPA 2 回到<strong>表徵空間</strong>，主張不必畫出每個像素也能規劃。這條取捨（預測得越具體越像模擬器，但越貴、越容易錯在不重要的細節上）貫穿整個領域。</p>
+</div>
+<h2 id="8">一張表看完 8 篇<a class="headerlink" href="#8" title="連到此段">#</a></h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>論文</th>
+<th>年份</th>
+<th>預測什麼</th>
+<th>動作從哪來</th>
+<th>訓練資料</th>
+<th>規模</th>
+<th>主要用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#world-models">World Models</a></td>
+<td>2018</td>
+<td>潛向量 z（VAE 壓縮）</td>
+<td>遊戲按鍵</td>
+<td>1 萬條隨機策略軌跡</td>
+<td>約 500 萬參數</td>
+<td>在「夢境」中訓練控制器</td>
+</tr>
+<tr>
+<td><a href="#muzero">MuZero</a></td>
+<td>2019</td>
+<td>獎勵、價值、策略（不預測畫面）</td>
+<td>遊戲動作</td>
+<td>自我對弈</td>
+<td>16 個殘差塊</td>
+<td>MCTS 規劃</td>
+</tr>
+<tr>
+<td><a href="#dreamerv3">DreamerV3</a></td>
+<td>2023</td>
+<td>離散潛狀態 + 獎勵 + 是否結束</td>
+<td>環境動作</td>
+<td>線上互動</td>
+<td>12M–400M</td>
+<td>想像中強化學習</td>
+</tr>
+<tr>
+<td><a href="#gaia-1">GAIA-1</a></td>
+<td>2023</td>
+<td>下一幀的影像 token</td>
+<td>車速、曲率</td>
+<td>4,700 小時倫敦行車</td>
+<td>約 9.4B</td>
+<td>自駕情境生成</td>
+</tr>
+<tr>
+<td><a href="#unisim">UniSim</a></td>
+<td>2023</td>
+<td>下一段影片</td>
+<td>文字、馬達指令、相機</td>
+<td>14 個資料集混合</td>
+<td>5.6B</td>
+<td>訓練 VLM 與 RL 策略</td>
+</tr>
+<tr>
+<td><a href="#genie">Genie</a></td>
+<td>2024</td>
+<td>下一幀的影像 token</td>
+<td><strong>從影片自學的 8 個潛動作</strong></td>
+<td>3 萬小時平台遊戲影片</td>
+<td>10.7B</td>
+<td>可互動的生成世界</td>
+</tr>
+<tr>
+<td><a href="#cosmos">Cosmos</a></td>
+<td>2025</td>
+<td>未來影片（擴散或自迴歸）</td>
+<td>文字、影片，後訓練加動作</td>
+<td>2,000 萬小時 → 1 億段</td>
+<td>4B–14B</td>
+<td>物理 AI 的基礎模型</td>
+</tr>
+<tr>
+<td><a href="#v-jepa-2">V-JEPA 2</a></td>
+<td>2025</td>
+<td>未來的<strong>表徵</strong></td>
+<td>機械手臂末端位移</td>
+<td>100 萬小時影片 + 62 小時 DROID</td>
+<td>1B + 300M</td>
+<td>零樣本機器人規劃</td>
+</tr>
+</tbody>
+</table></div>
+<figure class="dg">
+<svg viewBox="0 0 800 300" role="img" aria-label="8 篇經典世界模型論文的時間線與三條路線">
+<line x1="40" y1="150" x2="770" y2="150" class="ar"/>
+<text x="60" y="176" class="s">2018</text><text x="200" y="176" class="s">2019</text><text x="400" y="176" class="s">2023</text><text x="560" y="176" class="s">2024</text><text x="700" y="176" class="s">2025</text>
+<rect class="n wm" x="20" y="40" width="130" height="56" rx="10"/>
+<text x="85" y="64" text-anchor="middle" class="b wm">World Models</text>
+<text x="85" y="84" text-anchor="middle" class="s">潛空間夢境</text>
+<rect class="n wm" x="165" y="40" width="110" height="56" rx="10"/>
+<text x="220" y="64" text-anchor="middle" class="b wm">MuZero</text>
+<text x="220" y="84" text-anchor="middle" class="s">只預測價值</text>
+<rect class="n wm" x="290" y="40" width="130" height="56" rx="10"/>
+<text x="355" y="64" text-anchor="middle" class="b wm">DreamerV3</text>
+<text x="355" y="84" text-anchor="middle" class="s">想像中 RL</text>
+<rect class="n key" x="330" y="200" width="100" height="56" rx="10"/>
+<text x="380" y="224" text-anchor="middle" class="b">GAIA-1</text>
+<text x="380" y="244" text-anchor="middle" class="s">自駕影片</text>
+<rect class="n key" x="440" y="200" width="100" height="56" rx="10"/>
+<text x="490" y="224" text-anchor="middle" class="b">UniSim</text>
+<text x="490" y="244" text-anchor="middle" class="s">通用模擬器</text>
+<rect class="n key" x="550" y="200" width="100" height="56" rx="10"/>
+<text x="600" y="224" text-anchor="middle" class="b">Genie</text>
+<text x="600" y="244" text-anchor="middle" class="s">自學潛動作</text>
+<rect class="n key" x="660" y="200" width="110" height="56" rx="10"/>
+<text x="715" y="224" text-anchor="middle" class="b">Cosmos</text>
+<text x="715" y="244" text-anchor="middle" class="s">基礎模型平台</text>
+<rect class="n vla" x="640" y="40" width="140" height="56" rx="10"/>
+<text x="710" y="64" text-anchor="middle" class="b vla">V-JEPA 2</text>
+<text x="710" y="84" text-anchor="middle" class="s">表徵空間規劃</text>
+<text x="230" y="124" text-anchor="middle" class="s wm">上排綠：潛空間 / 強化學習路線</text>
+<text x="550" y="290" text-anchor="middle" class="s">下排橘：生成畫面的模擬器路線</text>
+<text x="710" y="124" text-anchor="middle" class="s vla">藍：JEPA 表徵路線</text>
+</svg>
+<figcaption>三條路線不是互相取代，而是對「要預測什麼」的不同答案。2023 年以後生成式路線因為影片模型成熟而爆發，但潛空間與表徵路線在需要快速規劃時仍佔優勢。</figcaption>
+</figure>
+
+<p><strong>建議閱讀順序</strong>：World Models（建立直覺）→ DreamerV3（潛空間路線的集大成）→ MuZero（「不預測畫面也能規劃」）→ Genie（從無標註影片學動作）→ UniSim、GAIA-1（生成式模擬器怎麼用）→ Cosmos（工業級資料與訓練）→ V-JEPA 2（回到表徵、接上真實機器人）。</p>
+<h2 id="world-models">World Models<a class="headerlink" href="#world-models" title="連到此段">#</a></h2>
+<p><strong>David Ha、Jürgen Schmidhuber，2018</strong>｜<a class="ext" href="https://arxiv.org/abs/1803.10122" target="_blank" rel="noopener">arXiv:1803.10122</a>｜<a class="ext" href="https://worldmodels.github.io/" target="_blank" rel="noopener">互動版論文</a>｜NeurIPS 2018 版本題為 <em>Recurrent World Models Facilitate Policy Evolution</em></p>
+<div class="admonition key">
+<p class="admonition-title">精髓</p>
+<p><strong>把「看、記、做」拆開：大模型（約 500 萬參數）用無監督方式學會壓縮畫面與預測未來，只用 867 個參數的線性控制器做決策；控制器甚至可以完全在模型的「夢境」裡訓練，再搬回真實環境。</strong></p>
+</div>
+<h3 id="_2">背景與問題<a class="headerlink" href="#_2" title="連到此段">#</a></h3>
+<ul>
+<li>人腦會建立外界的內部模型並預測感官輸入，例如打者在球飛到之前就揮棒。強化學習也需要「對過去的好表徵 + 對未來的預測」。</li>
+<li>但無模型強化學習很難訓練大網路：獎勵訊號稀疏，信用分配（credit assignment）困難，所以典型策略網路只有 10³–10⁶ 個參數。</li>
+<li><strong>要解決的問題</strong>：怎麼讓智能體從原始像素學到好用的環境表徵，同時又不讓決策部分大到難以用獎勵訓練？</li>
+</ul>
+<h3 id="vmc">解法：V、M、C 三個元件<a class="headerlink" href="#vmc" title="連到此段">#</a></h3>
+<figure class="dg">
+<svg viewBox="0 0 800 250" role="img" aria-label="World Models 的 V、M、C 架構">
+<rect class="n" x="10" y="90" width="110" height="60" rx="10"/>
+<text x="65" y="116" text-anchor="middle" class="b">畫面</text>
+<text x="65" y="136" text-anchor="middle" class="s">64×64×3</text>
+<rect class="n wm" x="160" y="80" width="150" height="80" rx="12"/>
+<text x="235" y="110" text-anchor="middle" class="b wm">V：VAE</text>
+<text x="235" y="132" text-anchor="middle" class="s">壓成 z（32／64 維）</text>
+<rect class="n wm" x="360" y="80" width="170" height="80" rx="12"/>
+<text x="445" y="110" text-anchor="middle" class="b wm">M：MDN-RNN</text>
+<text x="445" y="132" text-anchor="middle" class="s">LSTM + 5 個高斯混合</text>
+<rect class="n vla" x="590" y="80" width="190" height="80" rx="12"/>
+<text x="685" y="110" text-anchor="middle" class="b vla">C：線性控制器</text>
+<text x="685" y="132" text-anchor="middle" class="s">a = W[z, h] + b，867 參數</text>
+<path class="ar" d="M120,120 H158"/>
+<path class="ar wm" d="M310,120 H358"/>
+<path class="ar wm" d="M530,120 H588"/>
+<path class="ar wm" d="M235,160 V200 H640 V162"/>
+<text x="440" y="218" text-anchor="middle" class="s">z 也直接送給 C</text>
+<path class="ar vla dash" d="M685,80 V40 H445 V78"/>
+<text x="565" y="32" text-anchor="middle" class="s">動作 a 回饋給 M，預測下一個 z</text>
+</svg>
+<figcaption>V 管「看」、M 管「記與預測」、C 管「做」。世界模型（V + M）完全沒看過獎勵，只有 C 用到獎勵。資料來源：<a class="ext" href="https://arxiv.org/abs/1803.10122" target="_blank" rel="noopener">arXiv:1803.10122</a>。</figcaption>
+</figure>
+
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>元件</th>
+<th>結構</th>
+<th>參數量（賽車／VizDoom）</th>
+<th>訓練方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>V</strong>：視覺</td>
+<td>4 層卷積編碼器 + 4 層反卷積解碼器的 VAE；z 維度 32／64</td>
+<td>4,348,547／4,446,915</td>
+<td>重建 L2 + KL，1 個 epoch</td>
+</tr>
+<tr>
+<td><strong>M</strong>：記憶</td>
+<td>LSTM（256／512 隱藏單元）+ 混合密度網路，5 個對角高斯；VizDoom 版另外預測「是否死亡」</td>
+<td>422,368／1,678,785</td>
+<td>預測下一個 z，20 個 epoch</td>
+</tr>
+<tr>
+<td><strong>C</strong>：控制器</td>
+<td>單層線性 + tanh</td>
+<td>867／1,088</td>
+<td><strong>CMA-ES 演化策略</strong>，族群 64，每個候選跑 16 局取平均</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>為什麼控制器這麼小</strong>：把複雜度全部放進可以無監督訓練的 V 和 M，獎勵只需要調一個極小的搜尋空間，所以能用不需要梯度的演化策略。</p>
+<h3 id="_3">資料怎麼來<a class="headerlink" href="#_3" title="連到此段">#</a></h3>
+<ul>
+<li>兩個環境都用<strong>隨機策略跑 10,000 局</strong>收集畫面與動作，先訓練 V，再把畫面轉成 z 訓練 M。</li>
+<li>V 和 M 在單張 GPU 上各不到一小時。</li>
+</ul>
+<h3 id="_4">評估與結果<a class="headerlink" href="#_4" title="連到此段">#</a></h3>
+<p><strong>CarRacing-v0</strong>（隨機生成賽道，100 局平均分數，900 分算解決）：</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>分數</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DQN</td>
+<td>343 ± 18</td>
+</tr>
+<tr>
+<td>A3C（連續動作）</td>
+<td>591 ± 45</td>
+</tr>
+<tr>
+<td>Gym 排行榜最佳</td>
+<td>838 ± 11</td>
+</tr>
+<tr>
+<td>只用 V（控制器只看 z）</td>
+<td>632 ± 251</td>
+</tr>
+<tr>
+<td><strong>完整世界模型（V + M）</strong></td>
+<td><strong>906 ± 21</strong>，首個解決此任務的方法</td>
+</tr>
+</tbody>
+</table></div>
+<p>只看 z 的控制器會左右搖擺、過不了急彎；加入 M 的隱藏狀態 h（等於「對未來的預期」）後駕駛穩定許多。</p>
+<p><strong>VizDoom Take Cover，完全在夢裡訓練</strong>：控制器只在 M 生成的潛空間裡練習，搬回真實遊戲平均存活約 1,100 步（及格線 750 步）。</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>夢境溫度 τ</th>
+<th>夢裡分數</th>
+<th>真實分數</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.10</td>
+<td>2086 ± 140</td>
+<td>193 ± 58（比隨機策略還差）</td>
+</tr>
+<tr>
+<td>1.00</td>
+<td>1145 ± 690</td>
+<td>868 ± 511</td>
+</tr>
+<tr>
+<td><strong>1.15</strong></td>
+<td>918 ± 546</td>
+<td><strong>1092 ± 556</strong></td>
+</tr>
+<tr>
+<td>1.30</td>
+<td>732 ± 269</td>
+<td>753 ± 139</td>
+</tr>
+</tbody>
+</table></div>
+<div class="admonition warn">
+<p class="admonition-title">這張表是整個領域最重要的教訓之一</p>
+<p>溫度太低時，夢裡的火球根本不出現，控制器在夢中拿高分、在真實世界一敗塗地，這就是<strong>策略鑽世界模型漏洞（model exploitation）</strong>。提高溫度讓夢「更難、更不確定」，反而讓策略更穩健。後來 Dreamer、DreamGen、WMPO 都在處理同一個問題。</p>
+</div>
+<h3 id="_5">局限（作者自述）<a class="headerlink" href="#_5" title="連到此段">#</a></h3>
+<ul>
+<li>VAE 不知道任務是什麼，可能把容量浪費在無關細節（Doom 的牆面花紋），卻漏掉重要的東西（賽車的路面）。</li>
+<li>模型容量小，換到更複雜的環境需要更大的模型，也可能有災難性遺忘。</li>
+<li>M 只會一步一步預測，沒有分層規劃或抽象推理。</li>
+</ul>
+<h3 id="vla">對 VLA 的意義<a class="headerlink" href="#vla" title="連到此段">#</a></h3>
+<p>確立了「<strong>先無監督學世界、再用少量獎勵或示範學決策</strong>」的分工，以及「在世界模型裡訓練策略」的可行性與風險。今天 VLA 用世界模型做資料工廠或想像中 RL，問題框架都源自這篇。</p>
+<h2 id="muzero">MuZero<a class="headerlink" href="#muzero" title="連到此段">#</a></h2>
+<p><strong>Julian Schrittwieser 等，DeepMind，2019（Nature 2020）</strong>｜<a class="ext" href="https://arxiv.org/abs/1911.08265" target="_blank" rel="noopener">arXiv:1911.08265</a></p>
+<div class="admonition key">
+<p class="admonition-title">精髓</p>
+<p><strong>世界模型不必重建畫面，只要預測「規劃真正需要的三個量」：獎勵、價值、策略。</strong> 不給規則，MuZero 在圍棋、西洋棋、將棋追平 AlphaZero，在 Atari 超越當時最強的無模型方法。</p>
+</div>
+<h3 id="_6">背景與問題<a class="headerlink" href="#_6" title="連到此段">#</a></h3>
+<ul>
+<li>AlphaGo／AlphaZero 的樹搜尋很強，但前提是<strong>知道遊戲規則</strong>，可以完美模擬下一步。真實世界（機器人、工業控制）沒有規則可給。</li>
+<li>當時的模型式強化學習多半學著<strong>重建畫面或真實狀態</strong>，在 Atari 這種視覺複雜的環境裡遠遠落後無模型方法。</li>
+<li><strong>要解決的問題</strong>：不給規則，能不能靠學到的模型做規劃，同時在需要精準推演的棋類和視覺複雜的 Atari 都拿到頂尖成績？</li>
+</ul>
+<h3 id="mcts">解法：三個函數 + 在潛空間做 MCTS<a class="headerlink" href="#mcts" title="連到此段">#</a></h3>
+<figure class="dg">
+<svg viewBox="0 0 800 250" role="img" aria-label="MuZero 的表徵、動力學、預測三個函數">
+<rect class="n" x="10" y="90" width="120" height="60" rx="10"/>
+<text x="70" y="116" text-anchor="middle" class="b">過去的觀測</text>
+<text x="70" y="136" text-anchor="middle" class="s">32 幀 + 32 個動作</text>
+<rect class="n wm" x="160" y="90" width="110" height="60" rx="10"/>
+<text x="215" y="116" text-anchor="middle" class="b wm">表徵 h</text>
+<text x="215" y="136" text-anchor="middle" class="s">→ 根狀態 s⁰</text>
+<rect class="n wm" x="320" y="90" width="130" height="60" rx="10"/>
+<text x="385" y="116" text-anchor="middle" class="b wm">動力學 g</text>
+<text x="385" y="136" text-anchor="middle" class="s">(sᵏ⁻¹, aᵏ) → rᵏ, sᵏ</text>
+<rect class="n wm" x="500" y="90" width="130" height="60" rx="10"/>
+<text x="565" y="116" text-anchor="middle" class="b wm">動力學 g</text>
+<text x="565" y="136" text-anchor="middle" class="s">再往下推一步…</text>
+<rect class="n key" x="320" y="190" width="310" height="50" rx="10"/>
+<text x="475" y="220" text-anchor="middle" class="b">預測 f：每個 sᵏ → 策略 pᵏ、價值 vᵏ</text>
+<rect class="n vla" x="660" y="90" width="130" height="60" rx="10"/>
+<text x="725" y="116" text-anchor="middle" class="b vla">MCTS</text>
+<text x="725" y="136" text-anchor="middle" class="s">挑出要做的動作</text>
+<path class="ar" d="M130,120 H158"/>
+<path class="ar wm" d="M270,120 H318"/>
+<path class="ar wm" d="M450,120 H498"/>
+<path class="ar vla" d="M630,120 H658"/>
+<path class="ar dash" d="M385,150 V188"/>
+<path class="ar dash" d="M565,150 V188"/>
+<text x="400" y="40" text-anchor="middle" class="s">潛狀態 sᵏ 沒有固定意義：只被訓練成「能預測好 r、v、p」</text>
+</svg>
+<figcaption>和 World Models 最大的不同：<b>不解碼回畫面</b>。資料來源：<a class="ext" href="https://arxiv.org/abs/1911.08265" target="_blank" rel="noopener">arXiv:1911.08265</a>。</figcaption>
+</figure>
+
+<ul>
+<li><strong>表徵函數 h</strong>：把過去觀測編碼成搜尋樹的根狀態。</li>
+<li><strong>動力學函數 g</strong>：給定潛狀態與動作，輸出即時獎勵與下一個潛狀態（確定性的）。</li>
+<li><strong>預測函數 f</strong>：從潛狀態輸出策略與價值。</li>
+<li><strong>規劃</strong>：類似 AlphaZero 的 MCTS，每次模擬只呼叫一次 g 和一次 f；Q 值用樹中看到的最小最大值正規化到 [0, 1]，所以能處理沒有上下界的分數。</li>
+</ul>
+<h3 id="_7">訓練<a class="headerlink" href="#_7" title="連到此段">#</a></h3>
+<ul>
+<li>從回放資料中取一個時間點，把模型<strong>往後展開 K = 5 步</strong>，端到端反向傳播。</li>
+<li>三個目標：策略對齊 MCTS 搜尋出的策略；價值對齊 n 步回報（Atari n = 10）；獎勵對齊真實觀測到的獎勵。</li>
+<li>網路沿用 AlphaZero 的殘差結構（16 個殘差塊、256 通道）；Atari 輸入是最近 32 幀 96×96 畫面加 32 個動作，壓到 6×6 的潛狀態。</li>
+<li>算力：棋類用 16 顆 TPU 訓練、1,000 顆 TPU 自我對弈；Atari 用 8 顆訓練、32 顆自我對弈。</li>
+<li><strong>MuZero Reanalyze</strong>：用最新參數重新搜尋舊資料當訓練目標，大幅提升樣本效率。</li>
+</ul>
+<h3 id="_8">評估與結果<a class="headerlink" href="#_8" title="連到此段">#</a></h3>
+<p><strong>棋類</strong>：在圍棋、西洋棋、將棋上達到 AlphaZero 的超人水準（AlphaZero 有規則可用）；圍棋略勝，而且每次評估用的殘差塊更少（16 vs 20）。學到的模型讓搜尋時間放大到約 10 秒仍持續變強，表現和完美模擬器一樣。</p>
+<p><strong>Atari 57 款遊戲</strong>（人類正規化分數）：</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>中位數</th>
+<th>平均</th>
+<th>使用的環境幀數</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R2D2（無模型）</td>
+<td>1920.6%</td>
+<td>4024.9%</td>
+<td>375 億</td>
+</tr>
+<tr>
+<td><strong>MuZero</strong></td>
+<td><strong>2041.1%</strong></td>
+<td><strong>4999.2%</strong></td>
+<td>200 億</td>
+</tr>
+<tr>
+<td>MuZero Reanalyze</td>
+<td>731.1%</td>
+<td>2168.9%</td>
+<td>2 億</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="_9">局限<a class="headerlink" href="#_9" title="連到此段">#</a></h3>
+<ul>
+<li>動力學是確定性的，不直接處理隨機環境；也不處理撲克這類不完全資訊遊戲。</li>
+<li>Atari 上搜尋帶來的提升遠小於圍棋（約 100 次模擬後就飽和），作者歸因於模型不夠準。</li>
+<li>部分遊戲表現很差（Montezuma's Revenge、Venture 拿 0 分），而且訓練需要成百上千顆 TPU。</li>
+</ul>
+<h3 id="vla_1">對 VLA 的意義<a class="headerlink" href="#vla_1" title="連到此段">#</a></h3>
+<p>MuZero 證明「<strong>只學對決策有用的部分</strong>」就夠規劃。今天推論時用世界模型挑候選動作的方法（V-JEPA 2-AC、VLA-Reasoner），以及「是否需要生成像素」的爭論，都可以追溯到這裡。</p>
+<h2 id="dreamerv3">DreamerV3<a class="headerlink" href="#dreamerv3" title="連到此段">#</a></h2>
+<p><strong>Danijar Hafner、Jurgis Pasukonis、Jimmy Ba、Timothy Lillicrap，2023（Nature 2025）</strong>｜<a class="ext" href="https://arxiv.org/abs/2301.04104" target="_blank" rel="noopener">arXiv:2301.04104</a>｜<a class="ext" href="https://github.com/danijar/dreamerv3" target="_blank" rel="noopener">程式碼</a></p>
+<div class="admonition key">
+<p class="admonition-title">精髓</p>
+<p><strong>一組固定的超參數，橫跨 150 多個任務都打贏各領域的專門演算法，並且第一次不靠人類資料或課程，從零在 Minecraft 挖到鑽石。</strong> 關鍵不是新架構，而是一整套讓世界模型「對數值大小不敏感」的穩定化技巧。</p>
+</div>
+<h3 id="_10">背景與問題<a class="headerlink" href="#_10" title="連到此段">#</a></h3>
+<ul>
+<li>強化學習演算法換個領域就要重新調參，PPO 雖然穩健，但需要大量經驗且常輸給專門方法。</li>
+<li>各領域差異很大：獎勵尺度與稀疏程度、離散或連續動作、像素或向量輸入、2D 或 3D。</li>
+<li><strong>要解決的問題</strong>：做出一個「不用調參就能用」的通用演算法，核心難點是讓世界模型在預測<strong>大小未知的數值</strong>時也穩定。</li>
+</ul>
+<h3 id="_11">解法：世界模型 + 評論家 + 演員，三者一起訓練<a class="headerlink" href="#_11" title="連到此段">#</a></h3>
+<figure class="dg">
+<svg viewBox="0 0 800 270" role="img" aria-label="DreamerV3 的 RSSM 世界模型與想像中訓練">
+<rect class="n band" x="10" y="10" width="440" height="250" rx="14"/>
+<text x="230" y="36" text-anchor="middle" class="h">世界模型（RSSM），從真實回放資料學</text>
+<rect class="n" x="30" y="60" width="110" height="50" rx="8"/>
+<text x="85" y="90" text-anchor="middle" class="b">觀測 xₜ</text>
+<rect class="n wm" x="170" y="60" width="120" height="50" rx="8"/>
+<text x="230" y="82" text-anchor="middle" class="b wm">編碼器</text>
+<text x="230" y="100" text-anchor="middle" class="s">→ 離散潛變數 zₜ</text>
+<rect class="n wm" x="170" y="140" width="120" height="50" rx="8"/>
+<text x="230" y="162" text-anchor="middle" class="b wm">序列模型</text>
+<text x="230" y="180" text-anchor="middle" class="s">GRU，狀態 hₜ</text>
+<rect class="n wm" x="310" y="140" width="125" height="50" rx="8"/>
+<text x="372" y="162" text-anchor="middle" class="b wm">動力學預測器</text>
+<text x="372" y="180" text-anchor="middle" class="s">只看 hₜ 猜 zₜ</text>
+<rect class="n" x="30" y="200" width="250" height="44" rx="8"/>
+<text x="155" y="227" text-anchor="middle" class="s">解碼器、獎勵預測器、是否結束預測器</text>
+<path class="ar" d="M140,85 H168"/>
+<path class="ar wm" d="M230,110 V138"/>
+<path class="ar wm" d="M290,165 H308"/>
+<path class="ar dash" d="M230,190 V198"/>
+<rect class="n band" x="480" y="10" width="310" height="250" rx="14"/>
+<text x="635" y="36" text-anchor="middle" class="h">在想像中學決策</text>
+<rect class="n wm" x="500" y="60" width="270" height="50" rx="8"/>
+<text x="635" y="82" text-anchor="middle" class="b wm">用動力學預測器往前想像 15 步</text>
+<text x="635" y="100" text-anchor="middle" class="s">不需要任何真實觀測</text>
+<rect class="n key" x="500" y="130" width="125" height="50" rx="8"/>
+<text x="562" y="152" text-anchor="middle" class="b">評論家</text>
+<text x="562" y="170" text-anchor="middle" class="s">預測回報分布</text>
+<rect class="n vla" x="645" y="130" width="125" height="50" rx="8"/>
+<text x="707" y="152" text-anchor="middle" class="b vla">演員</text>
+<text x="707" y="170" text-anchor="middle" class="s">選動作</text>
+<text x="635" y="215" text-anchor="middle" class="s">λ-return，H = 15、λ = 0.95</text>
+<text x="635" y="235" text-anchor="middle" class="s">γ = 0.997（約 333 步的視野）</text>
+<path class="ar wm" d="M435,165 H460 V85 H498"/>
+<path class="ar" d="M635,110 V128"/>
+</svg>
+<figcaption>「動力學預測器只看 hₜ」是能在想像中滾動的關鍵：不需要真實畫面就能猜下一個潛狀態。資料來源：<a class="ext" href="https://arxiv.org/abs/2301.04104" target="_blank" rel="noopener">arXiv:2301.04104</a>。</figcaption>
+</figure>
+
+<p><strong>世界模型的損失</strong>：</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>損失</th>
+<th>作用</th>
+<th>權重</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>預測損失</td>
+<td>重建觀測、預測獎勵與是否結束</td>
+<td>1</td>
+</tr>
+<tr>
+<td>動力學損失</td>
+<td>KL，讓序列模型學會預測下一個潛變數（編碼器側停止梯度）</td>
+<td>1</td>
+</tr>
+<tr>
+<td>表徵損失</td>
+<td>反方向 KL，讓潛變數更容易被預測（動力學側停止梯度）</td>
+<td>0.1</td>
+</tr>
+</tbody>
+</table></div>
+<p>兩個 KL 都設 <strong>free bits</strong>（低於 1 nat 就不再懲罰），避免潛變數塌縮成沒資訊的解。</p>
+<p><strong>讓一組超參數通用的穩定化技巧</strong>：</p>
+<ul>
+<li><strong>symlog 轉換</strong>：<code>sign(x)·ln(|x|+1)</code>，把很大的數值壓小、接近零時幾乎不變，用在向量觀測與解碼目標。</li>
+<li><strong>symexp twohot 損失</strong>：獎勵與評論家不直接回歸數值，而是在 255 個指數間距的格子上做分類，梯度大小因此和目標數值大小無關。</li>
+<li><strong>百分位回報正規化</strong>：用批次中回報的第 95 與第 5 百分位差當尺度，只把大回報縮小、小回報不放大，稀疏獎勵也不會被雜訊放大。</li>
+<li>1% 均勻分布混入（unimix）、自適應梯度裁剪、LaProp 最佳化器、RMSNorm + SiLU。</li>
+</ul>
+<p><strong>模型大小</strong>：12M、25M、50M、100M、200M（預設）、400M，對應隱藏維度 256 到 1536。</p>
+<h3 id="_12">資料與評估<a class="headerlink" href="#_12" title="連到此段">#</a></h3>
+<p>全部在單張 A100 上跑，固定超參數。評估就是各基準的標準分數：</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>基準</th>
+<th>任務數</th>
+<th>預算</th>
+<th>DreamerV3</th>
+<th>對照</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Atari</td>
+<td>57</td>
+<td>2 億幀</td>
+<td>中位數 830%、平均 3381%</td>
+<td>MuZero 693%、3054%</td>
+</tr>
+<tr>
+<td>ProcGen</td>
+<td>16</td>
+<td>5,000 萬步</td>
+<td>66.01</td>
+<td>PPG 64.89、PPO 42.80</td>
+</tr>
+<tr>
+<td>DMLab</td>
+<td>30</td>
+<td>1 億步</td>
+<td>71.4%</td>
+<td>IMPALA 用 10 億步才 66.3%</td>
+</tr>
+<tr>
+<td>Atari100k</td>
+<td>26</td>
+<td>40 萬步</td>
+<td>平均 125%</td>
+<td>勝過 IRIS、SimPLe，輸 EfficientZero（190%）</td>
+</tr>
+<tr>
+<td>本體感知控制</td>
+<td>18</td>
+<td>50 萬步</td>
+<td>871</td>
+<td>D4PG 792、PPO 94</td>
+</tr>
+<tr>
+<td>視覺控制</td>
+<td>20</td>
+<td>100 萬步</td>
+<td>861</td>
+<td>DrQ-v2 770</td>
+</tr>
+<tr>
+<td>Minecraft 鑽石</td>
+<td>1</td>
+<td>1 億步</td>
+<td>回報 9.1</td>
+<td>IMPALA 7.1、PPO 5.1</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>擴展性</strong>：模型從 12M 加大到 400M，表現單調上升，而且越大的模型需要越少的環境互動。</p>
+<h3 id="_13">局限<a class="headerlink" href="#_13" title="連到此段">#</a></h3>
+<ul>
+<li>Minecraft 在 1 億步時只有約 0.4% 的回合挖到鑽石，任務本身也用了簡化的方塊破壞設定。</li>
+<li>BSuite 的探索類別幾乎得 0 分（0.01，Boot DQN 為 0.68）。</li>
+<li>DMLab 的對照組是用 10 倍資料的已發表結果，比較不完全公平。</li>
+</ul>
+<h3 id="vla_2">對 VLA 的意義<a class="headerlink" href="#vla_2" title="連到此段">#</a></h3>
+<p>DreamerV3 是「<strong>想像中強化學習</strong>」的標準答案。WMPO、VLA-RFT 這類讓 VLA 在世界模型裡做 RL 的方法，以及 Dreamer 4 在 Minecraft 純離線學習，都建立在它的穩定化技巧上。</p>
+<h2 id="gaia-1">GAIA-1<a class="headerlink" href="#gaia-1" title="連到此段">#</a></h2>
+<p><strong>Anthony Hu 等，Wayve，2023</strong>｜<a class="ext" href="https://arxiv.org/abs/2309.17080" target="_blank" rel="noopener">arXiv:2309.17080</a></p>
+<div class="admonition key">
+<p class="admonition-title">精髓</p>
+<p><strong>把自駕的世界模型當成「下一個 token 預測」：影像、文字、車輛動作全部變成 token 交錯排列，用 65 億參數的 Transformer 學會「如果我這樣開，世界會怎麼變」，再用擴散解碼器畫成高畫質影片。</strong></p>
+</div>
+<h3 id="_14">背景與問題<a class="headerlink" href="#_14" title="連到此段">#</a></h3>
+<ul>
+<li>自駕車必須預測場景會如何隨自己的動作演變；但過去的世界模型常依賴難以擴展的標註資料，模擬器又缺乏真實世界的複雜度。</li>
+<li>一般影片生成模型畫得逼真，但不一定學到精確的動態，也不能用動作控制。</li>
+<li><strong>要解決的問題</strong>：用大量未標註的真實行車影片，學出一個可用動作與文字控制、能生成多種合理未來的駕駛世界模型。</li>
+</ul>
+<h3 id="_15">解法：三段式架構<a class="headerlink" href="#_15" title="連到此段">#</a></h3>
+<figure class="dg">
+<svg viewBox="0 0 800 230" role="img" aria-label="GAIA-1 的影像 tokenizer、世界模型與影片解碼器">
+<rect class="n" x="10" y="30" width="130" height="44" rx="8"/>
+<text x="75" y="57" text-anchor="middle" class="b">影片</text>
+<rect class="n" x="10" y="90" width="130" height="44" rx="8"/>
+<text x="75" y="117" text-anchor="middle" class="b">文字</text>
+<rect class="n" x="10" y="150" width="130" height="44" rx="8"/>
+<text x="75" y="172" text-anchor="middle" class="b">動作</text>
+<text x="75" y="188" text-anchor="middle" class="s">車速、曲率</text>
+<rect class="n wm" x="175" y="20" width="150" height="64" rx="8"/>
+<text x="250" y="46" text-anchor="middle" class="b wm">影像 tokenizer</text>
+<text x="250" y="68" text-anchor="middle" class="s">每幀 576 個 token</text>
+<rect class="n" x="175" y="94" width="150" height="40" rx="8"/>
+<text x="250" y="119" text-anchor="middle" class="s">T5：每步 32 個 token</text>
+<rect class="n" x="175" y="150" width="150" height="44" rx="8"/>
+<text x="250" y="177" text-anchor="middle" class="s">線性層：2 個 token</text>
+<rect class="n key" x="365" y="60" width="200" height="100" rx="12"/>
+<text x="465" y="94" text-anchor="middle" class="b">世界模型 6.5B</text>
+<text x="465" y="118" text-anchor="middle" class="s">自迴歸 Transformer</text>
+<text x="465" y="138" text-anchor="middle" class="s">預測下一個影像 token</text>
+<rect class="n wm" x="600" y="60" width="190" height="100" rx="12"/>
+<text x="695" y="94" text-anchor="middle" class="b wm">影片擴散解碼器 2.6B</text>
+<text x="695" y="118" text-anchor="middle" class="s">3D U-Net</text>
+<text x="695" y="138" text-anchor="middle" class="s">補幀到 25 Hz</text>
+<path class="ar" d="M140,52 H173"/>
+<path class="ar" d="M140,112 H173"/>
+<path class="ar" d="M140,172 H173"/>
+<path class="ar" d="M325,52 H345 V100 H363"/>
+<path class="ar" d="M325,114 H363"/>
+<path class="ar" d="M325,172 H345 V130 H363"/>
+<path class="ar wm" d="M565,110 H598"/>
+<text x="465" y="200" text-anchor="middle" class="s">每個時間步 32 + 576 + 2 = 610 個 token，交錯排列</text>
+</svg>
+<figcaption>世界模型負責「推理場景結構與動態」，解碼器負責「畫得好看」。資料來源：<a class="ext" href="https://arxiv.org/abs/2309.17080" target="_blank" rel="noopener">arXiv:2309.17080</a>。</figcaption>
+</figure>
+
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>元件</th>
+<th>參數</th>
+<th>細節</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>影像 tokenizer</td>
+<td>約 0.3B</td>
+<td>全卷積 U-Net 自編碼器，288×512 輸入下採樣 16 倍 → 18×32 = 576 個 token，詞彙 8,192；另加 <strong>DINO 蒸餾損失</strong>讓 token 帶語意</td>
+</tr>
+<tr>
+<td>世界模型</td>
+<td>6.5B</td>
+<td>自迴歸 Transformer，影片從 25 Hz 降到 6.25 Hz，每段 26 步（約 4 秒）共 15,860 個 token；訓練時 20% 無條件、40% 動作條件、40% 文字條件</td>
+</tr>
+<tr>
+<td>影片解碼器</td>
+<td>2.6B</td>
+<td>3D U-Net 擴散模型，同時訓練生成、補幀等 4 種任務，DDIM 50 步</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="_16">資料集構建<a class="headerlink" href="#_16" title="連到此段">#</a></h3>
+<ul>
+<li><strong>4,700 小時</strong>倫敦行車影片（2019–2023），約 4.2 億張不重複影像，25 Hz。</li>
+<li><strong>平衡取樣</strong>：依經緯度、天氣、轉向與速度行為的分布，用「反比於經驗分布的 0.5 次方」加權，避免模型只學到最常見的直線巡航。</li>
+<li><strong>驗證集</strong>：400 小時未參與訓練的行程，刻意包含<strong>訓練中從未出現的地理區域</strong>，用來看泛化。</li>
+</ul>
+<h3 id="_17">評估<a class="headerlink" href="#_17" title="連到此段">#</a></h3>
+<ul>
+<li><strong>定量</strong>：在驗證集上的交叉熵。用 0.65M 到 650M 的小模型擬合冪律，準確預測了完整模型的最終損失，說明<strong>駕駛世界模型也有類似語言模型的擴展定律</strong>。</li>
+<li><strong>取樣策略</strong>：argmax 會陷入重複，完全隨機會取到不可靠的長尾 token；top-k = 50 最接近真實資料的困惑度。</li>
+<li><strong>定性能力</strong>：生成數分鐘長的影片、從同一段起始影片生成多種未來（讓行或轉彎）、用文字改天氣與時段、做<strong>反事實駕駛</strong>（例如故意開出車道，其他車會合理反應）、湧現出幾何理解（過減速帶時車身俯仰）。</li>
+<li>訓練算力：tokenizer 32 張 A100 4 天、世界模型 64 張 A100 15 天、解碼器 32 張 A100 15 天。</li>
+</ul>
+<h3 id="_18">局限<a class="headerlink" href="#_18" title="連到此段">#</a></h3>
+<ul>
+<li>自迴歸生成無法即時。</li>
+<li>文字與標註來源不完美，需要 classifier-free guidance，且要依用途調參。</li>
+<li><strong>沒有下游駕駛表現的評估</strong>，主要靠交叉熵與定性範例。</li>
+</ul>
+<h3 id="vla_3">對 VLA 的意義<a class="headerlink" href="#vla_3" title="連到此段">#</a></h3>
+<p>GAIA-1 示範了<strong>把動作當 token 混進生成模型</strong>的做法，也是自駕「世界模型當資料工廠與反事實測試」的起點。後續 GAIA-2（多鏡頭）、Waymo 基於 Genie 3 的世界模型都是同一條路。</p>
+<h2 id="unisim">UniSim<a class="headerlink" href="#unisim" title="連到此段">#</a></h2>
+<p><strong>Sherry Yang 等，Google DeepMind、UC Berkeley、MIT，2023（ICLR 2024 傑出論文）</strong>｜<a class="ext" href="https://arxiv.org/abs/2310.06114" target="_blank" rel="noopener">arXiv:2310.06114</a>｜<a class="ext" href="https://universal-simulator.github.io/unisim/" target="_blank" rel="noopener">專案頁</a></p>
+<div class="admonition key">
+<p class="admonition-title">精髓</p>
+<p><strong>沒有單一資料集同時有豐富的場景、動作和物理細節，所以把 14 種資料集（模擬、真機、人類影片、全景掃描、網路圖文）統一成「給動作、出影片」的格式，訓練一個通用模擬器；在裡面訓練的策略能零樣本搬到真實機器人。</strong></p>
+</div>
+<h3 id="_19">背景與問題<a class="headerlink" href="#_19" title="連到此段">#</a></h3>
+<ul>
+<li>不同資料各缺一塊：圖文資料場景豐富但沒有動作；影片字幕資料只有高層描述；人類活動資料動作豐富但缺機械細節；機器人資料動作精確但量少。</li>
+<li><strong>要解決的問題</strong>：怎麼把這些異質資料合成一個「什麼動作都能模擬」的真實世界模擬器，並證明它真的能拿來訓練策略？</li>
+</ul>
+<h3 id="_20">解法：統一的「動作進、影片出」介面<a class="headerlink" href="#_20" title="連到此段">#</a></h3>
+<figure class="dg">
+<svg viewBox="0 0 800 260" role="img" aria-label="UniSim 把不同資料統一成動作與影片">
+<rect class="n" x="10" y="20" width="200" height="40" rx="8"/>
+<text x="110" y="45" text-anchor="middle" class="s">網路圖文：圖片說明當動作</text>
+<rect class="n" x="10" y="70" width="200" height="40" rx="8"/>
+<text x="110" y="95" text-anchor="middle" class="s">人類活動：標籤轉成文字動作</text>
+<rect class="n" x="10" y="120" width="200" height="40" rx="8"/>
+<text x="110" y="145" text-anchor="middle" class="s">機器人：馬達指令離散成 4096 格</text>
+<rect class="n" x="10" y="170" width="200" height="40" rx="8"/>
+<text x="110" y="195" text-anchor="middle" class="s">全景掃描：相機位姿轉成「左轉」等</text>
+<rect class="n wm" x="270" y="70" width="220" height="110" rx="12"/>
+<text x="380" y="104" text-anchor="middle" class="b wm">UniSim 5.6B</text>
+<text x="380" y="128" text-anchor="middle" class="s">影片擴散（3D U-Net）</text>
+<text x="380" y="148" text-anchor="middle" class="s">條件：最近 4 幀 + 動作</text>
+<rect class="n vla" x="550" y="30" width="240" height="56" rx="10"/>
+<text x="670" y="54" text-anchor="middle" class="b vla">訓練高層 VLM 策略</text>
+<text x="670" y="74" text-anchor="middle" class="s">長任務成功率約 3–4 倍</text>
+<rect class="n vla" x="550" y="100" width="240" height="56" rx="10"/>
+<text x="670" y="124" text-anchor="middle" class="b vla">在模擬器裡做 RL</text>
+<text x="670" y="144" text-anchor="middle" class="s">成功率 0.58 → 0.81</text>
+<rect class="n" x="550" y="170" width="240" height="56" rx="10"/>
+<text x="670" y="194" text-anchor="middle" class="b">生成資料訓練影片字幕</text>
+<text x="670" y="214" text-anchor="middle" class="s">跨資料集泛化更好</text>
+<path class="ar" d="M210,40 H240 V110 H268"/>
+<path class="ar" d="M210,90 H240"/>
+<path class="ar" d="M210,140 H268"/>
+<path class="ar" d="M210,190 H240 V150 H268"/>
+<path class="ar wm" d="M490,110 H520 V58 H548"/>
+<path class="ar wm" d="M490,128 H548"/>
+<path class="ar wm" d="M490,150 H520 V198 H548"/>
+<text x="380" y="240" text-anchor="middle" class="s">自迴歸滾動：把生成的影片接回去當下一步的歷史</text>
+</svg>
+<figcaption>文字動作用 T5 編碼；低階控制先正規化再離散成 4096 格，和語言嵌入串接。資料來源：<a class="ext" href="https://arxiv.org/abs/2310.06114" target="_blank" rel="noopener">arXiv:2310.06114</a>。</figcaption>
+</figure>
+
+<ul>
+<li><strong>模型</strong>：影片擴散模型（預測雜訊、cosine 排程），動作用 classifier-free guidance 注入；最近 4 幀以通道方式串接當歷史條件。基礎模型生成 24×40，再經兩級超解析度到 192×320。</li>
+<li><strong>規模與算力</strong>：5.6B 參數，512 顆 TPU-v3 訓練約 20 天、100 萬步。</li>
+</ul>
+<h3 id="14">資料集構建（14 個資料集混合）<a class="headerlink" href="#14" title="連到此段">#</a></h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>類別</th>
+<th>資料集（筆數）</th>
+<th>取樣權重</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模擬</td>
+<td>Habitat HM3D（710）、Language Table 模擬（16 萬）</td>
+<td>0.1、0.05</td>
+</tr>
+<tr>
+<td>真實機器人</td>
+<td>Bridge（2 千）、RT-1（7 萬）、Language Table 真機（44 萬）、其他（13.3 萬）</td>
+<td>0.05–0.1</td>
+</tr>
+<tr>
+<td>人類活動</td>
+<td>Ego4D（350 萬）、Something-Something V2（16 萬）、EPIC-KITCHENS（2.5 萬）、其他（5 萬）</td>
+<td>0.05–0.1</td>
+</tr>
+<tr>
+<td>全景掃描</td>
+<td>Matterport Room-to-Room（350 萬）</td>
+<td>0.1</td>
+</tr>
+<tr>
+<td>網路</td>
+<td>LAION-400M、ALIGN（各 4 億）、其他影片（1,300 萬）</td>
+<td>各 0.05</td>
+</tr>
+</tbody>
+</table></div>
+<p>作者坦承權重沒有仔細調（只用 0.1 或 0.05）。</p>
+<h3 id="_21">評估指標與結果<a class="headerlink" href="#_21" title="連到此段">#</a></h3>
+<ul>
+<li><strong>影片品質</strong>：FVD、FID、Inception Score、CLIP 分數。消融顯示：條件用最近 4 幀比只用 1 幀好很多（FVD 315.7 → 211.3）；拿掉網路資料 FVD 變差到 307.8；模型從 500M 到 5.6B 持續改善但趨緩。</li>
+<li><strong>長任務 VLM 策略</strong>（Language Table，指標是「與目標距離的縮減量 RDG」）：一般行為克隆 0.11，用模擬器生成 1 萬條長軌跡做 hindsight 標註後 <strong>0.34</strong>，並零樣本在真機上完成任務。</li>
+<li><strong>RL 策略</strong>（48 個任務成功率）：行為克隆 0.58，在 UniSim 裡用 REINFORCE 微調後 <strong>0.81</strong>；指向類任務從 0.12 升到 0.71，同樣零樣本搬到真機。</li>
+<li><strong>影片字幕</strong>：只用生成影片微調，在 ActivityNet 上達到真實資料約 84% 的效果，在另外三個資料集上反而更好。</li>
+</ul>
+<h3 id="_22">局限<a class="headerlink" href="#_22" title="連到此段">#</a></h3>
+<ul>
+<li><strong>幻覺</strong>：要求不合理的動作（叫桌面機器人「洗手」）時會生成荒謬結果，而不是拒絕。</li>
+<li><strong>記憶有限</strong>：只看最近幾幀，記不住長期狀態。</li>
+<li>機器人形態只有約 4 種，跨形態泛化有限；只模擬視覺，沒有力、聲音。</li>
+</ul>
+<h3 id="vla_4">對 VLA 的意義<a class="headerlink" href="#vla_4" title="連到此段">#</a></h3>
+<p>UniSim 是第一個系統性證明「<strong>在生成式世界模型裡訓練的 VLA 策略可以零樣本搬到真機</strong>」的工作，直接啟發了 DreamGen、Cosmos 的資料工廠路線，以及用世界模型做 VLA 強化學習的研究。</p>
+<h2 id="genie">Genie<a class="headerlink" href="#genie" title="連到此段">#</a></h2>
+<p><strong>Jake Bruce 等，Google DeepMind，2024（ICML 2024 最佳論文）</strong>｜<a class="ext" href="https://arxiv.org/abs/2402.15391" target="_blank" rel="noopener">arXiv:2402.15391</a>｜<a class="ext" href="https://sites.google.com/view/genie-2024" target="_blank" rel="noopener">專案頁</a></p>
+<div class="admonition key">
+<p class="admonition-title">精髓</p>
+<p><strong>網路影片沒有動作標籤，Genie 就自己從影片裡「發明」動作：讓模型找出 8 個最能解釋前後幀變化的潛動作。只用 3 萬小時無標註的平台遊戲影片，就學會一個能逐幀操控的生成世界。</strong></p>
+</div>
+<h3 id="_23">背景與問題<a class="headerlink" href="#_23" title="連到此段">#</a></h3>
+<ul>
+<li>可控的世界模型通常需要動作標註資料，但網路上海量影片幾乎都沒有動作標籤。</li>
+<li><strong>要解決的問題</strong>：只用無標註影片，學出一個使用者可以逐幀操控的互動環境。</li>
+</ul>
+<h3 id="transformer">解法：三個元件，全部用時空 Transformer<a class="headerlink" href="#transformer" title="連到此段">#</a></h3>
+<figure class="dg">
+<svg viewBox="0 0 800 270" role="img" aria-label="Genie 的潛動作模型、影片 tokenizer 與動力學模型">
+<rect class="n band" x="10" y="10" width="380" height="250" rx="14"/>
+<text x="200" y="36" text-anchor="middle" class="h">訓練時：從影片自學動作</text>
+<rect class="n" x="30" y="60" width="140" height="50" rx="8"/>
+<text x="100" y="82" text-anchor="middle" class="b">前面各幀</text>
+<text x="100" y="100" text-anchor="middle" class="s">+ 下一幀</text>
+<rect class="n key" x="200" y="55" width="170" height="60" rx="10"/>
+<text x="285" y="80" text-anchor="middle" class="b">潛動作模型 300M</text>
+<text x="285" y="100" text-anchor="middle" class="s">VQ 壓成 8 個離散動作</text>
+<rect class="n wm" x="30" y="150" width="140" height="56" rx="8"/>
+<text x="100" y="174" text-anchor="middle" class="b wm">影片 tokenizer</text>
+<text x="100" y="194" text-anchor="middle" class="s">ST-ViViT，200M</text>
+<rect class="n wm" x="200" y="145" width="170" height="66" rx="10"/>
+<text x="285" y="172" text-anchor="middle" class="b wm">動力學模型 10.1B</text>
+<text x="285" y="194" text-anchor="middle" class="s">MaskGIT 預測下一幀 token</text>
+<path class="ar" d="M170,85 H198"/>
+<path class="ar" d="M170,178 H198"/>
+<path class="ar dash" d="M285,115 V143"/>
+<text x="330" y="133" class="s">潛動作</text>
+<rect class="n band" x="420" y="10" width="370" height="250" rx="14"/>
+<text x="605" y="36" text-anchor="middle" class="h">推論時：使用者就是潛動作</text>
+<rect class="n" x="440" y="60" width="150" height="50" rx="8"/>
+<text x="515" y="82" text-anchor="middle" class="b">一張提示圖</text>
+<text x="515" y="100" text-anchor="middle" class="s">文字生成、照片、手繪</text>
+<rect class="n vla" x="620" y="60" width="150" height="50" rx="8"/>
+<text x="695" y="82" text-anchor="middle" class="b vla">使用者按鍵</text>
+<text x="695" y="100" text-anchor="middle" class="s">0–7 其中一個</text>
+<rect class="n wm" x="500" y="150" width="210" height="56" rx="10"/>
+<text x="605" y="174" text-anchor="middle" class="b wm">動力學模型逐幀生成</text>
+<text x="605" y="194" text-anchor="middle" class="s">潛動作模型此時丟掉不用</text>
+<path class="ar" d="M515,110 V130 H580 V148"/>
+<path class="ar vla" d="M695,110 V130 H630 V148"/>
+</svg>
+<figcaption>潛動作只有 8 個，逼模型把「最主要的變化」（往左、往右、跳）分配到不同代碼上，於是自然對應到可操控的動作。資料來源：<a class="ext" href="https://arxiv.org/abs/2402.15391" target="_blank" rel="noopener">arXiv:2402.15391</a>。</figcaption>
+</figure>
+
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>元件</th>
+<th>參數</th>
+<th>做法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>時空 Transformer（ST-transformer）</strong></td>
+<td>—</td>
+<td>空間注意力只在同一幀內，時間注意力只沿時間軸且是因果的；計算量隨幀數線性而非平方成長</td>
+</tr>
+<tr>
+<td><strong>影片 tokenizer（ST-ViViT）</strong></td>
+<td>約 200M</td>
+<td>VQ-VAE，patch 4、碼本 1,024</td>
+</tr>
+<tr>
+<td><strong>潛動作模型（LAM）</strong></td>
+<td>約 300M</td>
+<td>編碼器看過去幀與下一幀，輸出潛動作；解碼器用歷史 + 潛動作重建下一幀；VQ 碼本限制為 <strong>8 個動作</strong>；直接吃像素效果比吃 token 好</td>
+</tr>
+<tr>
+<td><strong>動力學模型</strong></td>
+<td>10.1B</td>
+<td>decoder-only MaskGIT，動作以嵌入相加；推論每幀 25 步 MaskGIT</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="_24">資料集構建<a class="headerlink" href="#_24" title="連到此段">#</a></h3>
+<ul>
+<li><strong>平台遊戲資料</strong>：用關鍵字篩出 5,500 萬段 16 秒影片（約 24.4 萬小時），10 FPS、160×90。</li>
+<li><strong>品質過濾</strong>：人工標註 1 萬段影片（1–5 分），訓練 11M 參數的 ResNet18 分類器自動篩選，最後留下 <strong>680 萬段（3 萬多小時）</strong>。消融顯示篩過的資料讓 FVD 從 61.4 降到 54.8。<strong>資料品質比數量更重要。</strong></li>
+<li><strong>機器人資料</strong>：RT-1 約 13 萬條示範加其他真機資料，丟掉動作標籤，當純影片訓練。</li>
+</ul>
+<h3 id="_25">評估指標與結果<a class="headerlink" href="#_25" title="連到此段">#</a></h3>
+<ul>
+<li><strong>FVD</strong>：影片品質。</li>
+<li><strong>ΔtPSNR（可控性）</strong>：用「從真實影片推出的潛動作」生成的畫面 PSNR，減去「隨機潛動作」生成的 PSNR。數值越大，代表動作對結果的影響越大、越可控。</li>
+<li><strong>擴展</strong>：模型從 4,100 萬到 27 億參數，訓練損失穩定下降；最終模型在 256 顆 TPUv5p 上訓練，約 9,420 億 token。</li>
+<li><strong>tokenizer 消融</strong>：ST-ViViT 的 FVD 81.4、ΔtPSNR 1.66，勝過一般 ViT（114.5、1.39）和 C-ViViT（272.7、1.37）。</li>
+<li><strong>泛化</strong>：給它沒看過的文字生成圖、手繪草圖、真實照片都能操控，還湧現出前景背景的視差。</li>
+<li><strong>訓練智能體</strong>：在 CoinRun 裡，用潛動作模型替專家影片標上潛動作，再用少量真實動作資料做對應，<strong>只要 200 筆</strong>就追平有完整動作標籤的行為克隆。</li>
+</ul>
+<h3 id="_26">局限<a class="headerlink" href="#_26" title="連到此段">#</a></h3>
+<ul>
+<li>約 <strong>1 FPS</strong>，太慢無法真正互動（後來的 Genie 3 做到 24 FPS）。</li>
+<li>會產生不真實的未來；記憶只有 16 幀，長時間一致性差。</li>
+</ul>
+<h3 id="vla_5">對 VLA 的意義<a class="headerlink" href="#vla_5" title="連到此段">#</a></h3>
+<p><strong>潛動作（latent action）</strong>是 VLA 利用網路影片的關鍵技術：LAPA、UniVLA、GR00T N1、智元 GO-1 都用類似方法，替沒有動作標籤的人類或網路影片補上偽動作來預訓練。</p>
+<h2 id="cosmos">Cosmos<a class="headerlink" href="#cosmos" title="連到此段">#</a></h2>
+<p><strong>NVIDIA，2025</strong>｜<a class="ext" href="https://arxiv.org/abs/2501.03575" target="_blank" rel="noopener">arXiv:2501.03575</a>｜<a class="ext" href="https://github.com/nvidia-cosmos" target="_blank" rel="noopener">GitHub</a>｜<a class="ext" href="https://developer.nvidia.com/blog/advancing-physical-ai-with-nvidia-cosmos-world-foundation-model-platform" target="_blank" rel="noopener">NVIDIA 技術部落格</a></p>
+<div class="admonition key">
+<p class="admonition-title">精髓</p>
+<p><strong>把世界模型當成「基礎模型」來做：先用 2,000 萬小時影片預訓練一個通用的世界基礎模型（WFM），再用少量特定環境的資料後訓練成機器人或自駕專用模型。論文最大的貢獻其實是工業級的資料管線與 tokenizer，而且全部開源。</strong></p>
+</div>
+<h3 id="_27">背景與問題<a class="headerlink" href="#_27" title="連到此段">#</a></h3>
+<ul>
+<li>物理 AI（機器人、自駕）需要大量「觀測 + 動作」交錯的資料，但真實收集又貴又危險，探索性動作可能弄壞機器或周遭環境。</li>
+<li>作者主張物理 AI 應該先在數位世界訓練：需要策略的數位分身，也需要<strong>世界的數位分身</strong>，也就是世界模型。</li>
+<li><strong>要解決的問題</strong>：提供一個開放的平台，讓開發者不必從零訓練，就能做出自己場景專用的世界模型。</li>
+</ul>
+<h3 id="_28">解法：五個元件的平台<a class="headerlink" href="#_28" title="連到此段">#</a></h3>
+<figure class="dg">
+<svg viewBox="0 0 800 220" role="img" aria-label="Cosmos 平台：資料管線、tokenizer、預訓練、後訓練、防護">
+<rect class="n" x="10" y="70" width="140" height="80" rx="10"/>
+<text x="80" y="100" text-anchor="middle" class="b">影片資料管線</text>
+<text x="80" y="122" text-anchor="middle" class="s">2,000 萬小時</text>
+<text x="80" y="140" text-anchor="middle" class="s">→ 約 1 億段</text>
+<rect class="n wm" x="175" y="70" width="140" height="80" rx="10"/>
+<text x="245" y="100" text-anchor="middle" class="b wm">Cosmos Tokenizer</text>
+<text x="245" y="122" text-anchor="middle" class="s">連續與離散</text>
+<text x="245" y="140" text-anchor="middle" class="s">壓縮 8×8×8 等</text>
+<rect class="n key" x="340" y="30" width="190" height="70" rx="10"/>
+<text x="435" y="58" text-anchor="middle" class="b">擴散 WFM 7B／14B</text>
+<text x="435" y="80" text-anchor="middle" class="s">DiT，Text2World、Video2World</text>
+<rect class="n key" x="340" y="120" width="190" height="70" rx="10"/>
+<text x="435" y="148" text-anchor="middle" class="b">自迴歸 WFM 4B–13B</text>
+<text x="435" y="170" text-anchor="middle" class="s">Llama3 式 GPT，預測影片 token</text>
+<rect class="n vla" x="560" y="70" width="140" height="80" rx="10"/>
+<text x="630" y="100" text-anchor="middle" class="b vla">後訓練</text>
+<text x="630" y="122" text-anchor="middle" class="s">相機控制、機器人</text>
+<text x="630" y="140" text-anchor="middle" class="s">多鏡頭自駕</text>
+<rect class="n" x="720" y="70" width="70" height="80" rx="10"/>
+<text x="755" y="106" text-anchor="middle" class="b">防護</text>
+<text x="755" y="126" text-anchor="middle" class="s">前後過濾</text>
+<path class="ar" d="M150,110 H173"/>
+<path class="ar wm" d="M315,100 H325 V65 H338"/>
+<path class="ar wm" d="M315,120 H325 V155 H338"/>
+<path class="ar" d="M530,65 H545 V100 H558"/>
+<path class="ar" d="M530,155 H545 V120 H558"/>
+<path class="ar" d="M700,110 H718"/>
+</svg>
+<figcaption>所有世界基礎模型在 10,000 張 H100 上訓練約三個月。資料來源：<a class="ext" href="https://arxiv.org/abs/2501.03575" target="_blank" rel="noopener">arXiv:2501.03575</a>。</figcaption>
+</figure>
+
+<h3 id="_29">資料集構建：論文篇幅最多的部分<a class="headerlink" href="#_29" title="連到此段">#</a></h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>步驟</th>
+<th>做法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原始資料</td>
+<td>約 2,000 萬小時、720p 到 4K 的影片</td>
+</tr>
+<tr>
+<td>切段</td>
+<td>用 TransNetV2 做鏡頭切換偵測，丟掉短於 2 秒、切開長於 60 秒的片段</td>
+</tr>
+<tr>
+<td>轉碼</td>
+<td>統一成 mp4，換用 GPU 硬體編碼後吞吐量提升約 6.5 倍</td>
+</tr>
+<tr>
+<td>過濾</td>
+<td>光流分類器濾掉太靜或太晃的；品質分數最低 15% 丟掉；濾掉有大量疊字的；依類型分類器排除電玩、動畫並重新平衡類別</td>
+</tr>
+<tr>
+<td>標註</td>
+<td>內部 13B VILA 模型看 8 幀寫說明，平均 97 個英文字</td>
+</tr>
+<tr>
+<td>去重</td>
+<td>語意去重（k-means，k = 10,000），刪掉約 30%</td>
+</tr>
+<tr>
+<td>產出</td>
+<td>約 1 億段預訓練片段（2–60 秒）、約 1,000 萬段微調片段</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="_30">模型細節<a class="headerlink" href="#_30" title="連到此段">#</a></h3>
+<ul>
+<li><strong>Tokenizer</strong>：連續版（給擴散模型，潛維度 16）與離散版（給自迴歸模型，FSQ 碼本 64,000），影片壓縮率 4×8×8、8×8×8、8×16×16。在 DAVIS 上比既有 tokenizer 高約 4 dB PSNR，編碼快最多 12 倍。</li>
+<li><strong>擴散 WFM</strong>：DiT 架構，3D patch、3D RoPE，T5-XXL 文字以 cross-attention 注入；7B（28 層）與 14B（36 層）。漸進訓練：512p、57 幀 → 720p、121 幀 → 高品質子集微調。</li>
+<li><strong>自迴歸 WFM</strong>：從零訓練的 Llama3 式 GPT（4B、12B），Video2World 版加入文字 cross-attention（5B、13B）；另用擴散解碼器把離散 token 轉回連續空間，減少失真。</li>
+</ul>
+<h3 id="_31">評估指標與結果<a class="headerlink" href="#_31" title="連到此段">#</a></h3>
+<p><strong>3D 一致性</strong>（500 段靜態場景，生成影片能不能被當成真的 3D 場景重建）：</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>Sampson 誤差 ↓</th>
+<th>相機位姿估計成功率 ↑</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VideoLDM（基線）</td>
+<td>0.841</td>
+<td>4.4%</td>
+</tr>
+<tr>
+<td>Cosmos 擴散 Text2World 7B</td>
+<td>0.355</td>
+<td>62.6%</td>
+</tr>
+<tr>
+<td>Cosmos 擴散 Video2World 7B</td>
+<td>0.473</td>
+<td>68.4%</td>
+</tr>
+<tr>
+<td>Cosmos 自迴歸 4B</td>
+<td>0.433</td>
+<td>35.6%</td>
+</tr>
+<tr>
+<td>真實影片（參考）</td>
+<td>0.431</td>
+<td>56.4%</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>物理對齊</strong>：在 PhysX／Isaac Sim 裡建 8 種受控物理情境（掉落、碰撞等），比較生成影片與模擬器真值的 PSNR、SSIM、DreamSim、物體 IoU。給 9 幀條件時，擴散 Video2World 14B 的平均 IoU 最高（0.598），7B 從只給 1 幀的 0.332 升到 0.592。<strong>條件幀越多越準，但模型變大不一定更符合物理。</strong></p>
+<p>以上兩張表的數字取自 <a class="ext" href="https://developer.nvidia.com/blog/advancing-physical-ai-with-nvidia-cosmos-world-foundation-model-platform" target="_blank" rel="noopener">NVIDIA 技術部落格</a>對論文表格的整理。</p>
+<h3 id="_32">局限<a class="headerlink" href="#_32" title="連到此段">#</a></h3>
+<ul>
+<li>仍有<strong>物體恆存</strong>問題（東西憑空出現或消失）、變形、違反重力等不合理行為。</li>
+<li>論文自己說明：<strong>沒有提供</strong>把 Cosmos 用於策略評估、策略初始化、策略訓練、規劃或合成資料的實證結果，這些列為未來工作（後來由 DreamGen、Cosmos Policy 等論文補上）。</li>
+</ul>
+<h3 id="vla_6">對 VLA 的意義<a class="headerlink" href="#vla_6" title="連到此段">#</a></h3>
+<p>Cosmos 是目前「<strong>世界模型當 VLA 資料工廠</strong>」的主要基礎設施：DreamGen 用它微調後生成新任務的機器人影片訓練 GR00T，Cosmos-Transfer 負責把模擬畫面轉成真實感，Cosmos-Reason 負責過濾。細節見〈<a href="synthetic-data.html">具身基礎模型與合成資料</a>〉。</p>
+<h2 id="v-jepa-2">V-JEPA 2<a class="headerlink" href="#v-jepa-2" title="連到此段">#</a></h2>
+<p><strong>Mido Assran 等，Meta FAIR，2025</strong>｜<a class="ext" href="https://arxiv.org/abs/2506.09985" target="_blank" rel="noopener">arXiv:2506.09985</a>｜<a class="ext" href="https://github.com/facebookresearch/vjepa2" target="_blank" rel="noopener">GitHub</a></p>
+<div class="admonition key">
+<p class="admonition-title">精髓</p>
+<p><strong>不生成像素，只在表徵空間預測未來。先用 100 萬小時以上的網路影片學「世界怎麼動」，再用 62 小時沒有任何獎勵或成功標籤的機器人影片，學「我的動作會讓世界怎麼變」；結果在沒看過的實驗室裡零樣本完成抓放，每個動作的規劃時間是 Cosmos 的約 1/15。</strong></p>
+</div>
+<h3 id="_33">背景與問題<a class="headerlink" href="#_33" title="連到此段">#</a></h3>
+<ul>
+<li>互動資料太少，難以單靠它學世界模型；影片生成式世界模型又太貴，而且把力氣花在像素細節上，不利於規劃。</li>
+<li>JEPA（聯合嵌入預測架構）的主張：只在學到的表徵空間預測，忽略本來就無法預測的像素細節。</li>
+<li><strong>要解決的問題</strong>：結合網路規模的影片和少量機器人互動資料，做出能理解、預測並規劃的世界模型。</li>
+</ul>
+<h3 id="_34">解法：兩階段<a class="headerlink" href="#_34" title="連到此段">#</a></h3>
+<figure class="dg">
+<svg viewBox="0 0 800 280" role="img" aria-label="V-JEPA 2 預訓練與 V-JEPA 2-AC 規劃">
+<rect class="n band" x="10" y="10" width="370" height="260" rx="14"/>
+<text x="195" y="36" text-anchor="middle" class="h">階段一：無動作預訓練</text>
+<rect class="n" x="30" y="60" width="150" height="50" rx="8"/>
+<text x="105" y="82" text-anchor="middle" class="b">遮住部分的影片</text>
+<text x="105" y="100" text-anchor="middle" class="s">2,200 萬段影片</text>
+<rect class="n vla" x="210" y="60" width="150" height="50" rx="8"/>
+<text x="285" y="82" text-anchor="middle" class="b vla">編碼器 ViT-g</text>
+<text x="285" y="100" text-anchor="middle" class="s">1B 參數</text>
+<rect class="n vla" x="210" y="140" width="150" height="50" rx="8"/>
+<text x="285" y="162" text-anchor="middle" class="b vla">預測器</text>
+<text x="285" y="180" text-anchor="middle" class="s">猜被遮住處的表徵</text>
+<rect class="n" x="30" y="140" width="150" height="50" rx="8"/>
+<text x="105" y="162" text-anchor="middle" class="b">EMA 目標編碼器</text>
+<text x="105" y="180" text-anchor="middle" class="s">看完整影片給答案</text>
+<path class="ar" d="M180,85 H208"/>
+<path class="ar vla" d="M285,110 V138"/>
+<path class="ar dash" d="M180,165 H208"/>
+<text x="195" y="225" text-anchor="middle" class="s">損失：表徵之間的 L1，</text>
+<text x="195" y="245" text-anchor="middle" class="s">不重建任何像素</text>
+<rect class="n band" x="410" y="10" width="380" height="260" rx="14"/>
+<text x="600" y="36" text-anchor="middle" class="h">階段二：V-JEPA 2-AC 與規劃</text>
+<rect class="n" x="430" y="60" width="160" height="56" rx="8"/>
+<text x="510" y="82" text-anchor="middle" class="b">凍結的編碼器</text>
+<text x="510" y="102" text-anchor="middle" class="s">+ 末端狀態 + 動作</text>
+<rect class="n wm" x="610" y="60" width="160" height="56" rx="8"/>
+<text x="690" y="82" text-anchor="middle" class="b wm">動作條件預測器</text>
+<text x="690" y="102" text-anchor="middle" class="s">300M，62 小時 DROID</text>
+<rect class="n key" x="430" y="150" width="340" height="60" rx="10"/>
+<text x="600" y="176" text-anchor="middle" class="b">CEM 搜尋動作序列</text>
+<text x="600" y="196" text-anchor="middle" class="s">讓預測的表徵最接近「目標圖片」的表徵</text>
+<path class="ar" d="M590,88 H608"/>
+<path class="ar wm" d="M690,116 V148"/>
+<text x="600" y="240" text-anchor="middle" class="s">只執行第一個動作，再重新規劃（MPC）</text>
+</svg>
+<figcaption>階段一學「世界怎麼動」，階段二只用少量無標註機器人影片學「動作造成什麼」。資料來源：<a class="ext" href="https://arxiv.org/abs/2506.09985" target="_blank" rel="noopener">arXiv:2506.09985</a>。</figcaption>
+</figure>
+
+<p><strong>階段一：V-JEPA 2 預訓練</strong></p>
+<ul>
+<li>目標：在表徵空間做「遮罩去噪」。編碼器看被遮住的影片，預測器猜被遮住部分的表徵，答案來自編碼器的 EMA 副本（防止表徵塌縮），損失是 L1。</li>
+<li>四個擴展要素，各自帶來的提升（六項任務平均，從 V-JEPA 1 的 84.2 到 88.2）：<ol>
+<li><strong>資料</strong>：從 200 萬段擴到 2,200 萬段（VideoMix22M：HowTo100M、Kinetics、YT-Temporal-1B 篩選版、SSv2、ImageNet），+1.0；資料篩選另 +1.4。</li>
+<li><strong>模型</strong>：ViT-L（300M）到 ViT-g（1B），+1.5。</li>
+<li><strong>訓練更久</strong>：9 萬到 25.2 萬步，+0.8。</li>
+<li><strong>漸進解析度</strong>：大部分時間用 16 幀 256×256，最後短暫拉到 64 幀 384×384，省下 8.4 倍 GPU 時間。</li>
+</ol>
+</li>
+</ul>
+<p><strong>階段二：V-JEPA 2-AC（動作條件世界模型）</strong></p>
+<ul>
+<li>凍結編碼器，另訓練約 300M 參數的預測器（24 層、block-causal 注意力），輸入是每幀特徵、7 維末端狀態（位置、姿態、夾爪）與 7 維動作（末端位移）。</li>
+<li><strong>資料</strong>：約 62 小時 DROID 影片，4 fps、256×256，<strong>沒有任何獎勵或成功標籤</strong>。</li>
+<li>損失：teacher forcing 的 L1（15 步）加兩步自迴歸滾動的 L1，讓模型對自己的預測誤差更穩健。</li>
+</ul>
+<p><strong>規劃</strong>：給一張目標圖片，用交叉熵法（CEM）搜尋動作，讓預測出的表徵與目標表徵的 L1 距離最小；只執行第一步就重新規劃。</p>
+<h3 id="_35">評估指標與結果<a class="headerlink" href="#_35" title="連到此段">#</a></h3>
+<p><strong>理解</strong>（凍結編碼器 + 注意力探針）：Something-Something v2 77.3%、Diving-48 90.2%。</p>
+<p><strong>預測</strong>：Epic-Kitchens-100 動作預判 recall@5 <strong>39.7</strong>，對比 8B 的 PlausiVL 27.6，相對提升約 44%。</p>
+<p><strong>影片問答</strong>（接 Llama 3.1 8B）：PerceptionTest 84.0、TempCompass 76.9，同級最佳。</p>
+<p><strong>機器人零樣本操作</strong>（兩個實驗室的 Franka 手臂，環境與物體都沒出現在訓練資料，各 10 次）：</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>抓杯子</th>
+<th>抓盒子</th>
+<th>抓放杯子</th>
+<th>抓放盒子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Octo（VLA 基線）</td>
+<td>15%</td>
+<td>0%</td>
+<td>15%</td>
+<td>10%</td>
+</tr>
+<tr>
+<td><strong>V-JEPA 2-AC</strong></td>
+<td><strong>65%</strong></td>
+<td><strong>25%</strong></td>
+<td><strong>80%</strong></td>
+<td><strong>65%</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>和 Cosmos 做同樣的規劃比較（實驗室 2）：Cosmos 抓杯子 0%、抓放都是 0%；V-JEPA 2-AC 是 60%、80%、50%。<strong>規劃速度</strong>：V-JEPA 2-AC 每個動作約 16 秒，Cosmos 約 4 分鐘。</p>
+<h3 id="_36">局限<a class="headerlink" href="#_36" title="連到此段">#</a></h3>
+<ul>
+<li><strong>對相機位置敏感</strong>：沒有相機校正，機械手臂底座常不在畫面中，相機位置要手動調。</li>
+<li><strong>長時程規劃難</strong>：自迴歸誤差累積，搜尋空間隨步數指數成長；抓放任務需要人給中間子目標圖片。</li>
+<li>目標只能用<strong>圖片</strong>指定，還不支援語言指令；模型只擴展到約 1B。</li>
+</ul>
+<h3 id="vla_7">對 VLA 的意義<a class="headerlink" href="#vla_7" title="連到此段">#</a></h3>
+<p>V-JEPA 2-AC 是「<strong>推論時用世界模型挑動作</strong>」（本站分級的 I3）最乾淨的例子，也證明非生成式世界模型在機器人規劃上可以比影片生成模型快一個數量級。它的弱點（需要目標圖片、不懂語言）正好是 VLA 的強項，所以兩者結合是很自然的下一步。</p>
+<h2 id="8_1">回頭看：8 篇共同留下的問題<a class="headerlink" href="#8_1" title="連到此段">#</a></h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>問題</th>
+<th>第一次被點出</th>
+<th>後來怎麼處理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>策略會鑽世界模型的漏洞</td>
+<td>World Models（溫度實驗）</td>
+<td>加隨機性、用真實資料拴住、最後以真機驗收（DreamGen、WMPO）</td>
+</tr>
+<tr>
+<td>要不要預測像素</td>
+<td>MuZero（完全不預測） vs GAIA-1（預測像素）</td>
+<td>依用途分工：要當模擬器就生成，要快速規劃就用表徵（V-JEPA 2）</td>
+</tr>
+<tr>
+<td>沒有動作標籤怎麼辦</td>
+<td>Genie（潛動作）</td>
+<td>LAPA、UniVLA、GR00T N1 的潛動作預訓練</td>
+</tr>
+<tr>
+<td>異質資料怎麼統一</td>
+<td>UniSim</td>
+<td>Cosmos 的資料管線、GR00T 的資料金字塔</td>
+</tr>
+<tr>
+<td>長時間一致性與記憶</td>
+<td>Genie（16 幀）、UniSim（4 幀）</td>
+<td>Genie 3 做到數分鐘一致；仍是開放問題</td>
+</tr>
+<tr>
+<td>物理正不正確</td>
+<td>Cosmos（物體恆存）</td>
+<td>Physics-IQ 等基準、模擬器負責物理（見〈<a href="synthetic-data.html">合成資料</a>〉）</td>
+</tr>
+</tbody>
+</table></div>
+      <nav class="pn"><a class="prev" href="ai2-robotics.html"><small>上一篇</small>案例：智平方</a><a class="next" href="glossary.html"><small>下一篇</small>名詞速查</a></nav>
+      <footer class="foot">
+        內容整理自本專案的調研筆記與討論（2026-10-20）。數字取自論文或官方頁；查不到的標「未公開」。外部連結均開新分頁。
+      </footer>
+    </article>
+  </main>
+  <nav class="toc" aria-label="本頁目錄">
+    <p class="toc-h">本頁目錄</p>
+    <ul><li><a href="#8">一張表看完 8 篇</a></li><li><a href="#world-models">World Models</a><ul><li><a href="#_2">背景與問題</a></li><li><a href="#vmc">解法：V、M、C 三個元件</a></li><li><a href="#_3">資料怎麼來</a></li><li><a href="#_4">評估與結果</a></li><li><a href="#_5">局限（作者自述）</a></li><li><a href="#vla">對 VLA 的意義</a></li></ul></li><li><a href="#muzero">MuZero</a><ul><li><a href="#_6">背景與問題</a></li><li><a href="#mcts">解法：三個函數 + 在潛空間做 MCTS</a></li><li><a href="#_7">訓練</a></li><li><a href="#_8">評估與結果</a></li><li><a href="#_9">局限</a></li><li><a href="#vla_1">對 VLA 的意義</a></li></ul></li><li><a href="#dreamerv3">DreamerV3</a><ul><li><a href="#_10">背景與問題</a></li><li><a href="#_11">解法：世界模型 + 評論家 + 演員，三者一起訓練</a></li><li><a href="#_12">資料與評估</a></li><li><a href="#_13">局限</a></li><li><a href="#vla_2">對 VLA 的意義</a></li></ul></li><li><a href="#gaia-1">GAIA-1</a><ul><li><a href="#_14">背景與問題</a></li><li><a href="#_15">解法：三段式架構</a></li><li><a href="#_16">資料集構建</a></li><li><a href="#_17">評估</a></li><li><a href="#_18">局限</a></li><li><a href="#vla_3">對 VLA 的意義</a></li></ul></li><li><a href="#unisim">UniSim</a><ul><li><a href="#_19">背景與問題</a></li><li><a href="#_20">解法：統一的「動作進、影片出」介面</a></li><li><a href="#14">資料集構建（14 個資料集混合）</a></li><li><a href="#_21">評估指標與結果</a></li><li><a href="#_22">局限</a></li><li><a href="#vla_4">對 VLA 的意義</a></li></ul></li><li><a href="#genie">Genie</a><ul><li><a href="#_23">背景與問題</a></li><li><a href="#transformer">解法：三個元件，全部用時空 Transformer</a></li><li><a href="#_24">資料集構建</a></li><li><a href="#_25">評估指標與結果</a></li><li><a href="#_26">局限</a></li><li><a href="#vla_5">對 VLA 的意義</a></li></ul></li><li><a href="#cosmos">Cosmos</a><ul><li><a href="#_27">背景與問題</a></li><li><a href="#_28">解法：五個元件的平台</a></li><li><a href="#_29">資料集構建：論文篇幅最多的部分</a></li><li><a href="#_30">模型細節</a></li><li><a href="#_31">評估指標與結果</a></li><li><a href="#_32">局限</a></li><li><a href="#vla_6">對 VLA 的意義</a></li></ul></li><li><a href="#v-jepa-2">V-JEPA 2</a><ul><li><a href="#_33">背景與問題</a></li><li><a href="#_34">解法：兩階段</a></li><li><a href="#_35">評估指標與結果</a></li><li><a href="#_36">局限</a></li><li><a href="#vla_7">對 VLA 的意義</a></li></ul></li><li><a href="#8_1">回頭看：8 篇共同留下的問題</a></li></ul>
+  </nav>
+</div>
+<script src="assets/site.js"></script>
+<script src="assets/search-index.js"></script>
+<script src="assets/qa.js"></script>
+</body>
+</html>

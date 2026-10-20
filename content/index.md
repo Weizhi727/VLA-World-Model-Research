@@ -58,10 +58,11 @@
 
 | 你想知道的 | 從這裡讀 |
 |---|---|
-| 完全沒概念，想先知道為什麼有這兩個東西 | [01 起源與歷史](origins.html) → [10 名詞速查](glossary.html) |
+| 完全沒概念，想先知道為什麼有這兩個東西 | [01 起源與歷史](origins.html) → [11 名詞速查](glossary.html) |
 | 想懂模型長什麼樣、怎麼選型 | [02 主流模型架構](architectures.html) → [03 流派怎麼分](taxonomy.html) |
 | 要自己動手訓練或評估 | [04 訓練、資料與評估](training.html) |
 | 想知道世界模型到底怎麼幫 VLA | [05 四類與五種角色](world-model-roles.html) → [06 訓練時 vs 推論時](train-vs-inference.html) → [07 合成資料](synthetic-data.html) |
+| 想讀懂世界模型的經典論文 | [10 經典世界模型論文精讀](classic-world-models.html) |
 | 想知道業界誰在做什麼 | [08 業界產品盤點](industry.html) → [09 案例：智平方](ai2-robotics.html) |
 
 ## 全部章節
@@ -76,8 +77,9 @@
 <a class="card" href="synthetic-data.html"><span class="n">07</span><b>具身基礎模型與合成資料</b><small>「機器人版 GPT」指什麼；生成影片的物理問題與四層把關。</small></a>
 <a class="card" href="industry.html"><span class="n">08</span><b>業界產品盤點</b><small>π、Gemini Robotics、GR00T＋Cosmos、Figure、1X、Tesla、Waymo、華為、小鵬等。</small></a>
 <a class="card" href="ai2-robotics.html"><span class="n">09</span><b>案例：智平方</b><small>GOVLA、FiS-VLA、Video2Act、NeuroVLA；與 π0、Helix、GR00T 比較；類腦與 SNN。</small></a>
-<a class="card" href="glossary.html"><span class="n">10</span><b>名詞速查</b><small>action chunk、flow matching、IDM、RSSM、JEPA、FVD……一句話解釋。</small></a>
-<a class="card" href="references.html"><span class="n">11</span><b>參考資料</b><small>依主題整理的論文清單，以及本專案的原始報告與簡報。</small></a>
+<a class="card" href="classic-world-models.html"><span class="n">10</span><b>經典世界模型論文精讀</b><small>8 篇論文逐篇拆解：背景、問題、方法、架構、資料集、評估指標與局限。</small></a>
+<a class="card" href="glossary.html"><span class="n">11</span><b>名詞速查</b><small>action chunk、flow matching、IDM、RSSM、JEPA、FVD……一句話解釋。</small></a>
+<a class="card" href="references.html"><span class="n">12</span><b>參考資料</b><small>依主題整理的論文清單，以及本專案的原始報告與簡報。</small></a>
 </div>
 
 ## 關於資料來源
