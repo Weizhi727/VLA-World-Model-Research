@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>起源與歷史 · VLA × 世界模型 調研</title>
+<meta name="description" content="遇到什麼瓶頸，才發展出 VLA 與世界模型">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body data-page="origins">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead"/>
+    </marker>
+    <marker id="arr-wm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead wm"/>
+    </marker>
+    <marker id="arr-vla" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead vla"/>
+    </marker>
+  </defs>
+</svg>
+<header class="top">
+  <button class="menu" aria-label="開啟目錄" aria-expanded="false">☰</button>
+  <a class="brand" href="index.html"><span class="dot vla"></span><span class="dot wm"></span>VLA × 世界模型 調研</a>
+  <button class="theme" aria-label="切換深淺色">◐</button>
+</header>
+<div class="shell">
+  <aside class="side">
+    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li><a href="origins.html" class="on"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="architectures.html"><span class="num">02</span><span>主流模型架構</span></a></li><li><a href="taxonomy.html"><span class="num">03</span><span>流派怎麼分</span></a></li><li><a href="training.html"><span class="num">04</span><span>訓練、資料與評估</span></a></li><li><a href="world-model-roles.html"><span class="num">05</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">06</span><span>訓練時 vs 推論時</span></a></li><li><a href="synthetic-data.html"><span class="num">07</span><span>具身基礎模型與合成資料</span></a></li><li><a href="industry.html"><span class="num">08</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html"><span class="num">09</span><span>案例：智平方</span></a></li><li><a href="glossary.html"><span class="num">10</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">11</span><span>參考資料</span></a></li></ul>
+    <p class="side-note">整理日期：2026-10-20<br>面向技術人員的科普整理</p>
+  </aside>
+  <main>
+    <article class="doc">
+      <h1 id="vla">起源與歷史：為什麼會有 VLA 與世界模型<a class="headerlink" href="#vla" title="連到此段">#</a></h1>
+<p class="lede">兩個名詞各自從不同的瓶頸長出來：VLA 要解決「機器人學不會泛化」，世界模型要解決「在真實世界試錯太貴、太慢」。2023 年後，大模型與影片生成讓它們匯流。</p>
+
+<div class="admonition key">
+<p class="admonition-title">一句話</p>
+<p><strong>VLA</strong> 借用網路規模的圖文知識，彌補機器人資料的匱乏；<strong>世界模型</strong>讓智能體先在「腦中」模擬後果再行動。VLA 缺的是物理常識與可擴展的資料，世界模型正好能提供想像中的練習場與合成資料，所以 2025 年後的系統（NVIDIA Cosmos＋GR00T、π0.5、Gemini Robotics、V-JEPA 2）大多同時涉及兩者。</p>
+</div>
+<h2 id="_1">兩條路線的時間軸<a class="headerlink" href="#_1" title="連到此段">#</a></h2>
+<figure class="dg">
+<svg viewBox="0 0 800 330" role="img" aria-label="VLA 與世界模型兩條路線的時間軸">
+<text x="70" y="24" text-anchor="middle" class="h">1943–1991</text>
+<text x="190" y="24" text-anchor="middle" class="h">2015–2018</text>
+<text x="310" y="24" text-anchor="middle" class="h">2019–2022</text>
+<text x="430" y="24" text-anchor="middle" class="h">2023</text>
+<text x="550" y="24" text-anchor="middle" class="h">2024</text>
+<text x="700" y="24" text-anchor="middle" class="h">2025–</text>
+<text x="10" y="62" class="b vla">VLA 路線</text>
+<path d="M30,100 H620" stroke="var(--vla)" stroke-width="2"/>
+<circle cx="190" cy="100" r="6" fill="var(--vla)"/><circle cx="310" cy="100" r="6" fill="var(--vla)"/>
+<circle cx="430" cy="100" r="8" fill="var(--vla)"/><circle cx="550" cy="100" r="6" fill="var(--vla)"/>
+<text x="70" y="106" text-anchor="middle" class="s">手工模組化管線</text>
+<text x="190" y="88" text-anchor="middle" class="b">端到端視動</text>
+<text x="190" y="124" text-anchor="middle" class="s">Levine 2015</text>
+<text x="310" y="88" text-anchor="middle" class="b">SayCan・RT-1</text>
+<text x="310" y="124" text-anchor="middle" class="s">LLM 接上機器人</text>
+<text x="430" y="86" text-anchor="middle" class="b vla">RT-2</text>
+<text x="430" y="124" text-anchor="middle" class="s">「VLA」誕生</text>
+<text x="550" y="88" text-anchor="middle" class="b">OpenVLA・π0</text>
+<text x="550" y="124" text-anchor="middle" class="s">開源、連續動作</text>
+<text x="10" y="196" class="b wm">世界模型路線</text>
+<path d="M30,240 H620" stroke="var(--wm)" stroke-width="2"/>
+<circle cx="70" cy="240" r="6" fill="var(--wm)"/><circle cx="190" cy="240" r="8" fill="var(--wm)"/>
+<circle cx="310" cy="240" r="6" fill="var(--wm)"/><circle cx="430" cy="240" r="6" fill="var(--wm)"/><circle cx="550" cy="240" r="8" fill="var(--wm)"/>
+<text x="70" y="228" text-anchor="middle" class="b">Craik・Dyna</text>
+<text x="70" y="264" text-anchor="middle" class="s">心智模型、想像經驗</text>
+<text x="190" y="226" text-anchor="middle" class="b wm">World Models</text>
+<text x="190" y="264" text-anchor="middle" class="s">Ha &amp; Schmidhuber 2018</text>
+<text x="310" y="228" text-anchor="middle" class="b">MuZero・Dreamer</text>
+<text x="310" y="264" text-anchor="middle" class="s">潛空間想像</text>
+<text x="430" y="228" text-anchor="middle" class="b">UniPi・UniSim</text>
+<text x="430" y="264" text-anchor="middle" class="s">影片生成用於決策</text>
+<text x="550" y="226" text-anchor="middle" class="b wm">Sora・Genie</text>
+<text x="550" y="264" text-anchor="middle" class="s">世界模擬器成熱詞</text>
+<path class="ar vla" d="M620,100 C650,100 650,150 638,150"/>
+<path class="ar wm" d="M620,240 C650,240 650,190 638,190"/>
+<rect class="n mix" x="640" y="120" width="150" height="100" rx="12"/>
+<text x="715" y="152" text-anchor="middle" class="b mix">兩者匯流</text>
+<text x="715" y="176" text-anchor="middle" class="s">Cosmos＋GR00T</text>
+<text x="715" y="196" text-anchor="middle" class="s">π0.5・V-JEPA 2</text>
+<text x="715" y="212" text-anchor="middle" class="s">Genie 3</text>
+<text x="400" y="310" text-anchor="middle" class="s">上排：機器人學走向「借用大模型」；下排：強化學習走向「學一個可想像的世界」</text>
+</svg>
+<figcaption>兩條路線各自從不同的瓶頸出發，到 2025 年前後在同一批系統中匯流。</figcaption>
+</figure>
+
+<h2 id="vla_1">一、VLA 之前：機器人學卡在哪裡<a class="headerlink" href="#vla_1" title="連到此段">#</a></h2>
+<div class="admonition key">
+<p class="admonition-title">結論</p>
+<p>機器人學長期是「一個任務一個模型」，無法像 NLP、CV 那樣靠大資料加大模型得到泛化。VLA 的本質是<strong>借用網路規模的圖文知識，彌補機器人資料的匱乏</strong>。</p>
+</div>
+<h3 id="1">瓶頸 1：模組化管線太脆弱<a class="headerlink" href="#1" title="連到此段">#</a></h3>
+<p>傳統做法是「感知 → 狀態估計 → 任務規劃 → 運動規劃 → 控制」的手工管線。每一層都依賴人為設計的物體模型與規則，換一個沒見過的杯子或光線就可能失效。這就是 <a class="ext" href="https://en.wikipedia.org/wiki/Moravec%27s_paradox" target="_blank" rel="noopener">Moravec 悖論</a>：對人類最簡單的感知與操作，對機器反而最難。</p>
+<h3 id="2">瓶頸 2：端到端學習有了，但泛化很差<a class="headerlink" href="#2" title="連到此段">#</a></h3>
+<p>2015 年 Levine 等人的 <a class="ext" href="https://arxiv.org/abs/1504.00702" target="_blank" rel="noopener">End-to-End Visuomotor Policies</a> 證明可以直接從像素學到馬達指令。之後 Google 的 <a class="ext" href="https://arxiv.org/abs/1806.10293" target="_blank" rel="noopener">QT-Opt</a> 用 7 台機械手臂收了 58 萬次抓取資料，但學到的只是「抓取」一個技能。每個新技能都要重新付出一次這種代價。</p>
+<h3 id="3-sim2real-gap">瓶頸 3：強化學習在真實世界太貴，模擬又有 sim2real gap<a class="headerlink" href="#3-sim2real-gap" title="連到此段">#</a></h3>
+<p>真實機器人會壞、會慢、需要人重置場景。改在模擬器訓練，又遇到物理與視覺差異；<a class="ext" href="https://arxiv.org/abs/1703.06907" target="_blank" rel="noopener">Domain Randomization</a> 等技巧只能部分緩解。</p>
+<h3 id="4">瓶頸 4：機器人資料沒有「網路規模」<a class="headerlink" href="#4" title="連到此段">#</a></h3>
+<p>語言模型有整個網路可以訓練，機器人資料則分散在各實驗室、各種機型、各種格式，一個資料集常只有幾千到幾萬條軌跡。Sutton 的 <a class="ext" href="http://www.incompleteideas.net/IncIdeas/BitterLesson.html" target="_blank" rel="noopener">The Bitter Lesson</a> 指出通用方法加算力最終勝出，但機器人學缺的正是可以「堆」的資料。</p>
+<h3 id="5">瓶頸 5：語意理解與開放指令<a class="headerlink" href="#5" title="連到此段">#</a></h3>
+<p>「把可樂罐拿給泰勒絲」這種指令需要常識（誰是泰勒絲、哪個是可樂罐），傳統機器人只認得訓練時的類別。從 2018 年的視覺語言導航 <a class="ext" href="https://arxiv.org/abs/1711.07280" target="_blank" rel="noopener">R2R</a> 到 2021 年的 <a class="ext" href="https://arxiv.org/abs/2109.12098" target="_blank" rel="noopener">CLIPort</a>，研究者開始用預訓練的圖文表徵處理這個問題。</p>
+<h3 id="_2">轉折點：大型語言模型與視覺語言模型成熟<a class="headerlink" href="#_2" title="連到此段">#</a></h3>
+<p>2020 年後 GPT-3、<a class="ext" href="https://arxiv.org/abs/2103.00020" target="_blank" rel="noopener">CLIP</a>、PaLI 等模型證明「一個大模型可以通殺很多任務」。機器人學界自然問：能不能把這些模型的世界知識直接轉成動作？這就是 VLA 的出發點。</p>
+<h2 id="vla_2">二、VLA 的發展歷程<a class="headerlink" href="#vla_2" title="連到此段">#</a></h2>
+<div class="admonition key">
+<p class="admonition-title">結論</p>
+<p>VLA 經歷三個階段：<strong>「LLM 當大腦、傳統技能當小腦」（2022）→「把動作當 token、端到端訓練」（2023）→「開源化、跨機型資料、用擴散或 flow 輸出連續動作、大小腦雙系統」（2024–2025）</strong>。</p>
+</div>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>時間</th>
+<th>里程碑</th>
+<th>解決了什麼瓶頸</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2022.04</td>
+<td><a class="ext" href="https://arxiv.org/abs/2204.01691" target="_blank" rel="noopener">SayCan</a>（Google）</td>
+<td>LLM 拆解高層任務，再用「可供性」分數挑選機器人真的做得到的技能；解決開放指令理解</td>
+</tr>
+<tr>
+<td>2022.05</td>
+<td><a class="ext" href="https://arxiv.org/abs/2205.06175" target="_blank" rel="noopener">Gato</a>（DeepMind）</td>
+<td>一個 Transformer 同時玩 Atari、聊天、控機械手臂，證明「動作也能序列化」</td>
+</tr>
+<tr>
+<td>2022.07–09</td>
+<td><a class="ext" href="https://arxiv.org/abs/2207.05608" target="_blank" rel="noopener">Inner Monologue</a>、<a class="ext" href="https://arxiv.org/abs/2209.07753" target="_blank" rel="noopener">Code as Policies</a></td>
+<td>LLM 用回饋或寫程式來指揮機器人，仍依賴下層手工技能</td>
+</tr>
+<tr>
+<td>2022.10</td>
+<td><a class="ext" href="https://arxiv.org/abs/2210.03094" target="_blank" rel="noopener">VIMA</a></td>
+<td>多模態提示（圖＋文）直接驅動操作策略</td>
+</tr>
+<tr>
+<td>2022.12</td>
+<td><a class="ext" href="https://arxiv.org/abs/2212.06817" target="_blank" rel="noopener">RT-1</a>（Google）</td>
+<td>13 台機器人、約 13 萬條示範、700+ 種任務，證明 Transformer＋大資料在機器人上也有效</td>
+</tr>
+<tr>
+<td>2023.03</td>
+<td><a class="ext" href="https://arxiv.org/abs/2303.03378" target="_blank" rel="noopener">PaLM-E</a></td>
+<td>562B 參數的具身多模態模型，把感測器資訊注入 LLM；主要輸出仍是高層計畫</td>
+</tr>
+<tr>
+<td>2023.03–04</td>
+<td><a class="ext" href="https://arxiv.org/abs/2303.04137" target="_blank" rel="noopener">Diffusion Policy</a>、<a class="ext" href="https://arxiv.org/abs/2304.13705" target="_blank" rel="noopener">ACT／ALOHA</a></td>
+<td>用擴散模型與 action chunking 解決「多模態動作分布」與精細操作，後來成為 VLA 動作頭的標準設計</td>
+</tr>
+<tr>
+<td><strong>2023.07</strong></td>
+<td><strong><a class="ext" href="https://arxiv.org/abs/2307.15818" target="_blank" rel="noopener">RT-2</a>（Google DeepMind）</strong></td>
+<td><strong>正式提出「VLA」。把動作離散化成文字 token，與網路圖文資料一起微調 VLM，讓網路知識直接轉移到動作</strong></td>
+</tr>
+<tr>
+<td>2023.10</td>
+<td><a class="ext" href="https://arxiv.org/abs/2310.08864" target="_blank" rel="noopener">Open X-Embodiment／RT-X</a></td>
+<td>21 個機構、22 種機器人、100 萬條以上軌跡合併，直接攻擊「資料不夠大」</td>
+</tr>
+<tr>
+<td>2024.05</td>
+<td><a class="ext" href="https://arxiv.org/abs/2405.12213" target="_blank" rel="noopener">Octo</a></td>
+<td>開源通用機器人策略，可快速微調到新機型</td>
+</tr>
+<tr>
+<td>2024.06</td>
+<td><a class="ext" href="https://arxiv.org/abs/2406.09246" target="_blank" rel="noopener">OpenVLA</a></td>
+<td>7B 開源 VLA，效果超過 55B 的 RT-2-X，讓學界也能做 VLA</td>
+</tr>
+<tr>
+<td>2024.10</td>
+<td><a class="ext" href="https://arxiv.org/abs/2410.24164" target="_blank" rel="noopener">π0</a>（Physical Intelligence）</td>
+<td>VLM 主幹＋flow matching 動作專家，輸出 50 Hz 連續動作，解決「離散 token 太粗、太慢」</td>
+</tr>
+<tr>
+<td>2025.01</td>
+<td><a class="ext" href="https://arxiv.org/abs/2501.09747" target="_blank" rel="noopener">FAST</a></td>
+<td>用 DCT 壓縮動作 token，讓自回歸 VLA 也能處理高頻精細動作</td>
+</tr>
+<tr>
+<td>2025.02–03</td>
+<td><a class="ext" href="https://www.figure.ai/news/helix" target="_blank" rel="noopener">Helix</a>、<a class="ext" href="https://arxiv.org/abs/2503.14734" target="_blank" rel="noopener">GR00T N1</a>、<a class="ext" href="https://arxiv.org/abs/2503.20020" target="_blank" rel="noopener">Gemini Robotics</a></td>
+<td>「系統 2 慢思考＋系統 1 快反應」雙系統，走向人形機器人與業界落地</td>
+</tr>
+<tr>
+<td>2025.04</td>
+<td><a class="ext" href="https://arxiv.org/abs/2504.16054" target="_blank" rel="noopener">π0.5</a></td>
+<td>在沒見過的真實家庭完成長時程清潔任務，重點放在開放世界泛化</td>
+</tr>
+</tbody>
+</table></div>
+<div class="admonition note">
+<p class="admonition-title">關鍵觀察</p>
+<p>VLA 不是一個新理論，而是一個「工程假設」的勝利：只要把動作當成另一種模態，就能搭上 LLM／VLM 的規模化便車。後續大部分研究都在修補這個假設帶來的新問題：動作精度、推論速度、資料來源。</p>
+</div>
+<h2 id="_3">三、世界模型之前：智能體卡在哪裡<a class="headerlink" href="#_3" title="連到此段">#</a></h2>
+<div class="admonition key">
+<p class="admonition-title">結論</p>
+<p>世界模型的動機一直沒變：<strong>「先在腦中模擬世界，再行動」</strong>，用來解決真實試錯太貴、無法規劃、不懂物理三大問題。不同年代只是「用什麼模型來模擬」不同。</p>
+</div>
+<h3 id="_4">思想源頭：認知科學與控制理論<a class="headerlink" href="#_4" title="連到此段">#</a></h3>
+<ul>
+<li>1943 年心理學家 Kenneth Craik 在《The Nature of Explanation》提出「心智模型」：生物在腦中建立外界的小型模型，用來預測後果、試跑選項。</li>
+<li>控制理論的「系統識別＋模型預測控制（MPC）」是同一概念的工程版本：先學動態模型，再用它規劃。</li>
+</ul>
+<h3 id="1_1">瓶頸 1：無模型強化學習的樣本效率太差<a class="headerlink" href="#1_1" title="連到此段">#</a></h3>
+<p><a class="ext" href="https://www.nature.com/articles/nature14236" target="_blank" rel="noopener">DQN</a> 玩一個 Atari 遊戲要大約 2 億幀，等於人類連玩數百小時。在遊戲裡可以，在真實機器人或自駕車上不行。危險的試錯（撞車、摔壞機器人）更不能在現實中做。</p>
+<h3 id="2_1">瓶頸 2：反應式策略不會「想」<a class="headerlink" href="#2_1" title="連到此段">#</a></h3>
+<p>只學「看到 X 就做 Y」的策略沒有規劃能力，遇到需要多步推理或訓練分布之外的情況就失效。AlphaGo 強是因為有完美的規則模型可以搜尋；真實世界沒有現成規則，所以要「學」一個出來。</p>
+<h3 id="3-rl">瓶頸 3：早期模型式 RL 的「模型誤差」<a class="headerlink" href="#3-rl" title="連到此段">#</a></h3>
+<p>1990–2010 年代的方法（如用高斯過程的 <a class="ext" href="https://mlg.eng.cam.ac.uk/pub/pdf/DeiRas11.pdf" target="_blank" rel="noopener">PILCO</a>）在低維狀態很有效，但遇到像素這種高維輸入就學不好；模型一旦有誤差，多步展開會越滾越大（compounding error），策略還會「鑽模型漏洞」。這是模型式 RL 長期打不過無模型 RL 的主因。</p>
+<h3 id="4_1">瓶頸 4：大語言模型不懂物理世界<a class="headerlink" href="#4_1" title="連到此段">#</a></h3>
+<p>2022 年 Yann LeCun 在 <a class="ext" href="https://openreview.net/pdf?id=BZ5a1r-kVsf" target="_blank" rel="noopener">A Path Towards Autonomous Machine Intelligence</a> 主張：只靠文字的自回歸 LLM 缺乏物理常識與規劃能力，學會「預測世界如何變化」的世界模型才是通往人類級智能的關鍵。這把世界模型從 RL 子領域拉高到 AGI 路線之爭。</p>
+<h3 id="5_1">瓶頸 5：自駕與機器人的長尾場景<a class="headerlink" href="#5_1" title="連到此段">#</a></h3>
+<p>真實資料永遠收不齊罕見危險場景，傳統模擬器（CARLA、Isaac Sim）又要大量人工建場景。「學出來的神經模擬器」可以自動生成這些場景，這是 Wayve、Tesla、NVIDIA 積極投入的原因。</p>
+<h2 id="_5">四、世界模型的發展歷程<a class="headerlink" href="#_5" title="連到此段">#</a></h2>
+<div class="admonition key">
+<p class="admonition-title">結論</p>
+<p>世界模型有兩條主線：<strong>RL 路線</strong>（在潛空間想像來訓練策略，代表 Dreamer、MuZero）與<strong>生成路線</strong>（用影片生成模型當世界模擬器，代表 Sora、Genie、Cosmos）。LeCun 的 <strong>JEPA</strong> 主張第三條：只在表徵空間預測，不生成像素。</p>
+</div>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>時間</th>
+<th>里程碑</th>
+<th>意義</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1943</td>
+<td>Craik《The Nature of Explanation》</td>
+<td>提出「心智模型」，是世界模型的哲學源頭</td>
+</tr>
+<tr>
+<td>1990</td>
+<td>Schmidhuber《Making the World Differentiable》</td>
+<td>用 RNN 學環境模型並在其中規劃，也提出「好奇心」驅動探索</td>
+</tr>
+<tr>
+<td>1991</td>
+<td>Sutton <a class="ext" href="https://dl.acm.org/doi/10.1145/122344.122377" target="_blank" rel="noopener">Dyna</a></td>
+<td>用學到的模型產生「想像經驗」訓練策略，是 Dreamer 的前身</td>
+</tr>
+<tr>
+<td>2011</td>
+<td><a class="ext" href="https://mlg.eng.cam.ac.uk/pub/pdf/DeiRas11.pdf" target="_blank" rel="noopener">PILCO</a></td>
+<td>模型式 RL 首次在真實控制任務展現驚人樣本效率</td>
+</tr>
+<tr>
+<td><strong>2018.03</strong></td>
+<td><strong><a class="ext" href="https://arxiv.org/abs/1803.10122" target="_blank" rel="noopener">World Models</a>（Ha &amp; Schmidhuber），<a class="ext" href="https://worldmodels.github.io/" target="_blank" rel="noopener">互動版</a></strong></td>
+<td><strong>VAE（視覺）＋MDN-RNN（記憶與預測）＋小控制器；智能體在自己的「夢境」裡訓練再轉回真實環境，讓這個名詞廣為人知</strong></td>
+</tr>
+<tr>
+<td>2018.11</td>
+<td><a class="ext" href="https://arxiv.org/abs/1811.04551" target="_blank" rel="noopener">PlaNet</a></td>
+<td>從像素學潛空間動態（RSSM）並直接在潛空間規劃</td>
+</tr>
+<tr>
+<td>2019.03</td>
+<td><a class="ext" href="https://arxiv.org/abs/1903.00374" target="_blank" rel="noopener">SimPLe</a></td>
+<td>在學到的影片預測模型裡玩 Atari，只用 10 萬步互動（Atari 100k 基準由此而來）</td>
+</tr>
+<tr>
+<td>2019.11</td>
+<td><a class="ext" href="https://arxiv.org/abs/1911.08265" target="_blank" rel="noopener">MuZero</a>（DeepMind）</td>
+<td>不需要遊戲規則，自己學「只為規劃而存在」的模型</td>
+</tr>
+<tr>
+<td>2019–2023</td>
+<td><a class="ext" href="https://arxiv.org/abs/1912.01603" target="_blank" rel="noopener">Dreamer</a> → <a class="ext" href="https://arxiv.org/abs/2010.02193" target="_blank" rel="noopener">DreamerV2</a> → <a class="ext" href="https://arxiv.org/abs/2301.04104" target="_blank" rel="noopener">DreamerV3</a></td>
+<td>在想像中學策略；V3 一組超參數通殺 150+ 任務，首次從零在 Minecraft 挖到鑽石</td>
+</tr>
+<tr>
+<td>2022.06</td>
+<td>LeCun <a class="ext" href="https://openreview.net/pdf?id=BZ5a1r-kVsf" target="_blank" rel="noopener">JEPA 立場文</a></td>
+<td>把世界模型定位為自主智能的核心模組，主張在抽象表徵空間預測</td>
+</tr>
+<tr>
+<td>2023.02</td>
+<td><a class="ext" href="https://arxiv.org/abs/2302.00111" target="_blank" rel="noopener">UniPi</a></td>
+<td>「先生成影片計畫，再反推動作」，把影片生成用在決策上</td>
+</tr>
+<tr>
+<td>2023.09</td>
+<td><a class="ext" href="https://arxiv.org/abs/2309.17080" target="_blank" rel="noopener">GAIA-1</a>（Wayve）</td>
+<td>自駕生成式世界模型，可用文字或動作控制生成駕駛場景</td>
+</tr>
+<tr>
+<td>2023.10</td>
+<td><a class="ext" href="https://arxiv.org/abs/2310.06114" target="_blank" rel="noopener">UniSim</a></td>
+<td>可互動的真實世界模擬器，在其中訓練的策略可零樣本轉到現實</td>
+</tr>
+<tr>
+<td><strong>2024.02</strong></td>
+<td><strong><a class="ext" href="https://openai.com/index/video-generation-models-as-world-simulators/" target="_blank" rel="noopener">Sora</a>（OpenAI）、<a class="ext" href="https://arxiv.org/abs/2402.15391" target="_blank" rel="noopener">Genie</a>（DeepMind）</strong></td>
+<td><strong>Sora 主張擴展影片生成是通往物理世界模擬器的路；Genie 從無標註影片學出「潛在動作」，可互動。自此世界模型成為業界熱詞</strong></td>
+</tr>
+<tr>
+<td>2024.04</td>
+<td><a class="ext" href="https://arxiv.org/abs/2404.08471" target="_blank" rel="noopener">V-JEPA</a>（Meta）</td>
+<td>影片版 JEPA，在表徵空間預測被遮住的部分</td>
+</tr>
+<tr>
+<td>2024.05–08</td>
+<td><a class="ext" href="https://arxiv.org/abs/2405.12399" target="_blank" rel="noopener">DIAMOND</a>、<a class="ext" href="https://arxiv.org/abs/2408.14837" target="_blank" rel="noopener">GameNGen</a></td>
+<td>用擴散模型即時模擬遊戲（GameNGen 可即時玩 DOOM）</td>
+</tr>
+<tr>
+<td>2025.01</td>
+<td><a class="ext" href="https://arxiv.org/abs/2501.03575" target="_blank" rel="noopener">NVIDIA Cosmos</a></td>
+<td>「世界基礎模型平台」，專為機器人與自駕產生合成資料</td>
+</tr>
+<tr>
+<td>2025.06</td>
+<td><a class="ext" href="https://arxiv.org/abs/2506.09985" target="_blank" rel="noopener">V-JEPA 2</a>（Meta）</td>
+<td>上百萬小時影片預訓練，再用少量機器人資料訓練動作條件模型，直接規劃抓放</td>
+</tr>
+<tr>
+<td>2025.08</td>
+<td><a class="ext" href="https://deepmind.google/discover/blog/genie-3-a-new-frontier-for-world-models/" target="_blank" rel="noopener">Genie 3</a>（DeepMind）</td>
+<td>文字生成可即時互動、維持數分鐘一致性的 3D 世界</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_6">五、兩條路線的交會<a class="headerlink" href="#_6" title="連到此段">#</a></h2>
+<div class="admonition key">
+<p class="admonition-title">結論</p>
+<p>VLA 負責「懂指令、做動作」，世界模型負責「預測後果、提供練習場」。現在的趨勢是把兩者合進同一個具身基礎模型（詳見 <a href="synthetic-data.html">第 07 章</a>）。</p>
+</div>
+<ul>
+<li><strong>世界模型 → VLA 的資料工廠</strong>：Cosmos、Genie 類模型可以合成大量機器人影片與罕見場景，緩解 VLA「真實資料太少」。</li>
+<li><strong>世界模型 → VLA 的評測器</strong>：在學到的模擬器中跑策略，比在真實機器人上評測便宜得多。</li>
+<li><strong>影片預測當 VLA 的預訓練目標</strong>：如 ByteDance <a class="ext" href="https://arxiv.org/abs/2312.13139" target="_blank" rel="noopener">GR-1</a> 先用影片預測預訓練，再微調成動作策略；UniPi、V-JEPA 2 也是「先預測世界，再推出動作」。</li>
+<li><strong>VLA → 世界模型的動作介面</strong>：純影片生成模型不會「做事」，需要接上動作條件與策略才能閉環。</li>
+</ul>
+<h3 id="_7">仍未解決的問題<a class="headerlink" href="#_7" title="連到此段">#</a></h3>
+<ol>
+<li><strong>資料瓶頸只是緩解，沒有解決</strong>：最大的開放機器人資料集仍遠小於網路文字與影片；遙操作收資料很貴。</li>
+<li><strong>物理一致性</strong>：影片生成式世界模型常「看起來對但物理錯」（物體穿透、消失），Sora 自己的技術報告也承認。</li>
+<li><strong>生成像素 vs 預測表徵</strong>：要不要生成像素（Sora／Genie 路線），還是只預測抽象表徵（JEPA 路線），學界仍在爭論。</li>
+<li><strong>推論速度</strong>：數十億參數的 VLA 要在機器人上跑到數十 Hz，是雙系統架構出現的直接原因。</li>
+<li><strong>長時程任務與錯誤恢復</strong>：以模仿學習為主的 VLA 失誤後很難自己修正，所以大家重新重視「用世界模型做規劃與 RL 微調」。</li>
+<li><strong>評測標準</strong>：真實機器人實驗難以重現，各家數字難以直接比較。</li>
+</ol>
+<h3 id="_8">延伸閱讀<a class="headerlink" href="#_8" title="連到此段">#</a></h3>
+<ul>
+<li><a class="ext" href="https://robotics-transformer-x.github.io/" target="_blank" rel="noopener">Open X-Embodiment 專案頁</a>：跨機型資料的起點</li>
+<li><a class="ext" href="https://worldmodels.github.io/" target="_blank" rel="noopener">World Models 互動論文</a>：理解世界模型直覺最好的入門材料</li>
+<li><a class="ext" href="https://openai.com/index/video-generation-models-as-world-simulators/" target="_blank" rel="noopener">Sora 技術報告</a>：生成式世界模擬器的代表性主張</li>
+</ul>
+      <nav class="pn"><a class="prev" href="index.html"><small>上一篇</small>首頁</a><a class="next" href="architectures.html"><small>下一篇</small>主流模型架構</a></nav>
+      <footer class="foot">
+        內容整理自本專案的調研筆記與討論（2026-10-20）。數字取自論文或官方頁；查不到的標「未公開」。外部連結均開新分頁。
+      </footer>
+    </article>
+  </main>
+  <nav class="toc" aria-label="本頁目錄">
+    <p class="toc-h">本頁目錄</p>
+    <ul><li><a href="#_1">兩條路線的時間軸</a></li><li><a href="#vla_1">一、VLA 之前：機器人學卡在哪裡</a><ul><li><a href="#1">瓶頸 1：模組化管線太脆弱</a></li><li><a href="#2">瓶頸 2：端到端學習有了，但泛化很差</a></li><li><a href="#3-sim2real-gap">瓶頸 3：強化學習在真實世界太貴，模擬又有 sim2real gap</a></li><li><a href="#4">瓶頸 4：機器人資料沒有「網路規模」</a></li><li><a href="#5">瓶頸 5：語意理解與開放指令</a></li><li><a href="#_2">轉折點：大型語言模型與視覺語言模型成熟</a></li></ul></li><li><a href="#vla_2">二、VLA 的發展歷程</a></li><li><a href="#_3">三、世界模型之前：智能體卡在哪裡</a><ul><li><a href="#_4">思想源頭：認知科學與控制理論</a></li><li><a href="#1_1">瓶頸 1：無模型強化學習的樣本效率太差</a></li><li><a href="#2_1">瓶頸 2：反應式策略不會「想」</a></li><li><a href="#3-rl">瓶頸 3：早期模型式 RL 的「模型誤差」</a></li><li><a href="#4_1">瓶頸 4：大語言模型不懂物理世界</a></li><li><a href="#5_1">瓶頸 5：自駕與機器人的長尾場景</a></li></ul></li><li><a href="#_5">四、世界模型的發展歷程</a></li><li><a href="#_6">五、兩條路線的交會</a><ul><li><a href="#_7">仍未解決的問題</a></li><li><a href="#_8">延伸閱讀</a></li></ul></li></ul>
+  </nav>
+</div>
+<script src="assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>名詞速查 · VLA × 世界模型 調研</title>
+<meta name="description" content="常見術語一句話解釋">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body data-page="glossary">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead"/>
+    </marker>
+    <marker id="arr-wm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead wm"/>
+    </marker>
+    <marker id="arr-vla" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead vla"/>
+    </marker>
+  </defs>
+</svg>
+<header class="top">
+  <button class="menu" aria-label="開啟目錄" aria-expanded="false">☰</button>
+  <a class="brand" href="index.html"><span class="dot vla"></span><span class="dot wm"></span>VLA × 世界模型 調研</a>
+  <button class="theme" aria-label="切換深淺色">◐</button>
+</header>
+<div class="shell">
+  <aside class="side">
+    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li><a href="origins.html"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="architectures.html"><span class="num">02</span><span>主流模型架構</span></a></li><li><a href="taxonomy.html"><span class="num">03</span><span>流派怎麼分</span></a></li><li><a href="training.html"><span class="num">04</span><span>訓練、資料與評估</span></a></li><li><a href="world-model-roles.html"><span class="num">05</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">06</span><span>訓練時 vs 推論時</span></a></li><li><a href="synthetic-data.html"><span class="num">07</span><span>具身基礎模型與合成資料</span></a></li><li><a href="industry.html"><span class="num">08</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html"><span class="num">09</span><span>案例：智平方</span></a></li><li><a href="glossary.html" class="on"><span class="num">10</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">11</span><span>參考資料</span></a></li></ul>
+    <p class="side-note">整理日期：2026-10-20<br>面向技術人員的科普整理</p>
+  </aside>
+  <main>
+    <article class="doc">
+      <h1 id="_1">名詞速查<a class="headerlink" href="#_1" title="連到此段">#</a></h1>
+<p class="lede">全站出現過的術語，一行說清楚是什麼，並指回詳細解說的章節。按主題分組，同組內大致依「先懂這個才懂下一個」排序。</p>
+
+<h2 id="_2">基本概念<a class="headerlink" href="#_2" title="連到此段">#</a></h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>名詞</th>
+<th>一句話解釋</th>
+<th>詳見</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>VLA</strong>（Vision-Language-Action）</td>
+<td>看畫面、聽語言指令、直接輸出機器人動作的模型；2023 年 <a class="ext" href="https://arxiv.org/abs/2307.15818" target="_blank" rel="noopener">RT-2</a> 正式提出這個詞</td>
+<td><a href="origins.html">01</a>、<a href="architectures.html">02</a></td>
+</tr>
+<tr>
+<td><strong>VLM</strong>（Vision-Language Model）</td>
+<td>看圖讀文字、輸出文字的模型，是多數 VLA 的主幹</td>
+<td><a href="architectures.html">02</a></td>
+</tr>
+<tr>
+<td><strong>世界模型</strong>（World Model）</td>
+<td>給定「現在」與「動作」，預測「接下來會發生什麼」的模型</td>
+<td><a href="world-model-roles.html">05</a></td>
+</tr>
+<tr>
+<td><strong>具身基礎模型</strong></td>
+<td>同時具備理解、行動、預測後果三種能力的通用預訓練模型，業界也叫 Robot Foundation Model</td>
+<td><a href="synthetic-data.html">07</a></td>
+</tr>
+<tr>
+<td><strong>World Foundation Model</strong></td>
+<td>NVIDIA 對大型通用世界模型的稱呼，例如 Cosmos</td>
+<td><a href="synthetic-data.html">07</a></td>
+</tr>
+<tr>
+<td><strong>策略</strong>（Policy）</td>
+<td>從觀測到動作的映射；VLA 就是一種策略</td>
+<td><a href="training.html">04</a></td>
+</tr>
+<tr>
+<td><strong>具身智能</strong>（Embodied AI）</td>
+<td>有身體、能在物理世界感知與行動的 AI</td>
+<td><a href="origins.html">01</a></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="vla">VLA 架構<a class="headerlink" href="#vla" title="連到此段">#</a></h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>名詞</th>
+<th>一句話解釋</th>
+<th>詳見</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>單系統</strong></td>
+<td>一個模型同時理解與輸出動作，例如 RT-2、OpenVLA</td>
+<td><a href="taxonomy.html">03</a></td>
+</tr>
+<tr>
+<td><strong>雙系統</strong>（快慢腦）</td>
+<td>慢系統（大 VLM，低頻）理解與推理，快系統（小模型，高頻）出動作，例如 GR00T N1、Helix</td>
+<td><a href="taxonomy.html">03</a></td>
+</tr>
+<tr>
+<td><strong>顯式分層</strong></td>
+<td>上層輸出人看得懂的中間計畫（子任務、關鍵點、軌跡），下層照著執行</td>
+<td><a href="taxonomy.html">03</a></td>
+</tr>
+<tr>
+<td><strong>動作專家</strong>（Action Expert）</td>
+<td>接在 VLM 後面、專門輸出連續動作的子網路，例如 π0 的 300M 模組</td>
+<td><a href="architectures.html">02</a></td>
+</tr>
+<tr>
+<td><strong>Action Chunk</strong></td>
+<td>一次輸出未來多步動作（例如 50 步），降低推論頻率需求、讓動作更平滑</td>
+<td><a href="training.html">04</a></td>
+</tr>
+<tr>
+<td><strong>動作離散化／動作 token</strong></td>
+<td>把連續動作切成格子變成 token，讓語言模型像出字一樣出動作</td>
+<td><a href="architectures.html">02</a></td>
+</tr>
+<tr>
+<td><strong>FAST</strong></td>
+<td>用 DCT 壓縮動作序列再 token 化，讓自迴歸 VLA 也能做高頻精細動作（<a class="ext" href="https://arxiv.org/abs/2501.09747" target="_blank" rel="noopener">arXiv:2501.09747</a>）</td>
+<td><a href="architectures.html">02</a></td>
+</tr>
+<tr>
+<td><strong>Diffusion Policy</strong></td>
+<td>用擴散模型從雜訊逐步去噪生成動作，能表達多模態動作分布</td>
+<td><a href="architectures.html">02</a></td>
+</tr>
+<tr>
+<td><strong>Flow Matching</strong></td>
+<td>學一個把雜訊「流」到資料的向量場，比擴散步數少，π0、GR00T 用它出動作</td>
+<td><a href="architectures.html">02</a></td>
+</tr>
+<tr>
+<td><strong>Knowledge Insulation</strong></td>
+<td>阻斷動作損失的梯度回流 VLM 主幹，避免動作訓練破壞語言知識</td>
+<td><a href="industry.html">08</a></td>
+</tr>
+<tr>
+<td><strong>Latent Action</strong></td>
+<td>從無標註影片學出的抽象「動作」表示，可用來給網路影片補動作標籤</td>
+<td><a href="training.html">04</a></td>
+</tr>
+<tr>
+<td><strong>IDM</strong>（逆動力學模型）</td>
+<td>看前後兩幀，推回中間做了什麼動作；合成資料流程的關鍵</td>
+<td><a href="world-model-roles.html">05</a></td>
+</tr>
+<tr>
+<td><strong>Embodied CoT</strong></td>
+<td>出動作前先輸出推理文字、子任務或視覺預測，例如 CoT-VLA</td>
+<td><a href="train-vs-inference.html">06</a></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_3">世界模型<a class="headerlink" href="#_3" title="連到此段">#</a></h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>名詞</th>
+<th>一句話解釋</th>
+<th>詳見</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>影片生成式</strong></td>
+<td>輸出未來畫面，例如 Cosmos、Genie 3；最適合當模擬器與資料工廠</td>
+<td><a href="world-model-roles.html">05</a></td>
+</tr>
+<tr>
+<td><strong>潛空間動力學</strong></td>
+<td>在壓縮的潛狀態裡預測下一步，例如 Dreamer、TD-MPC2；適合想像中 RL</td>
+<td><a href="world-model-roles.html">05</a></td>
+</tr>
+<tr>
+<td><strong>RSSM</strong></td>
+<td>Dreamer 系列的循環狀態空間模型，同時有確定與隨機的潛狀態</td>
+<td><a href="architectures.html">02</a></td>
+</tr>
+<tr>
+<td><strong>JEPA</strong></td>
+<td>LeCun 提出的聯合嵌入預測架構，只在表徵空間預測，不生成像素</td>
+<td><a href="world-model-roles.html">05</a></td>
+</tr>
+<tr>
+<td><strong>3D／4D 世界模型</strong></td>
+<td>預測 3D 場景或未來佔據（occupancy），例如 OccWorld</td>
+<td><a href="world-model-roles.html">05</a></td>
+</tr>
+<tr>
+<td><strong>Action-conditioned</strong></td>
+<td>預測未來時把「要做的動作」當條件輸入，才能拿來規劃或評估</td>
+<td><a href="world-model-roles.html">05</a></td>
+</tr>
+<tr>
+<td><strong>想像中訓練</strong>（Learning in Imagination）</td>
+<td>策略在世界模型產生的軌跡裡練習，不碰真實環境</td>
+<td><a href="world-model-roles.html">05</a></td>
+</tr>
+<tr>
+<td><strong>MPC</strong>（模型預測控制）</td>
+<td>用模型模擬多個候選動作序列，挑最好的執行第一步，再重新規劃</td>
+<td><a href="training.html">04</a></td>
+</tr>
+<tr>
+<td><strong>CEM</strong>（交叉熵法）</td>
+<td>MPC 常用的取樣最佳化：反覆取樣、留下最好的一批、更新分布</td>
+<td><a href="training.html">04</a></td>
+</tr>
+<tr>
+<td><strong>Compounding Error</strong></td>
+<td>模型多步展開時誤差越滾越大</td>
+<td><a href="origins.html">01</a></td>
+</tr>
+<tr>
+<td><strong>Model Exploitation</strong></td>
+<td>策略學會鑽世界模型的錯誤拿高分，在真實世界卻失敗</td>
+<td><a href="synthetic-data.html">07</a></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_4">訓練與資料<a class="headerlink" href="#_4" title="連到此段">#</a></h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>名詞</th>
+<th>一句話解釋</th>
+<th>詳見</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>模仿學習／行為克隆</strong>（IL／BC）</td>
+<td>拿人類示範當標準答案，學「看到這個就做那個」</td>
+<td><a href="training.html">04</a></td>
+</tr>
+<tr>
+<td><strong>遙操作</strong>（Teleoperation）</td>
+<td>人用搖桿、VR 或主從手臂操控機器人收示範資料</td>
+<td><a href="training.html">04</a></td>
+</tr>
+<tr>
+<td><strong>資料金字塔</strong></td>
+<td>底層網路影片、中層模擬與合成、頂層真機資料的混合配方</td>
+<td><a href="training.html">04</a></td>
+</tr>
+<tr>
+<td><strong>跨機型</strong>（Cross-embodiment）</td>
+<td>用多種不同機器人的資料訓練同一個模型</td>
+<td><a href="training.html">04</a></td>
+</tr>
+<tr>
+<td><strong>Sim2Real Gap</strong></td>
+<td>模擬器與真實世界的物理、視覺差異</td>
+<td><a href="synthetic-data.html">07</a></td>
+</tr>
+<tr>
+<td><strong>Domain Randomization</strong></td>
+<td>在模擬中隨機改顏色、光線、物理參數，讓策略對差異更穩健</td>
+<td><a href="origins.html">01</a></td>
+</tr>
+<tr>
+<td><strong>後訓練</strong>（Post-training）</td>
+<td>預訓練之後用少量高品質資料或 RL 微調到特定任務</td>
+<td><a href="training.html">04</a></td>
+</tr>
+<tr>
+<td><strong>離線 RL</strong></td>
+<td>只用已收集的資料做強化學習，不在線上試錯；π*0.6 Recap 用它</td>
+<td><a href="industry.html">08</a></td>
+</tr>
+<tr>
+<td><strong>蒸餾</strong>（Distillation）</td>
+<td>用大模型（教師）的輸出訓練小模型（學生），把雲端能力搬到端側</td>
+<td><a href="industry.html">08</a></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_5">評測<a class="headerlink" href="#_5" title="連到此段">#</a></h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>名詞</th>
+<th>一句話解釋</th>
+<th>詳見</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>開環評估</strong></td>
+<td>拿資料集算預測誤差，不讓模型真的行動；和真實表現相關性常常不高</td>
+<td><a href="training.html">04</a></td>
+</tr>
+<tr>
+<td><strong>閉環評估</strong></td>
+<td>讓策略真的在模擬器、世界模型或真機上執行，看最後成不成功</td>
+<td><a href="training.html">04</a></td>
+</tr>
+<tr>
+<td><strong>LIBERO／CALVIN／SimplerEnv</strong></td>
+<td>常用的機器人操作模擬基準</td>
+<td><a href="training.html">04</a></td>
+</tr>
+<tr>
+<td><strong>FVD</strong></td>
+<td>衡量生成影片與真實影片分布差距的指標，越低越好</td>
+<td><a href="training.html">04</a></td>
+</tr>
+<tr>
+<td><strong>Physics-IQ</strong></td>
+<td>測影片模型物理理解的基準，發現逼真度與物理正確幾乎無關</td>
+<td><a href="synthetic-data.html">07</a></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_6">本站自訂的分類代號<a class="headerlink" href="#_6" title="連到此段">#</a></h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>代號</th>
+<th>意思</th>
+<th>詳見</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>T1–T4</strong></td>
+<td>世界模型在<strong>訓練時</strong>的四種用法：預訓練／輔助、資料工廠、想像中 RL、評估器</td>
+<td><a href="train-vs-inference.html">06</a></td>
+</tr>
+<tr>
+<td><strong>I0–I3</strong></td>
+<td>世界模型在<strong>推論時</strong>的四個等級：不用、部分一步特徵、先想再做、候選搜尋</td>
+<td><a href="train-vs-inference.html">06</a></td>
+</tr>
+<tr>
+<td><strong>五種角色</strong></td>
+<td>資料引擎、輔助預測、想像中 RL、先想再做、評測模擬器</td>
+<td><a href="world-model-roles.html">05</a></td>
+</tr>
+<tr>
+<td><strong>五種整合模式</strong></td>
+<td>資料工廠、閉環評估器、RL 訓練場、預訓練再接動作頭、WM 即為策略</td>
+<td><a href="industry.html">08</a></td>
+</tr>
+</tbody>
+</table></div>
+      <nav class="pn"><a class="prev" href="ai2-robotics.html"><small>上一篇</small>案例：智平方</a><a class="next" href="references.html"><small>下一篇</small>參考資料</a></nav>
+      <footer class="foot">
+        內容整理自本專案的調研筆記與討論（2026-10-20）。數字取自論文或官方頁；查不到的標「未公開」。外部連結均開新分頁。
+      </footer>
+    </article>
+  </main>
+  <nav class="toc" aria-label="本頁目錄">
+    <p class="toc-h">本頁目錄</p>
+    <ul><li><a href="#_2">基本概念</a></li><li><a href="#vla">VLA 架構</a></li><li><a href="#_3">世界模型</a></li><li><a href="#_4">訓練與資料</a></li><li><a href="#_5">評測</a></li><li><a href="#_6">本站自訂的分類代號</a></li></ul>
+  </nav>
+</div>
+<script src="assets/site.js"></script>
+</body>
+</html>

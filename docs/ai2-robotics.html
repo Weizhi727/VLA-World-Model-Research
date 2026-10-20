@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>案例：智平方 · VLA × 世界模型 調研</title>
+<meta name="description" content="產品分類、競品比較、類腦與 SNN">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body data-page="ai2-robotics">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead"/>
+    </marker>
+    <marker id="arr-wm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead wm"/>
+    </marker>
+    <marker id="arr-vla" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead vla"/>
+    </marker>
+  </defs>
+</svg>
+<header class="top">
+  <button class="menu" aria-label="開啟目錄" aria-expanded="false">☰</button>
+  <a class="brand" href="index.html"><span class="dot vla"></span><span class="dot wm"></span>VLA × 世界模型 調研</a>
+  <button class="theme" aria-label="切換深淺色">◐</button>
+</header>
+<div class="shell">
+  <aside class="side">
+    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li><a href="origins.html"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="architectures.html"><span class="num">02</span><span>主流模型架構</span></a></li><li><a href="taxonomy.html"><span class="num">03</span><span>流派怎麼分</span></a></li><li><a href="training.html"><span class="num">04</span><span>訓練、資料與評估</span></a></li><li><a href="world-model-roles.html"><span class="num">05</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">06</span><span>訓練時 vs 推論時</span></a></li><li><a href="synthetic-data.html"><span class="num">07</span><span>具身基礎模型與合成資料</span></a></li><li><a href="industry.html"><span class="num">08</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html" class="on"><span class="num">09</span><span>案例：智平方</span></a></li><li><a href="glossary.html"><span class="num">10</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">11</span><span>參考資料</span></a></li></ul>
+    <p class="side-note">整理日期：2026-10-20<br>面向技術人員的科普整理</p>
+  </aside>
+  <main>
+    <article class="doc">
+      <h1 id="ai2-robotics">案例：智平方 AI² Robotics<a class="headerlink" href="#ai2-robotics" title="連到此段">#</a></h1>
+<p class="lede">把一家公司的產品線放到前面的分類地圖上逐一對照：它屬於哪個流派、跟競品差在哪裡、訓練方法公開了多少，以及「類腦」這個說法該怎麼看。整理日期 2026-10-19。</p>
+
+<div class="admonition note">
+<p class="admonition-title">先釐清名字</p>
+<p>智平方（深圳，2023 年成立，創辦人郭彥東，前小鵬、OPPO 首席科學家）<strong>與 Allen Institute 的 Ai2 無關</strong>（<a class="ext" href="https://www.therobotreport.com/ai2-robotics-raises-series-b-funding-advance-alphabot-embodied-ai/" target="_blank" rel="noopener">The Robot Report</a>）。另外，<a class="ext" href="https://arxiv.org/abs/2503.10631" target="_blank" rel="noopener">HybridVLA</a> 雖然也出自北大張尚彤團隊，但作者名單裡沒有智平方，不算它的產品。</p>
+</div>
+<h2 id="_1">重點先講<a class="headerlink" href="#_1" title="連到此段">#</a></h2>
+<div class="admonition key">
+<p class="admonition-title">六句話看懂智平方</p>
+<ol>
+<li><strong>它是「VLA 公司」，不是「世界模型公司」。</strong> 主力是自研 VLA 大腦 AlphaBrain + 輪式人形機器人 AlphaBot 2，軟硬體與場景一起做。</li>
+<li><strong>架構軸：主線是雙系統（快慢腦）</strong>，和 Figure Helix、GR00T N1、π0.5 同一格；GOVLA 的慢系統會輸出語言子任務，落在「雙系統與顯式分層之間」的灰色地帶。</li>
+<li><strong>動作解碼軸：連續（擴散）派</strong>，FiS-VLA 是「慢系統離散 token 訓練 + 快系統擴散出動作」的混合。</li>
+<li><strong>世界模型只當加值模組</strong>：Video2Act 借用影片生成模型的特徵輔助出動作，但<strong>論文本身不產生未來影格、也沒自稱世界模型</strong>；「先預測後執行」是公司行銷說法。</li>
+<li><strong>NeuroVLA（2026）是分類法之外的新分支</strong>：「大腦／小腦／脊髓」三層類腦架構，下層用神經形態晶片做 20 ms 反射。</li>
+<li><strong>要打折扣</strong>：多數數字是公司或合作論文自報，比較對象多是 π0 而非 π0.5。</li>
+</ol>
+</div>
+<h2 id="_2">產品與模型一覽<a class="headerlink" href="#_2" title="連到此段">#</a></h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>代際</th>
+<th>模型</th>
+<th>時間</th>
+<th>論文</th>
+<th>一句話</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GOVLA 0.0</td>
+<td><strong>RoboMamba</strong></td>
+<td>2024</td>
+<td><a class="ext" href="https://arxiv.org/abs/2406.04339" target="_blank" rel="noopener">arXiv:2406.04339</a>（NeurIPS 2024）</td>
+<td>用 Mamba 取代 Transformer 骨幹的小型 VLA，強調推理效率</td>
+</tr>
+<tr>
+<td>GOVLA 0.5</td>
+<td><strong>FiS-VLA</strong>（Fast-in-Slow）</td>
+<td>2025-06</td>
+<td><a class="ext" href="https://arxiv.org/abs/2506.01953" target="_blank" rel="noopener">arXiv:2506.01953</a>（<a class="ext" href="https://neurips.cc/virtual/2025/poster/119931" target="_blank" rel="noopener">NeurIPS 2025</a>）</td>
+<td>把快系統「嵌」在慢系統 VLM 的最後幾層裡</td>
+</tr>
+<tr>
+<td>GOVLA 1.0</td>
+<td><strong>GOVLA</strong>（產品版）</td>
+<td>2025 隨 AlphaBot 2 發布</td>
+<td>無論文，見<a class="ext" href="https://ai2robotics.com/en/%E6%99%BA%E5%B9%B3%E6%96%B9%E5%8F%91%E5%B8%83%E5%85%A8%E6%96%B0%E4%B8%80%E4%BB%A3%E6%99%BA%E8%83%BD%E6%9C%BA%E5%99%A8%E4%BA%BAalphabot-2%E5%BC%80%E5%90%AFagi%E7%BB%88%E7%AB%AF%E6%96%B0/" target="_blank" rel="noopener">官方發布頁</a></td>
+<td>全域全身 VLA：空間互動基座 + 慢系統 + 快系統</td>
+</tr>
+<tr>
+<td>—</td>
+<td><strong>Video2Act</strong></td>
+<td>2025-11</td>
+<td><a class="ext" href="https://arxiv.org/abs/2512.03044" target="_blank" rel="noopener">arXiv:2512.03044</a></td>
+<td>用影片擴散模型當慢系統的特徵抽取器</td>
+</tr>
+<tr>
+<td>—</td>
+<td><strong>NeuroVLA</strong></td>
+<td>2026（智源大會發表）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2601.14628" target="_blank" rel="noopener">arXiv:2601.14628</a></td>
+<td>大腦／小腦／脊髓三層類腦 VLA，已在 AlphaBrain 平台開源</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>GOVLA 其實是系列名</strong>（<a class="ext" href="https://www.qbitai.com/2026/02/382004.html" target="_blank" rel="noopener">量子位轉載公司稿</a>）：0.0 = RoboMamba，0.5 = FiS-VLA，1.0 = 目前 AlphaBot 2 上的產品版（只說「更強大」，無細節）。</p>
+<p><strong>硬體 AlphaBot 2（愛寶）</strong>：輪式雙臂人形，全身 34+ 自由度、腰腿升降、作業高度 0–240 cm、360° 感知、續航 6 小時以上，算力 NVIDIA AGX Orin 64GB（<a class="ext" href="https://ai2robotics.com/en/%E6%99%BA%E5%B9%B3%E6%96%B9%E5%8F%91%E5%B8%83%E5%85%A8%E6%96%B0%E4%B8%80%E4%BB%A3%E6%99%BA%E8%83%BD%E6%9C%BA%E5%99%A8%E4%BA%BAalphabot-2%E5%BC%80%E5%90%AFagi%E7%BB%88%E7%AB%AF%E6%96%B0/" target="_blank" rel="noopener">官方發布頁</a>、<a class="ext" href="https://www.sohu.com/a/1067022731_100265270" target="_blank" rel="noopener">搜狐</a>）。</p>
+<h2 id="_3">最有辨識度的設計：快系統「嵌」在慢系統裡<a class="headerlink" href="#_3" title="連到此段">#</a></h2>
+<figure class="dg">
+<svg viewBox="0 0 800 300" role="img" aria-label="一般雙系統與 FiS-VLA 的對比">
+<text x="200" y="26" text-anchor="middle" class="h">一般雙系統（π0、GR00T、Helix）</text>
+<text x="600" y="26" text-anchor="middle" class="h">FiS-VLA（智平方）</text>
+<rect class="n vla" x="60" y="50" width="280" height="90" rx="12"/>
+<text x="200" y="88" text-anchor="middle" class="b vla">VLM（慢系統）</text>
+<text x="200" y="112" text-anchor="middle" class="s">理解畫面與指令</text>
+<rect class="n mix" x="60" y="190" width="280" height="80" rx="12"/>
+<text x="200" y="224" text-anchor="middle" class="b">另一個動作模型（快系統）</text>
+<text x="200" y="248" text-anchor="middle" class="s">80M～1B，需要從頭學</text>
+<path class="ar vla" d="M200,140 V188"/>
+<text x="210" y="170" class="s">特徵</text>
+<rect class="n vla" x="460" y="50" width="280" height="220" rx="12"/>
+<text x="600" y="78" text-anchor="middle" class="b vla">同一個 7B VLM</text>
+<rect class="n ghost" x="485" y="92" width="230" height="34" rx="6"/>
+<text x="600" y="114" text-anchor="middle" class="s">前面各層：慢系統推理（低頻）</text>
+<rect class="n ghost" x="485" y="134" width="230" height="34" rx="6"/>
+<text x="600" y="156" text-anchor="middle" class="s">⋯</text>
+<rect class="n key" x="485" y="190" width="230" height="64" rx="8"/>
+<text x="600" y="216" text-anchor="middle" class="b">最後 2 層 = 快系統</text>
+<text x="600" y="238" text-anchor="middle" class="s">+ 點雲、機器人狀態，擴散出動作</text>
+<path class="ar" d="M600,168 V188"/>
+</svg>
+<figcaption>FiS-VLA 的快系統共享 VLM 自己的權重，所以直接繼承預訓練知識。慢:快 = 1:4，4090 上 action chunk = 8 時達 117.7 Hz。資料來源：<a class="ext" href="https://arxiv.org/abs/2506.01953" target="_blank" rel="noopener">FiS-VLA arXiv:2506.01953</a>。</figcaption>
+</figure>
+
+<h2 id="_4">逐一對照分類法<a class="headerlink" href="#_4" title="連到此段">#</a></h2>
+<h3 id="robomamba">RoboMamba：單系統<a class="headerlink" href="#robomamba" title="連到此段">#</a></h3>
+<ul>
+<li><strong>架構軸</strong>：單一系統，一個模型理解並輸出動作。</li>
+<li><strong>特色</strong>：骨幹換成 Mamba（狀態空間模型），公司稱規模約谷歌同類模型的 1/20。屬於「效率優化」路線，不是新流派。</li>
+</ul>
+<h3 id="govla">GOVLA：雙系統，偏「語言子任務」灰色地帶<a class="headerlink" href="#govla" title="連到此段">#</a></h3>
+<ul>
+<li><strong>架構軸</strong>：雙系統。慢系統負責推理與任務拆解並<strong>輸出語言</strong>，快系統輸出全身控制動作與底盤移動軌跡。</li>
+<li><strong>中間表徵軸</strong>：語言子任務，和 π0.5、Gemini Robotics 1.5 一樣，介於雙系統與顯式分層之間。</li>
+<li><strong>差異化</strong>：公司宣稱傳統 VLA 只輸出手臂動作，GOVLA 同時輸出<strong>全身 + 移動軌跡</strong>。這是「動作空間」的擴展，不是新派別。</li>
+<li><strong>限制</strong>：沒有論文，解碼方式與頻率未揭露，這一格是依官方描述推論。</li>
+</ul>
+<h3 id="fis-vla">FiS-VLA：雙系統 + 混合解碼（技術含量最高）<a class="headerlink" href="#fis-vla" title="連到此段">#</a></h3>
+<ul>
+<li><strong>架構軸</strong>：雙系統，但<strong>直接拿 7B VLM 的最後兩層 Transformer 當快系統</strong>（見上圖）。</li>
+<li><strong>動作解碼軸</strong>：混合式。慢系統用離散 token 的 next-token loss 訓練，快系統用擴散生成連續動作。</li>
+<li><strong>異步雙頻</strong>：慢:快 = 1:4，快系統額外吃 3D 點雲與機器人狀態。</li>
+</ul>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>設定</th>
+<th>FiS-VLA</th>
+<th>π0</th>
+<th>CogACT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RLBench 10 任務成功率</td>
+<td><strong>69%</strong></td>
+<td>55%</td>
+<td>61%</td>
+</tr>
+<tr>
+<td>AgileX 真機</td>
+<td><strong>68%</strong></td>
+<td>59%</td>
+<td>—</td>
+</tr>
+<tr>
+<td>AlphaBot 真機</td>
+<td><strong>74%</strong></td>
+<td>61%</td>
+<td>—</td>
+</tr>
+<tr>
+<td>未見物體時成功率下降（AlphaBot）</td>
+<td><strong>−19%</strong></td>
+<td>−38%</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="video2act">Video2Act：雙系統 +「借世界模型的眼睛」<a class="headerlink" href="#video2act" title="連到此段">#</a></h3>
+<ul>
+<li><strong>架構軸</strong>：雙系統。慢系統是騰訊混元影片擴散模型（只取前 25 層當特徵抽取器），快系統是 1B 擴散 Transformer 動作專家，頻率比 1:8。</li>
+<li><strong>動作解碼軸</strong>：擴散（DiT 去噪 action chunk，長度 64）。</li>
+<li><strong>世界模型軸</strong>：借用的是<strong>影片生成式世界模型</strong>的預訓練表徵，<strong>但不生成未來畫面、不用想像做規劃</strong>。在分類法裡屬於「把世界模型當加值模組／感知骨幹」。公司說的「世界模型內生、先預測後執行」比論文本身說得更強，引用時要注意。</li>
+<li><strong>論文結果</strong>：RoboTwin 1.0／2.0 平均 54.6%／54.1%；真機 6 任務 73.3%；宣稱比既有 SOTA 在模擬高 8.9%、真機高 21.7%。</li>
+</ul>
+<h3 id="neurovla">NeuroVLA：分類法之外的「類腦三層」<a class="headerlink" href="#neurovla" title="連到此段">#</a></h3>
+<figure class="dg">
+<svg viewBox="0 0 800 280" role="img" aria-label="NeuroVLA 三層架構">
+<rect class="n vla" x="20" y="40" width="230" height="130" rx="12"/>
+<text x="135" y="72" text-anchor="middle" class="b vla">大腦皮層</text>
+<text x="135" y="98" text-anchor="middle" class="s">Qwen-VL（GPU）</text>
+<text x="135" y="120" text-anchor="middle" class="s">理解語言與畫面</text>
+<text x="135" y="142" text-anchor="middle" class="s">產生抽象目標</text>
+<rect class="n mix" x="285" y="40" width="230" height="130" rx="12"/>
+<text x="400" y="72" text-anchor="middle" class="b">小腦</text>
+<text x="400" y="98" text-anchor="middle" class="s">GRU + FiLM 調變</text>
+<text x="400" y="120" text-anchor="middle" class="s">每秒讀感測器數百次</text>
+<text x="400" y="142" text-anchor="middle" class="s">平滑、修正誤差</text>
+<rect class="n key" x="550" y="40" width="230" height="130" rx="12"/>
+<text x="665" y="72" text-anchor="middle" class="b">脊髓</text>
+<text x="665" y="98" text-anchor="middle" class="s">LIF 脈衝神經網路</text>
+<text x="665" y="120" text-anchor="middle" class="s">FPGA 神經形態處理器</text>
+<text x="665" y="142" text-anchor="middle" class="s">事件驅動的反射</text>
+<path class="ar" d="M250,105 H283"/>
+<path class="ar" d="M515,105 H548"/>
+<text x="135" y="200" text-anchor="middle" class="s">規劃</text>
+<text x="400" y="200" text-anchor="middle" class="s">穩定、修正</text>
+<text x="665" y="200" text-anchor="middle" class="s">反射約 20 ms、約 0.4 W</text>
+<text x="400" y="250" text-anchor="middle" class="s">三層中只有脊髓層是真正的脈衝神經元 + 神經形態硬體；整套用行為克隆端到端訓練</text>
+</svg>
+<figcaption>資料來源：<a class="ext" href="https://arxiv.org/abs/2601.14628" target="_blank" rel="noopener">NeuroVLA arXiv:2601.14628</a>、<a class="ext" href="https://www.sohu.com/a/1033666912_114822" target="_blank" rel="noopener">搜狐四代演進整理</a>。</figcaption>
+</figure>
+
+<ul>
+<li><strong>怎麼歸類</strong>：<ul>
+<li>層與層之間傳的是抽象目標與控制訊號，不是人看得懂的子任務，所以<strong>不是</strong>綜述定義的「顯式分層」。</li>
+<li>比較像「雙系統再往下多加一層控制」，下兩層借鏡生物神經系統而非傳統控制。</li>
+<li>建議在兩軸地圖上把它標為<strong>「三系統／類腦」新分支</strong>，和同期的 <a class="ext" href="https://arxiv.org/html/2603.08124" target="_blank" rel="noopener">SaiVLA-0</a>、<a class="ext" href="https://arxiv.org/abs/2609.27468" target="_blank" rel="noopener">CereVLA</a> 歸成一類趨勢。</li>
+</ul>
+</li>
+<li><strong>宣稱結果</strong>：碰撞反射約 20 ms（傳統 VLA 超過 200 ms）、抖動降低 75% 以上、脊髓層功耗約 0.4 W、碰撞後任務恢復成功率 54.8%（傳統模型 0%）。</li>
+</ul>
+<h3 id="_5">總表：放到分類地圖上<a class="headerlink" href="#_5" title="連到此段">#</a></h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>架構軸</th>
+<th>動作解碼軸</th>
+<th>中間表徵軸</th>
+<th>世界模型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RoboMamba</td>
+<td>單系統</td>
+<td>簡單策略頭</td>
+<td>原始動作</td>
+<td>無</td>
+</tr>
+<tr>
+<td>GOVLA</td>
+<td>雙系統（偏分層灰區）</td>
+<td>未公開</td>
+<td>語言子任務</td>
+<td>無</td>
+</tr>
+<tr>
+<td>FiS-VLA</td>
+<td>雙系統（快嵌於慢）</td>
+<td>混合（離散訓練 + 擴散輸出）</td>
+<td>潛向量</td>
+<td>無</td>
+</tr>
+<tr>
+<td>Video2Act</td>
+<td>雙系統</td>
+<td>擴散</td>
+<td>潛向量（影片模型特徵）</td>
+<td>借用影片生成式表徵</td>
+</tr>
+<tr>
+<td>NeuroVLA</td>
+<td>三層類腦（新分支）</td>
+<td>未詳述</td>
+<td>抽象目標 + 控制訊號</td>
+<td>無</td>
+</tr>
+</tbody>
+</table></div>
+<p>三條軸的定義見〈<a href="taxonomy.html">流派怎麼分</a>〉。</p>
+<h2 id="_6">對照競品：大模型、小模型各多大<a class="headerlink" href="#_6" title="連到此段">#</a></h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>公司／模型</th>
+<th>架構軸</th>
+<th>大模型（慢／理解）</th>
+<th>小模型（快／動作）</th>
+<th>動作解碼</th>
+<th>頻率</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>智平方 FiS-VLA</strong></td>
+<td>雙系統（快系統嵌在 VLM 內）</td>
+<td>LLaMA2 <strong>7B</strong>（Prismatic VLM，SigLIP + DINOv2）</td>
+<td>同一 LLM 的<strong>最後 2 層</strong>（參數量未公開）</td>
+<td>混合</td>
+<td>慢:快 = 1:4；117.7 Hz</td>
+<td><a class="ext" href="https://arxiv.org/abs/2506.01953" target="_blank" rel="noopener">arXiv:2506.01953</a></td>
+</tr>
+<tr>
+<td><strong>智平方 Video2Act</strong></td>
+<td>雙系統</td>
+<td>HunyuanVideo 前 25／60 層（全模型 <strong>13B</strong>，<a class="ext" href="https://arxiv.org/abs/2412.03603" target="_blank" rel="noopener">arXiv:2412.03603</a>；截取部分未公開）</td>
+<td><strong>1B</strong> DiT</td>
+<td>擴散</td>
+<td>慢:快 = 1:8</td>
+<td><a class="ext" href="https://arxiv.org/abs/2512.03044" target="_blank" rel="noopener">arXiv:2512.03044</a></td>
+</tr>
+<tr>
+<td><strong>智平方 NeuroVLA</strong></td>
+<td>三層類腦</td>
+<td>Qwen-VL（尺寸未公開）</td>
+<td>小腦 GRU；脊髓 LIF SNN 跑在 FPGA（參數量未公開）</td>
+<td>未詳述</td>
+<td>脊髓單次推論 2.19 ms、約 0.4 W</td>
+<td><a class="ext" href="https://arxiv.org/abs/2601.14628" target="_blank" rel="noopener">arXiv:2601.14628</a></td>
+</tr>
+<tr>
+<td><strong>智平方 RoboMamba</strong></td>
+<td>單系統</td>
+<td>Mamba <strong>2.7B</strong>（全模型約 3.2B），CLIP ViT-L</td>
+<td>MLP 策略頭 <strong>3.7M</strong></td>
+<td>直接回歸末端位姿</td>
+<td>—</td>
+<td><a class="ext" href="https://arxiv.org/abs/2406.04339" target="_blank" rel="noopener">arXiv:2406.04339</a></td>
+</tr>
+<tr>
+<td><strong>智平方 GOVLA 1.0</strong></td>
+<td>雙系統（慢系統出語言子任務）</td>
+<td>未公開</td>
+<td>未公開</td>
+<td>未公開</td>
+<td>未公開</td>
+<td>官方發布頁</td>
+</tr>
+<tr>
+<td>Physical Intelligence π0</td>
+<td>雙系統（同一 Transformer）</td>
+<td>PaliGemma <strong>3B</strong></td>
+<td>動作專家約 <strong>300M</strong>（共約 3.3B）</td>
+<td>flow matching</td>
+<td>最高 50 Hz，chunk = 50</td>
+<td><a class="ext" href="https://arxiv.org/abs/2410.24164" target="_blank" rel="noopener">arXiv:2410.24164</a></td>
+</tr>
+<tr>
+<td>Figure Helix</td>
+<td>雙系統</td>
+<td>VLM <strong>7B</strong>，7–9 Hz</td>
+<td>視覺運動 Transformer <strong>80M</strong></td>
+<td>連續輸出（未細說）</td>
+<td>200 Hz</td>
+<td><a class="ext" href="https://www.figure.ai/news/helix" target="_blank" rel="noopener">Figure 部落格</a></td>
+</tr>
+<tr>
+<td>NVIDIA GR00T N1</td>
+<td>雙系統</td>
+<td>Eagle-2 VLM <strong>1.34B</strong>（取第 12 層特徵）</td>
+<td>DiT 動作頭（全模型約 <strong>2.2B</strong>）</td>
+<td>flow matching</td>
+<td>慢 10 Hz、快 120 Hz</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.14734" target="_blank" rel="noopener">arXiv:2503.14734</a></td>
+</tr>
+<tr>
+<td>智元 AgiBot GO-1</td>
+<td>分層（VLM → 潛在規劃器 → 動作專家）</td>
+<td>InternVL2.5-<strong>2B</strong></td>
+<td>24 層潛在規劃器 + 動作專家（未公開）</td>
+<td>擴散，chunk = 30</td>
+<td>—</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.06669" target="_blank" rel="noopener">arXiv:2503.06669</a></td>
+</tr>
+<tr>
+<td>Gemini Robotics 1.5</td>
+<td>雙模型，偏顯式分層</td>
+<td>未公開</td>
+<td>未公開</td>
+<td>未公開</td>
+<td>—</td>
+<td><a class="ext" href="https://arxiv.org/abs/2510.03342" target="_blank" rel="noopener">arXiv:2510.03342</a></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>怎麼讀這張表</strong></p>
+<ul>
+<li><strong>同一格的對手</strong>：智平方主線（FiS-VLA、Video2Act、GOVLA）和 π0、Helix、GR00T N1 都是雙系統。</li>
+<li><strong>差別在快系統怎麼接</strong>：π0、GR00T、Helix 是「VLM + <strong>另外一個</strong>動作模型」；FiS-VLA 是「<strong>拆 VLM 自己的最後幾層</strong>當快系統」。</li>
+<li><strong>跟 GO-1、Gemini Robotics 的差別</strong>：這兩家中間多了一層明確的規劃介面（潛在動作／語言子任務），更接近顯式分層。</li>
+<li><strong>NeuroVLA 沒有可比對手</strong>：主流公司裡沒人把脈衝神經網路與神經形態晶片放進 VLA 量產路線。</li>
+</ul>
+<h2 id="_7">怎麼訓練的（只寫查得到的）<a class="headerlink" href="#_7" title="連到此段">#</a></h2>
+<h3 id="fis-vla_1">FiS-VLA（訓練細節最完整）<a class="headerlink" href="#fis-vla_1" title="連到此段">#</a></h3>
+<ol>
+<li><strong>初始化</strong>：載入 Prismatic VLM 權重，沿用 CogACT、OpenVLA 的做法。</li>
+<li><strong>大規模預訓練</strong>：Open X-Embodiment、DROID、RoboMIND 等<strong>超過 86 萬條軌跡</strong>，5 個 epoch。這些資料沒有子任務語言標註，所以慢系統先用<strong>離散動作 token</strong> 監督。</li>
+<li><strong>微調</strong>：真機每任務 <strong>100 條</strong>主從遙操作示範（AgileX 與 AlphaBot 各 4 個任務），RLBench 10 任務各 100 條。慢系統額外加入人工標註的子任務規劃語言再自動擴增。模擬微調用 8 張 A800、300 epoch。</li>
+<li><strong>損失</strong>：快系統擴散去噪損失 + 慢系統 next-token 損失，<strong>聯合訓練</strong>。論文說只訓練快系統會讓慢系統的推理能力災難性遺忘；訓練時刻意讓慢系統更新得較慢，讓快系統學會用「較舊」的慢系統輸出，模擬部署時的異步。</li>
+<li><strong>未公開</strong>：預訓練 GPU 數與時數、哪些層被凍結。</li>
+</ol>
+<h3 id="video2act_1">Video2Act<a class="headerlink" href="#video2act_1" title="連到此段">#</a></h3>
+<ul>
+<li>慢系統用現成 HunyuanVideo 抽特徵，快系統是 1B DiT，標準擴散噪聲預測損失。</li>
+<li>資料：模擬每任務 100 條示範；真機 6 任務，每任務 100 條遙操作示範。</li>
+<li><strong>未公開</strong>：影片模型是否凍結、DiT 是否另外預訓練、預訓練資料、算力與步數。</li>
+</ul>
+<h3 id="neurovla_1">NeuroVLA<a class="headerlink" href="#neurovla_1" title="連到此段">#</a></h3>
+<ul>
+<li>從預訓練 Qwen-VL 出發，整套系統端到端用<strong>行為克隆</strong>訓練。</li>
+<li>脈衝神經網路在 GPU 上用 <strong>surrogate gradient</strong> 訓練，不是從一般神經網路轉換，也不是在晶片上學習。</li>
+<li>下游只用「<strong>數百筆</strong>」樣本微調，在 LIBERO 模擬基準評測。</li>
+<li><strong>未公開</strong>：資料集名稱、示範數量、精確損失形式。</li>
+</ul>
+<h3 id="robomamba_1">RoboMamba<a class="headerlink" href="#robomamba_1" title="連到此段">#</a></h3>
+<ol>
+<li>對齊預訓練：LLaVA 558K 圖文對，只訓練投影層。</li>
+<li>指令共訓：LLaVA-1.5 655K + 約 30 萬筆 RoboVQA，訓練投影層與 Mamba。</li>
+<li>操作微調：SAPIEN 20 個任務、1 萬張圖，<strong>只訓練 3.7M 參數的策略頭</strong>，單張 A100 幾十分鐘。</li>
+</ol>
+<h3 id="govla-10">GOVLA 1.0 產品：只有方向性說法<a class="headerlink" href="#govla-10" title="連到此段">#</a></h3>
+<ul>
+<li>公司稿稱冷啟動資料來自「互聯網、仿真與真機融合數據」，規模化部署後以真實作業場景資料為主，形成資料閉環（<a class="ext" href="https://www.qbitai.com/2026/02/382004.html" target="_blank" rel="noopener">量子位</a>）。</li>
+<li>公司稱為 RoboCOIN 雙臂資料集最大貢獻者（佔比超過 35%、50 多個場景），並使用千卡級算力叢集。</li>
+<li><strong>未公開</strong>：參數量、資料總量、是否用強化學習、訓練階段。網路上沒有可靠來源，這裡不推測。</li>
+</ul>
+<h2 id="_8">優勢與要打折扣的地方<a class="headerlink" href="#_8" title="連到此段">#</a></h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>優勢</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>快系統設計最有辨識度</strong></td>
+<td>快系統共享 VLM 權重；AlphaBot 遇到未見物體，成功率只掉 19%，π0 掉 38%</td>
+</tr>
+<tr>
+<td><strong>控制頻率屬第一梯隊</strong></td>
+<td>117.7 Hz 介於 GR00T N1（120 Hz）與 π0（50 Hz）之間，但 Helix 200 Hz 更高；量測硬體不同，只能粗略比</td>
+</tr>
+<tr>
+<td><strong>全身加移動</strong></td>
+<td>GOVLA 1.0 號稱輸出全身與底盤軌跡；Gemini Robotics 2、Helix 02 也在做，算<strong>跟上</strong>一線而非獨家</td>
+</tr>
+<tr>
+<td><strong>安全反射路線獨特</strong></td>
+<td>NeuroVLA 是主流公司中唯一把神經形態晶片做進 VLA 的</td>
+</tr>
+<tr>
+<td><strong>落地速度</strong></td>
+<td>惠科三年 1,000 台以上框架協議（約人民幣 5 億元）；部署於東風柳汽、半導體廠、無菌車間；自建產線年產能 2,000 台以上，規劃擴到 2–3 萬台（<a class="ext" href="https://autonews.gasgoo.com/articles/news/ai-robotics-releases-worlds-first-brain-inspired-embodied-intelligence-system-neurovla-2066466738265505793" target="_blank" rel="noopener">Gasgoo</a>）</td>
+</tr>
+<tr>
+<td><strong>資金</strong></td>
+<td>2026-02 B 輪系列超過人民幣 10 億元（百度、中車參投）；2026-06 再融約 50 億元、估值超過 200 億元（<a class="ext" href="https://www.sohu.com/a/1067022731_100265270" target="_blank" rel="noopener">搜狐</a>）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="admonition warn">
+<p class="admonition-title">要打折扣的地方</p>
+<ul>
+<li><strong>數字多為自報</strong>：「每台年省 45 萬元、1.5 年回本」只來自單一客戶；框架協議不等於已認列營收。</li>
+<li><strong>比較基線偏舊</strong>：主要對比 π0 與 CogACT，沒對比 π0.5、GR00T N1.5。</li>
+<li><strong>預訓練規模公開得少</strong>：π0 有 1 萬小時以上、GR00T 約 5 萬 H100 GPU 小時、GO-1 百萬條軌跡都有公開。</li>
+<li><strong>GOVLA 沒有論文</strong>，產品主力模型無法獨立驗證。</li>
+<li><strong>部分中文媒體有業配色彩</strong>（如<a class="ext" href="https://www.ithome.com/0/927/850.htm" target="_blank" rel="noopener">這篇</a>），本整理不以其為依據。</li>
+<li><strong>「世界模型」用語偏寬</strong>：Video2Act 只是借用影片模型特徵，不應與 Cosmos、Genie、V-JEPA 2 並列。</li>
+</ul>
+</div>
+<h2 id="vs-neurovla">「類腦」怎麼認定：數位果蠅 vs NeuroVLA<a class="headerlink" href="#vs-neurovla" title="連到此段">#</a></h2>
+<h3 id="_9">三個常被混用的詞<a class="headerlink" href="#_9" title="連到此段">#</a></h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>詞</th>
+<th>意思</th>
+<th>判斷標準</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SNN（脈衝神經網路）</strong></td>
+<td>一種<strong>神經元模型</strong>：累積膜電位、超過閾值就放電送出離散脈衝</td>
+<td>神經元是否用脈衝傳訊，例如 LIF（漏積分放電）模型</td>
+</tr>
+<tr>
+<td><strong>全腦仿真（brain emulation）</strong></td>
+<td>把<strong>某個真實大腦的接線圖</strong>照搬到電腦裡跑</td>
+<td>結構是否來自真實生物的連接組（connectome）</td>
+</tr>
+<tr>
+<td><strong>類腦啟發（brain-inspired）</strong></td>
+<td>借用大腦的<strong>分工概念或計算方式</strong>設計 AI</td>
+<td>寬鬆，只要有生物學對應就常被這樣稱呼</td>
+</tr>
+</tbody>
+</table></div>
+<p>三者可以重疊，但不互相包含：SNN 不一定是全腦仿真，全腦仿真也可以不用 SNN。</p>
+<h3 id="snn">數位果蠅算 SNN 嗎？要看是哪一隻<a class="headerlink" href="#snn" title="連到此段">#</a></h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>專案</th>
+<th>大腦用什麼模型</th>
+<th>是 SNN 嗎</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Shiu 等人的果蠅全腦模型</strong>（<a class="ext" href="https://www.nature.com/articles/s41586-024-07763-9" target="_blank" rel="noopener">Nature 2024</a>）</td>
+<td>依 FlyWire 連接組建出約 <strong>13.9 萬個 LIF 神經元</strong>、5,000 多萬個突觸</td>
+<td>✅ 是</td>
+</tr>
+<tr>
+<td><strong>Eon Systems 2026/03 的「數字果蠅」</strong>（<a class="ext" href="https://finance.sina.com.cn/tech/roll/2026-03-09/doc-inhqksxq3976477.shtml" target="_blank" rel="noopener">新浪科技</a>）</td>
+<td>沿用 Shiu 的 LIF 全腦模型，接上 NeuroMechFly v2 虛擬身體，在 MuJoCo 裡跑</td>
+<td>✅ 大腦是 SNN 且是全腦仿真；但腦到身體的接口是人工橋接</td>
+</tr>
+<tr>
+<td><strong>Janelia + DeepMind flybody</strong>（<a class="ext" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12310536/" target="_blank" rel="noopener">Nature 2025</a>）</td>
+<td>深度強化學習訓練的一般神經網路控制虛擬身體</td>
+<td>❌ 不是，它是「數位果蠅身體」而非「大腦」</td>
+</tr>
+</tbody>
+</table></div>
+<p>Eon 那隻的批評：所有神經元共用同一組參數、權重凍結不學習、「行為準確率 91%」未經同行評審。</p>
+<h3 id="neurovla_2">NeuroVLA 算「類腦」嗎？算「類腦啟發」，不算「仿腦」<a class="headerlink" href="#neurovla_2" title="連到此段">#</a></h3>
+<p><strong>支持的理由</strong>：脊髓層真的是 LIF 脈衝神經元，跑在 FPGA 神經形態處理器上（單次推論 2.19 ms、約 0.87 mJ），符合「類腦計算」最嚴格的技術定義；三層分工在神經科學上也有依據。</p>
+<p><strong>不能說成「仿腦」的理由</strong>：大腦層是一般 Transformer（Qwen-VL）；小腦層是 GRU，沒有模仿浦肯野細胞等真實迴路；整套靠反向傳播訓練，論文自己把線上 STDP 列為未來工作；沒有任何連接組成分。</p>
+<div class="admonition key">
+<p class="admonition-title">一句話對照</p>
+<p><strong>數位果蠅</strong>：結構照抄真實大腦、<strong>不訓練</strong>、神經元用 SNN，是「仿腦」。<strong>NeuroVLA</strong>：功能分工借鏡大腦、<strong>靠資料訓練</strong>、只有最底層用 SNN，是「類腦啟發的混合架構」。Figure Helix 02 也是三層卻沒自稱類腦；真正的技術差異在<strong>有沒有用脈衝神經元與神經形態硬體</strong>。</p>
+</div>
+      <nav class="pn"><a class="prev" href="industry.html"><small>上一篇</small>業界產品盤點</a><a class="next" href="glossary.html"><small>下一篇</small>名詞速查</a></nav>
+      <footer class="foot">
+        內容整理自本專案的調研筆記與討論（2026-10-20）。數字取自論文或官方頁；查不到的標「未公開」。外部連結均開新分頁。
+      </footer>
+    </article>
+  </main>
+  <nav class="toc" aria-label="本頁目錄">
+    <p class="toc-h">本頁目錄</p>
+    <ul><li><a href="#_1">重點先講</a></li><li><a href="#_2">產品與模型一覽</a></li><li><a href="#_3">最有辨識度的設計：快系統「嵌」在慢系統裡</a></li><li><a href="#_4">逐一對照分類法</a><ul><li><a href="#robomamba">RoboMamba：單系統</a></li><li><a href="#govla">GOVLA：雙系統，偏「語言子任務」灰色地帶</a></li><li><a href="#fis-vla">FiS-VLA：雙系統 + 混合解碼（技術含量最高）</a></li><li><a href="#video2act">Video2Act：雙系統 +「借世界模型的眼睛」</a></li><li><a href="#neurovla">NeuroVLA：分類法之外的「類腦三層」</a></li><li><a href="#_5">總表：放到分類地圖上</a></li></ul></li><li><a href="#_6">對照競品：大模型、小模型各多大</a></li><li><a href="#_7">怎麼訓練的（只寫查得到的）</a><ul><li><a href="#fis-vla_1">FiS-VLA（訓練細節最完整）</a></li><li><a href="#video2act_1">Video2Act</a></li><li><a href="#neurovla_1">NeuroVLA</a></li><li><a href="#robomamba_1">RoboMamba</a></li><li><a href="#govla-10">GOVLA 1.0 產品：只有方向性說法</a></li></ul></li><li><a href="#_8">優勢與要打折扣的地方</a></li><li><a href="#vs-neurovla">「類腦」怎麼認定：數位果蠅 vs NeuroVLA</a><ul><li><a href="#_9">三個常被混用的詞</a></li><li><a href="#snn">數位果蠅算 SNN 嗎？要看是哪一隻</a></li><li><a href="#neurovla_2">NeuroVLA 算「類腦」嗎？算「類腦啟發」，不算「仿腦」</a></li></ul></li></ul>
+  </nav>
+</div>
+<script src="assets/site.js"></script>
+</body>
+</html>

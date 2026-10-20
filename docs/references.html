@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>參考資料 · VLA × 世界模型 調研</title>
+<meta name="description" content="論文、官方頁與本專案原始產出">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body data-page="references">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead"/>
+    </marker>
+    <marker id="arr-wm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead wm"/>
+    </marker>
+    <marker id="arr-vla" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead vla"/>
+    </marker>
+  </defs>
+</svg>
+<header class="top">
+  <button class="menu" aria-label="開啟目錄" aria-expanded="false">☰</button>
+  <a class="brand" href="index.html"><span class="dot vla"></span><span class="dot wm"></span>VLA × 世界模型 調研</a>
+  <button class="theme" aria-label="切換深淺色">◐</button>
+</header>
+<div class="shell">
+  <aside class="side">
+    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li><a href="origins.html"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="architectures.html"><span class="num">02</span><span>主流模型架構</span></a></li><li><a href="taxonomy.html"><span class="num">03</span><span>流派怎麼分</span></a></li><li><a href="training.html"><span class="num">04</span><span>訓練、資料與評估</span></a></li><li><a href="world-model-roles.html"><span class="num">05</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">06</span><span>訓練時 vs 推論時</span></a></li><li><a href="synthetic-data.html"><span class="num">07</span><span>具身基礎模型與合成資料</span></a></li><li><a href="industry.html"><span class="num">08</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html"><span class="num">09</span><span>案例：智平方</span></a></li><li><a href="glossary.html"><span class="num">10</span><span>名詞速查</span></a></li><li><a href="references.html" class="on"><span class="num">11</span><span>參考資料</span></a></li></ul>
+    <p class="side-note">整理日期：2026-10-20<br>面向技術人員的科普整理</p>
+  </aside>
+  <main>
+    <article class="doc">
+      <h1 id="_1">參考資料<a class="headerlink" href="#_1" title="連到此段">#</a></h1>
+<p class="lede">全站引用過的論文、官方頁面與報導，依主題分組。每一條都是原始出處的超連結；各章節內文也在引用處直接附上連結。</p>
+
+<div class="admonition note">
+<p class="admonition-title">來源可靠度</p>
+<p>論文與技術報告優先；只有官方部落格、發表會或媒體報導的項目，在〈<a href="industry.html">業界產品盤點</a>〉以 🎤 標記，代表沒有可重現的細節。數字（資料量、參數量）取自各論文摘要或正文，引用前建議對照原文。</p>
+</div>
+<h2 id="_2">綜述與分類依據<a class="headerlink" href="#_2" title="連到此段">#</a></h2>
+<ul>
+<li><a class="ext" href="https://arxiv.org/abs/2509.19012" target="_blank" rel="noopener">Pure Vision Language Action (VLA) Models: A Comprehensive Survey（arXiv:2509.19012）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2508.13073" target="_blank" rel="noopener">VLA 系統架構綜述：單系統、雙系統、分層（arXiv:2508.13073）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2507.01925" target="_blank" rel="noopener">A Survey on VLA Models: An Action Tokenization Perspective（arXiv:2507.01925）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2510.16732" target="_blank" rel="noopener">A Comprehensive Survey on World Models for Embodied AI（arXiv:2510.16732）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2411.14499" target="_blank" rel="noopener">Understanding World or Predicting Future?（arXiv:2411.14499）</a></li>
+</ul>
+<h2 id="vla">VLA 之前：機器人學習的前史<a class="headerlink" href="#vla" title="連到此段">#</a></h2>
+<ul>
+<li><a class="ext" href="https://arxiv.org/abs/1504.00702" target="_blank" rel="noopener">End-to-End Visuomotor Policies（arXiv:1504.00702）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/1703.06907" target="_blank" rel="noopener">Domain Randomization（arXiv:1703.06907）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/1711.07280" target="_blank" rel="noopener">R2R 視覺語言導航（arXiv:1711.07280）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/1806.10293" target="_blank" rel="noopener">QT-Opt（arXiv:1806.10293）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2103.00020" target="_blank" rel="noopener">CLIP（arXiv:2103.00020）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2109.12098" target="_blank" rel="noopener">CLIPort（arXiv:2109.12098）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2204.01691" target="_blank" rel="noopener">SayCan（arXiv:2204.01691）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2205.06175" target="_blank" rel="noopener">Gato（arXiv:2205.06175）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2207.05608" target="_blank" rel="noopener">Inner Monologue（arXiv:2207.05608）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2209.07753" target="_blank" rel="noopener">Code as Policies（arXiv:2209.07753）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2210.03094" target="_blank" rel="noopener">VIMA（arXiv:2210.03094）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2303.03378" target="_blank" rel="noopener">PaLM-E（arXiv:2303.03378）</a></li>
+</ul>
+<h2 id="vla_1">VLA 主要模型<a class="headerlink" href="#vla_1" title="連到此段">#</a></h2>
+<h3 id="token">離散 token 與單系統<a class="headerlink" href="#token" title="連到此段">#</a></h3>
+<ul>
+<li><a class="ext" href="https://arxiv.org/abs/2212.06817" target="_blank" rel="noopener">RT-1（arXiv:2212.06817）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2307.15818" target="_blank" rel="noopener">RT-2（arXiv:2307.15818）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2405.12213" target="_blank" rel="noopener">Octo（arXiv:2405.12213）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2406.09246" target="_blank" rel="noopener">OpenVLA（arXiv:2406.09246）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2502.19645" target="_blank" rel="noopener">OpenVLA-OFT（arXiv:2502.19645）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2501.09747" target="_blank" rel="noopener">FAST tokenizer／π0-FAST（arXiv:2501.09747）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2406.04339" target="_blank" rel="noopener">RoboMamba（arXiv:2406.04339）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2506.01844" target="_blank" rel="noopener">SmolVLA（arXiv:2506.01844）</a></li>
+</ul>
+<h3 id="flow-matching">連續動作：擴散與 flow matching<a class="headerlink" href="#flow-matching" title="連到此段">#</a></h3>
+<ul>
+<li><a class="ext" href="https://arxiv.org/abs/2303.04137" target="_blank" rel="noopener">Diffusion Policy（arXiv:2303.04137）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2304.13705" target="_blank" rel="noopener">ACT／ALOHA（arXiv:2304.13705）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2410.24164" target="_blank" rel="noopener">π0（arXiv:2410.24164）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2504.16054" target="_blank" rel="noopener">π0.5（arXiv:2504.16054）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2505.23705" target="_blank" rel="noopener">Knowledge Insulation（arXiv:2505.23705）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2410.07864" target="_blank" rel="noopener">RDT-1B（arXiv:2410.07864）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2411.19650" target="_blank" rel="noopener">CogACT（arXiv:2411.19650）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2503.10631" target="_blank" rel="noopener">HybridVLA（arXiv:2503.10631）</a></li>
+<li><a class="ext" href="https://github.com/Physical-Intelligence/openpi" target="_blank" rel="noopener">openpi 程式碼</a>｜<a class="ext" href="https://github.com/huggingface/lerobot" target="_blank" rel="noopener">LeRobot</a></li>
+</ul>
+<h3 id="_3">雙系統、分層與中間表徵<a class="headerlink" href="#_3" title="連到此段">#</a></h3>
+<ul>
+<li><a class="ext" href="https://arxiv.org/abs/2503.14734" target="_blank" rel="noopener">GR00T N1（arXiv:2503.14734）</a>｜<a class="ext" href="https://github.com/NVIDIA/Isaac-GR00T" target="_blank" rel="noopener">Isaac-GR00T GitHub</a></li>
+<li><a class="ext" href="https://www.figure.ai/news/helix" target="_blank" rel="noopener">Figure Helix 官方部落格</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2503.20020" target="_blank" rel="noopener">Gemini Robotics（arXiv:2503.20020）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2510.03342" target="_blank" rel="noopener">Gemini Robotics 1.5（arXiv:2510.03342）</a></li>
+<li><a class="ext" href="https://deepmind.google/blog/gemini-robotics-2-brings-whole-body-intelligence-to-robots/" target="_blank" rel="noopener">Gemini Robotics 2 部落格</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2502.19417" target="_blank" rel="noopener">Hi Robot（arXiv:2502.19417）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2503.06669" target="_blank" rel="noopener">AgiBot World／GO-1（arXiv:2503.06669）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2506.01953" target="_blank" rel="noopener">FiS-VLA（arXiv:2506.01953）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2512.03044" target="_blank" rel="noopener">Video2Act（arXiv:2512.03044）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2601.14628" target="_blank" rel="noopener">NeuroVLA（arXiv:2601.14628）</a></li>
+<li><a class="ext" href="https://arxiv.org/html/2603.08124" target="_blank" rel="noopener">SaiVLA-0（arXiv:2603.08124）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2609.27468" target="_blank" rel="noopener">CereVLA（arXiv:2609.27468）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2502.05485" target="_blank" rel="noopener">HAMSTER（arXiv:2502.05485）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2406.10721" target="_blank" rel="noopener">RoboPoint（arXiv:2406.10721）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2410.11758" target="_blank" rel="noopener">LAPA（arXiv:2410.11758）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2505.06111" target="_blank" rel="noopener">UniVLA（arXiv:2505.06111）</a></li>
+</ul>
+<h2 id="_4">世界模型<a class="headerlink" href="#_4" title="連到此段">#</a></h2>
+<h3 id="_5">經典與潛空間路線<a class="headerlink" href="#_5" title="連到此段">#</a></h3>
+<ul>
+<li><a class="ext" href="https://arxiv.org/abs/1803.10122" target="_blank" rel="noopener">World Models（arXiv:1803.10122）</a>｜<a class="ext" href="https://worldmodels.github.io/" target="_blank" rel="noopener">互動版</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/1811.04551" target="_blank" rel="noopener">PlaNet（arXiv:1811.04551）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/1903.00374" target="_blank" rel="noopener">SimPLe（arXiv:1903.00374）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/1911.08265" target="_blank" rel="noopener">MuZero（arXiv:1911.08265）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/1912.01603" target="_blank" rel="noopener">Dreamer（arXiv:1912.01603）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2010.02193" target="_blank" rel="noopener">DreamerV2（arXiv:2010.02193）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2301.04104" target="_blank" rel="noopener">DreamerV3（arXiv:2301.04104）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2509.24527" target="_blank" rel="noopener">Dreamer 4（arXiv:2509.24527）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2209.00588" target="_blank" rel="noopener">IRIS（arXiv:2209.00588）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2310.16828" target="_blank" rel="noopener">TD-MPC2（arXiv:2310.16828）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2411.04983" target="_blank" rel="noopener">DINO-WM（arXiv:2411.04983）</a></li>
+</ul>
+<h3 id="jepa">JEPA 表徵預測<a class="headerlink" href="#jepa" title="連到此段">#</a></h3>
+<ul>
+<li><a class="ext" href="https://arxiv.org/abs/2404.08471" target="_blank" rel="noopener">V-JEPA（arXiv:2404.08471）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2506.09985" target="_blank" rel="noopener">V-JEPA 2／V-JEPA 2-AC（arXiv:2506.09985）</a></li>
+</ul>
+<h3 id="_6">影片生成與互動世界<a class="headerlink" href="#_6" title="連到此段">#</a></h3>
+<ul>
+<li><a class="ext" href="https://arxiv.org/abs/2310.06114" target="_blank" rel="noopener">UniSim（arXiv:2310.06114）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2402.15391" target="_blank" rel="noopener">Genie 1（arXiv:2402.15391）</a></li>
+<li><a class="ext" href="https://deepmind.google/discover/blog/genie-3-a-new-frontier-for-world-models/" target="_blank" rel="noopener">Genie 3 部落格</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2405.12399" target="_blank" rel="noopener">DIAMOND（arXiv:2405.12399）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2408.14837" target="_blank" rel="noopener">GameNGen（arXiv:2408.14837）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2407.01392" target="_blank" rel="noopener">Diffusion Forcing（arXiv:2407.01392）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2506.08009" target="_blank" rel="noopener">Self Forcing（arXiv:2506.08009）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2501.03575" target="_blank" rel="noopener">NVIDIA Cosmos（arXiv:2501.03575）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2503.14492" target="_blank" rel="noopener">Cosmos-Transfer1（arXiv:2503.14492）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2503.15558" target="_blank" rel="noopener">Cosmos-Reason1（arXiv:2503.15558）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2511.00062" target="_blank" rel="noopener">Cosmos-Predict2.5（arXiv:2511.00062）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2412.03603" target="_blank" rel="noopener">HunyuanVideo（arXiv:2412.03603）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2508.05635" target="_blank" rel="noopener">Genie Envisioner（arXiv:2508.05635）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2510.10125" target="_blank" rel="noopener">Ctrl-World（arXiv:2510.10125）</a></li>
+</ul>
+<h3 id="3d4d">自駕與 3D／4D<a class="headerlink" href="#3d4d" title="連到此段">#</a></h3>
+<ul>
+<li><a class="ext" href="https://arxiv.org/abs/2309.17080" target="_blank" rel="noopener">GAIA-1（arXiv:2309.17080）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2503.20523" target="_blank" rel="noopener">GAIA-2（arXiv:2503.20523）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2311.16038" target="_blank" rel="noopener">OccWorld（arXiv:2311.16038）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2402.12289" target="_blank" rel="noopener">DriveVLM（arXiv:2402.12289）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2410.23262" target="_blank" rel="noopener">EMMA（arXiv:2410.23262）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2511.00088" target="_blank" rel="noopener">Alpamayo-R1（arXiv:2511.00088）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2504.19077" target="_blank" rel="noopener">Learning to Drive from a World Model（arXiv:2504.19077）</a>｜<a class="ext" href="https://github.com/commaai/openpilot" target="_blank" rel="noopener">openpilot</a></li>
+</ul>
+<h2 id="vla_2">世界模型 × VLA 的結合<a class="headerlink" href="#vla_2" title="連到此段">#</a></h2>
+<ul>
+<li><a class="ext" href="https://arxiv.org/abs/2302.00111" target="_blank" rel="noopener">UniPi（arXiv:2302.00111）</a>：先生成影片再反推動作</li>
+<li><a class="ext" href="https://arxiv.org/abs/2312.13139" target="_blank" rel="noopener">GR-1（arXiv:2312.13139）</a>、<a class="ext" href="https://arxiv.org/abs/2410.06158" target="_blank" rel="noopener">GR-2（arXiv:2410.06158）</a>、<a class="ext" href="https://arxiv.org/abs/2507.15493" target="_blank" rel="noopener">GR-3（arXiv:2507.15493）</a>：影片預測預訓練</li>
+<li><a class="ext" href="https://arxiv.org/abs/2412.14803" target="_blank" rel="noopener">VPP（arXiv:2412.14803）</a>、<a class="ext" href="https://arxiv.org/abs/2412.15109" target="_blank" rel="noopener">Seer（arXiv:2412.15109）</a>、<a class="ext" href="https://arxiv.org/abs/2503.00200" target="_blank" rel="noopener">UVA（arXiv:2503.00200）</a>：預測式 VLA</li>
+<li><a class="ext" href="https://arxiv.org/abs/2503.22020" target="_blank" rel="noopener">CoT-VLA（arXiv:2503.22020）</a>、<a class="ext" href="https://arxiv.org/abs/2506.21539" target="_blank" rel="noopener">WorldVLA（arXiv:2506.21539）</a>、<a class="ext" href="https://arxiv.org/abs/2507.04447" target="_blank" rel="noopener">DreamVLA（arXiv:2507.04447）</a>、<a class="ext" href="https://arxiv.org/abs/2505.15659" target="_blank" rel="noopener">FLARE（arXiv:2505.15659）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2505.12705" target="_blank" rel="noopener">DreamGen（arXiv:2505.12705）</a>：世界模型當資料工廠</li>
+<li><a class="ext" href="https://arxiv.org/abs/2511.09515" target="_blank" rel="noopener">WMPO（arXiv:2511.09515）</a>、<a class="ext" href="https://arxiv.org/abs/2510.00406" target="_blank" rel="noopener">VLA-RFT（arXiv:2510.00406）</a>：想像中強化學習</li>
+<li><a class="ext" href="https://arxiv.org/abs/2509.22643" target="_blank" rel="noopener">VLA-Reasoner（arXiv:2509.22643）</a>、<a class="ext" href="https://arxiv.org/abs/2502.01828" target="_blank" rel="noopener">FOREWARN（arXiv:2502.01828）</a>、<a class="ext" href="https://arxiv.org/abs/2601.16163" target="_blank" rel="noopener">Cosmos Policy（arXiv:2601.16163）</a>、<a class="ext" href="https://arxiv.org/abs/2608.16885" target="_blank" rel="noopener">τ0-VLA（arXiv:2608.16885）</a>：推論時候選搜尋</li>
+<li><a class="ext" href="https://arxiv.org/abs/2512.10675" target="_blank" rel="noopener">Veo 當策略評測模擬器（arXiv:2512.10675）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2310.17596" target="_blank" rel="noopener">MimicGen（arXiv:2310.17596）</a>：模擬中擴增示範</li>
+</ul>
+<h2 id="_7">資料集、基準與評測<a class="headerlink" href="#_7" title="連到此段">#</a></h2>
+<ul>
+<li><a class="ext" href="https://arxiv.org/abs/2310.08864" target="_blank" rel="noopener">Open X-Embodiment／RT-X（arXiv:2310.08864）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2403.12945" target="_blank" rel="noopener">DROID（arXiv:2403.12945）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2308.12952" target="_blank" rel="noopener">BridgeData V2（arXiv:2308.12952）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2111.02767" target="_blank" rel="noopener">RLDS（arXiv:2111.02767）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2402.10329" target="_blank" rel="noopener">UMI（arXiv:2402.10329）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2110.07058" target="_blank" rel="noopener">Ego4D（arXiv:2110.07058）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2306.03310" target="_blank" rel="noopener">LIBERO（arXiv:2306.03310）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2112.03227" target="_blank" rel="noopener">CALVIN（arXiv:2112.03227）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2405.05941" target="_blank" rel="noopener">SimplerEnv（arXiv:2405.05941）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2406.02523" target="_blank" rel="noopener">RoboCasa（arXiv:2406.02523）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2507.05331" target="_blank" rel="noopener">TRI Large Behavior Models（arXiv:2507.05331）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/1812.01717" target="_blank" rel="noopener">FVD（arXiv:1812.01717）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2311.17982" target="_blank" rel="noopener">VBench（arXiv:2311.17982）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2501.09038" target="_blank" rel="noopener">Physics-IQ（arXiv:2501.09038）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2411.02385" target="_blank" rel="noopener">How Far is Video Generation from World Model（arXiv:2411.02385）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2406.03520" target="_blank" rel="noopener">VideoPhy（arXiv:2406.03520）</a></li>
+<li><a class="ext" href="https://arxiv.org/abs/2410.05363" target="_blank" rel="noopener">PhyGenBench（arXiv:2410.05363）</a></li>
+</ul>
+<h2 id="_8">業界官方頁面與報導<a class="headerlink" href="#_8" title="連到此段">#</a></h2>
+<ul>
+<li><a class="ext" href="https://www.physicalintelligence.company/research" target="_blank" rel="noopener">Physical Intelligence 研究頁</a></li>
+<li><a class="ext" href="https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Releases-New-Physical-AI-Models-as-Global-Partners-Unveil-Next-Generation-Robots/default.aspx" target="_blank" rel="noopener">NVIDIA CES 2026 物理 AI 新聞稿</a></li>
+<li><a class="ext" href="https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Announces-Alpamayo-Family-of-Open-Source-AI-Models-and-Tools-to-Accelerate-Safe-Reasoning-Based-Autonomous-Vehicle-Development/" target="_blank" rel="noopener">NVIDIA Alpamayo 新聞稿</a></li>
+<li><a class="ext" href="https://www.1x.tech/discover/redwood-ai-world-model" target="_blank" rel="noopener">1X Redwood AI／World Model</a></li>
+<li><a class="ext" href="https://github.com/unitreerobotics/unifolm-world-model-action" target="_blank" rel="noopener">Unitree UnifoLM-WMA-0</a></li>
+<li><a class="ext" href="https://wayve.ai/thinking/lingo-2-driving-with-language/" target="_blank" rel="noopener">Wayve LINGO-2</a></li>
+<li><a class="ext" href="https://www.humanoidsdaily.com/feed/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus" target="_blank" rel="noopener">Tesla 世界模擬器演講整理</a></li>
+<li><a class="ext" href="https://the-decoder.com/waymo-taps-google-deepminds-genie-3-to-simulate-driving-scenarios-its-cars-have-never-seen/" target="_blank" rel="noopener">Waymo World Model 報導</a></li>
+<li><a class="ext" href="https://www.36kr.com/p/3463098292770179" target="_blank" rel="noopener">36Kr 中國車廠技術路線整理</a></li>
+<li><a class="ext" href="https://ai2robotics.com/en/%E6%99%BA%E5%B9%B3%E6%96%B9%E5%8F%91%E5%B8%83%E5%85%A8%E6%96%B0%E4%B8%80%E4%BB%A3%E6%99%BA%E8%83%BD%E6%9C%BA%E5%99%A8%E4%BA%BAalphabot-2%E5%BC%80%E5%90%AFagi%E7%BB%88%E7%AB%AF%E6%96%B0/" target="_blank" rel="noopener">智平方 AlphaBot 2／GOVLA 發布頁</a></li>
+<li><a class="ext" href="https://www.therobotreport.com/ai2-robotics-raises-series-b-funding-advance-alphabot-embodied-ai/" target="_blank" rel="noopener">The Robot Report：智平方 B 輪</a></li>
+<li><a class="ext" href="https://www.nature.com/articles/s41586-024-07763-9" target="_blank" rel="noopener">果蠅全腦模型（Nature 2024）</a></li>
+</ul>
+<h2 id="project-outputs">本專案的原始產出<a class="headerlink" href="#project-outputs" title="連到此段">#</a></h2>
+<p>這個網站整理自專案內先前的報告與簡報。以下連結是 claude.ai 上的私人頁面，<strong>需要登入、且有權限的帳號才能開啟</strong>。</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>產出</th>
+<th>內容</th>
+<th>對應章節</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a class="ext" href="https://claude.ai/code/artifact/5c119e30-7c97-4bec-bb9e-b7a2628d3995" target="_blank" rel="noopener">起源與歷史報告</a></td>
+<td>兩條路線的瓶頸、里程碑、匯流；具身基礎模型與合成資料追問</td>
+<td>01、07</td>
+</tr>
+<tr>
+<td><a class="ext" href="https://claude.ai/artifact/8VrHVsBejHtCYZm1aJEDsT" target="_blank" rel="noopener">主流模型架構報告</a></td>
+<td>VLA 四路線、世界模型四路線</td>
+<td>02</td>
+</tr>
+<tr>
+<td><a class="ext" href="https://claude.ai/artifact/VBZAwSnrQMFA4q5zeze5bR" target="_blank" rel="noopener">訓練與評估手冊</a></td>
+<td>訓練流程、資料、I/O、評估</td>
+<td>04</td>
+</tr>
+<tr>
+<td><a class="ext" href="https://claude.ai/artifact/J5M7pfkUDBvDbspadVYUop" target="_blank" rel="noopener">工程師課件簡報</a></td>
+<td>72 頁，模型架構與結果</td>
+<td>02、04</td>
+</tr>
+<tr>
+<td><a class="ext" href="https://claude.ai/artifact/FjNw2SX9ALNwFMG7hbmz1m" target="_blank" rel="noopener">非技術版簡報</a></td>
+<td>32 頁，給非工程背景讀者</td>
+<td>首頁</td>
+</tr>
+<tr>
+<td><a class="ext" href="https://claude.ai/artifact/XasR8g8FD5Saj3dBfrd5jk" target="_blank" rel="noopener">世界模型種類簡報</a></td>
+<td>四類世界模型、五種角色</td>
+<td>05</td>
+</tr>
+</tbody>
+</table></div>
+<p>專案共享資料夾內的調研筆記（流派分類、訓練時 vs 推論時、業界產品、智平方）分別對應第 03、06、08、09 章。</p>
+      <nav class="pn"><a class="prev" href="glossary.html"><small>上一篇</small>名詞速查</a><span></span></nav>
+      <footer class="foot">
+        內容整理自本專案的調研筆記與討論（2026-10-20）。數字取自論文或官方頁；查不到的標「未公開」。外部連結均開新分頁。
+      </footer>
+    </article>
+  </main>
+  <nav class="toc" aria-label="本頁目錄">
+    <p class="toc-h">本頁目錄</p>
+    <ul><li><a href="#_2">綜述與分類依據</a></li><li><a href="#vla">VLA 之前：機器人學習的前史</a></li><li><a href="#vla_1">VLA 主要模型</a><ul><li><a href="#token">離散 token 與單系統</a></li><li><a href="#flow-matching">連續動作：擴散與 flow matching</a></li><li><a href="#_3">雙系統、分層與中間表徵</a></li></ul></li><li><a href="#_4">世界模型</a><ul><li><a href="#_5">經典與潛空間路線</a></li><li><a href="#jepa">JEPA 表徵預測</a></li><li><a href="#_6">影片生成與互動世界</a></li><li><a href="#3d4d">自駕與 3D／4D</a></li></ul></li><li><a href="#vla_2">世界模型 × VLA 的結合</a></li><li><a href="#_7">資料集、基準與評測</a></li><li><a href="#_8">業界官方頁面與報導</a></li><li><a href="#project-outputs">本專案的原始產出</a></li></ul>
+  </nav>
+</div>
+<script src="assets/site.js"></script>
+</body>
+</html>
