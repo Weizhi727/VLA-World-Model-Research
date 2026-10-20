@@ -84,6 +84,8 @@
 
 ## 關於資料來源
 
+- **離線版**：公司網路打不開這個網站時，可以下載 [離線壓縮包](https://github.com/Weizhi727/VLA-World-Model-Research/releases/download/offline-latest/VLA-World-Model-Research-offline.zip)，解壓縮後打開 `index.html` 即可閱讀。
+
 - 內容來自本專案的調研筆記與討論串，整理日期 2026-10-20。
 - 論文一律連到 arXiv 摘要頁或官方頁；只有部落格、發表會或新聞來源的，會在文中註明。
 - 參數量、資料量等數字以論文或官方頁為準；**查不到的標「未公開」，不猜**。少數早期整理中未逐篇核對的數字，會在該處標示「約」或另加說明。

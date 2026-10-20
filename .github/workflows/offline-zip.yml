@@ -1,0 +1,33 @@
+# 每次 docs/ 有變動，就把網站打包成離線版，放到固定的 Release「offline-latest」供下載
+name: Offline zip
+
+on:
+  push:
+    branches: [main]
+    paths: ['docs/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  zip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build zip
+        run: |
+          mkdir -p out/VLA-World-Model-Research
+          cp -r docs/. out/VLA-World-Model-Research/
+          printf '離線版使用方式：解壓縮後，直接用瀏覽器開啟 index.html 即可閱讀，不需要網路。\n站內問答的「站內檢索」離線可用；「Claude 生成」模式需要能連到 api.anthropic.com 與 esm.sh。\n' > out/VLA-World-Model-Research/請先讀我.txt
+          cd out && zip -qr ../VLA-World-Model-Research-offline.zip VLA-World-Model-Research
+      - name: Publish to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh release view offline-latest >/dev/null 2>&1; then
+            gh release create offline-latest --title "離線版（最新）" \
+              --notes "解壓縮後打開 index.html 即可離線閱讀。每次網站更新會自動替換成最新版。"
+          fi
+          gh release upload offline-latest VLA-World-Model-Research-offline.zip --clobber
+          gh release edit offline-latest --notes "解壓縮後打開 index.html 即可離線閱讀。最後更新：$(date -u +%Y-%m-%d) 的 ${GITHUB_SHA::7}。"

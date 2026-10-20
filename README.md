@@ -4,6 +4,8 @@
 
 **線上閱讀**：https://weizhi727.github.io/VLA-World-Model-Research/
 
+**離線版下載**：[VLA-World-Model-Research-offline.zip](https://github.com/Weizhi727/VLA-World-Model-Research/releases/download/offline-latest/VLA-World-Model-Research-offline.zip)（打不開 github.io 時使用：解壓縮後打開 `index.html`。每次網站更新會自動重新打包。）
+
 ## 章節
 
 | # | 章節 | 檔案 |
