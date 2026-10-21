@@ -987,6 +987,16 @@
     "華為",
     "蔚來"
    ]
+  },
+  {
+   "name": "OccWorld",
+   "org": "清華等",
+   "params": "論文未寫",
+   "detail": "3D occupancy 世界模型（自駕）",
+   "src": "https://arxiv.org/abs/2311.16038",
+   "alias": [
+    "OccWorld"
+   ]
   }
  ]
 }
