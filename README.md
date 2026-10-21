@@ -8,20 +8,25 @@
 
 ## 章節
 
-| # | 章節 | 檔案 |
-|---|---|---|
-| 01 | 起源與歷史 | `content/origins.md` |
-| 02 | 主流模型架構 | `content/architectures.md` |
-| 03 | 流派怎麼分 | `content/taxonomy.md` |
-| 04 | 訓練、資料與評估 | `content/training.md` |
-| 05 | 世界模型四類與五種角色 | `content/world-model-roles.md` |
-| 06 | 訓練時 vs 推論時 | `content/train-vs-inference.md` |
-| 07 | 具身基礎模型與合成資料 | `content/synthetic-data.md` |
-| 08 | 業界產品盤點 | `content/industry.md` |
-| 09 | 案例：智平方 | `content/ai2-robotics.md` |
-| 10 | 經典世界模型論文精讀 | `content/classic-world-models.md` |
-| 11 | 名詞速查 | `content/glossary.md` |
-| 12 | 參考資料 | `content/references.md` |
+分成五區：入門總覽、VLA、世界模型、綜合應用（VLA × 世界模型）、查詢工具。
+
+| # | 分區 | 章節 | 檔案 |
+|---|---|---|---|
+| 01 | 入門總覽 | 起源與歷史 | `content/origins.md` |
+| 02 | 入門總覽 | 訓練、資料與評估 | `content/training.md` |
+| 03 | VLA | VLA 主流架構 | `content/vla-architectures.md` |
+| 04 | VLA | VLA 流派怎麼分 | `content/vla-taxonomy.md` |
+| 05 | 世界模型 | 世界模型路線與流派 | `content/wm-architectures.md` |
+| 06 | 世界模型 | 經典世界模型論文精讀 | `content/classic-world-models.md` |
+| 07 | 綜合應用：VLA × 世界模型 | 世界模型四類與五種角色 | `content/world-model-roles.md` |
+| 08 | 綜合應用：VLA × 世界模型 | 訓練時 vs 推論時 | `content/train-vs-inference.md` |
+| 09 | 綜合應用：VLA × 世界模型 | 具身基礎模型與合成資料 | `content/synthetic-data.md` |
+| 10 | 綜合應用：VLA × 世界模型 | 世界模型代表作的實際應用 | `content/wm-in-practice.md` |
+| 11 | 綜合應用：VLA × 世界模型 | 業界產品盤點 | `content/industry.md` |
+| 12 | 綜合應用：VLA × 世界模型 | 案例：智平方 | `content/ai2-robotics.md` |
+| 13 | 查詢工具 | 參數量總表 | `content/params.md` |
+| 14 | 查詢工具 | 名詞速查 | `content/glossary.md` |
+| 15 | 查詢工具 | 參考資料 | `content/references.md` |
 
 ## 怎麼修改與重建
 
@@ -35,7 +40,7 @@ python3 -m http.server -d docs 8000   # 本地預覽 http://localhost:8000
 
 - 內容寫在 `content/*.md`（Markdown，可內嵌 SVG 圖）。
 - 重點框語法：`!!! key "標題"`、`!!! note`、`!!! warn`，內文縮排四格。
-- 新增章節：在 `build.py` 的 `PAGES` 清單加一行。
+- 新增章節：在 `build.py` 的 `GROUPS` 對應分區加一行。側欄、首頁卡片與章節編號都會自動產生；文中寫成 `[NN 標題](slug.html)` 的連結，編號也會在建置時自動更新。
 - 樣式與互動：`docs/assets/style.css`、`docs/assets/site.js`（深色模式、手機選單、目錄高亮）。
 
 ## 站內問答

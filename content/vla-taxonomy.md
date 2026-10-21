@@ -1,12 +1,11 @@
-# 流派怎麼分：VLA 的三條軸、世界模型的四個流派
+# VLA 流派怎麼分：三條分類軸
 
-<p class="lede">「端到端 vs 分層」是 VLA 的一種分類沒錯，但它只是其中一條軸。一個模型通常在每條軸上各選一格。世界模型也有流派，最常見的切法是「在哪個空間預測未來」。</p>
+<p class="lede">「端到端 vs 分層」是 VLA 的一種分類沒錯，但它只是其中一條軸。一個模型通常在每條軸上各選一格。世界模型的流派見〈[世界模型路線與流派](wm-architectures.html)〉。</p>
 
 !!! key "重點先講"
     1. **「端到端 vs 分層」只是一條軸**：看的是系統架構，以及中間有沒有人看得懂的中間產物。
     2. **VLA 至少還有另外兩條常用的軸**：**動作怎麼解碼**（離散 token 自回歸、擴散／flow matching、兩者混合），以及**中間表徵是什麼**（語言子任務、程式碼、關鍵點、軌跡、目標影像、潛在動作、原始動作、推理鏈）。
-    3. **世界模型也分流派**：「輸出影片」和「潛空間」是前兩派，**第三派是 JEPA 式的非生成表徵預測（如 V-JEPA 2），第四派是 3D／4D 空間式（如 World Labs Marble、佔據柵格）**。
-    4. 專案早期課件的「VLA 四大流派」把不同軸混在一起，也漏了真正的「顯式分層」派；本頁的「兩軸地圖」是建議的替代講法。
+    3. 專案早期課件的「VLA 四大流派」把不同軸混在一起，也漏了真正的「顯式分層」派；本頁的「兩軸地圖」是建議的替代講法。
 
 ## VLA 的三條分類軸
 
@@ -136,31 +135,8 @@
 - **舊講法的問題 2：漏了真正的「顯式分層」派。** 依 [arXiv:2508.13073](https://arxiv.org/abs/2508.13073) 的定義，Helix／GR00T N1 是端到端的雙系統；真正的分層派（規劃器輸出子任務、關鍵點、軌跡或程式碼，再交給低階策略）需要自己的代表作，例如 Hi Robot、RoboPoint、HAMSTER。
 - **新分支**：智平方的 NeuroVLA（大腦／小腦／脊髓三層類腦）不屬於上面任何一格，可以標成「三系統／類腦」新分支，見 [09 案例：智平方](ai2-robotics.html)。
 
-## 世界模型的流派
-
-### 主切法：在哪個空間預測未來
-
-| 流派 | 預測什麼 | 代表作 | 長處／代價 |
-|---|---|---|---|
-| **① 影片／像素生成式** | 未來的影格。通常在影片 tokenizer 的 latent 裡生成，最後解碼成像素 | [Cosmos](https://arxiv.org/abs/2501.03575)、[Genie 3](https://deepmind.google/discover/blog/genie-3-a-new-frontier-for-world-models/)、[GAIA-2](https://arxiv.org/abs/2503.20523)、[UniSim](https://arxiv.org/abs/2310.06114) | 人看得懂、能當模擬器或造合成資料；但貴、慢，物理不一定對 |
-| **② 潛空間動力學** | 低維潛狀態的下一步，通常仍保留重建像素的解碼器幫助學習 | [DreamerV3](https://arxiv.org/abs/2301.04104)、[Dreamer 4](https://arxiv.org/abs/2509.24527)、[TD-MPC2](https://arxiv.org/abs/2310.16828) | 快，適合在想像中做 RL 或規劃；但畫面細節少 |
-| **③ JEPA 式表徵預測** | 在自監督表徵空間預測，**完全不生成、也不重建像素** | [V-JEPA 2／2-AC](https://arxiv.org/abs/2506.09985) | 不浪費算力在畫面細節，可零樣本規劃；但無法產出可看的影片，難直接檢查 |
-| **④ 3D／4D 空間式** | 顯式 3D 場景（高斯潑濺、NeRF、佔據柵格、BEV） | [World Labs Marble](https://www.worldlabs.ai/blog/marble-world-model)、[OccWorld](https://arxiv.org/abs/2311.16038) | 幾何一致、可自由視角；但動態與拓撲變化難處理 |
-
-!!! key "最常被混淆的一點"
-    **② 和 ③ 都在潛空間，差別只在「要不要重建畫面」。** Dreamer 系列會訓練解碼器去重建畫面，JEPA 刻意不重建，這正是 LeCun「生成式 vs 非生成式」的核心。若只分兩派，常見說法是「生成式（①②④）vs 非生成式（③）」；若分三派，就是「影片、潛空間、JEPA」。
-
-### 其他切法（綜述用的軸）
-
-- **用途軸**：[A Comprehensive Survey on World Models for Embodied AI（arXiv:2510.16732）](https://arxiv.org/abs/2510.16732) 分成 **Decision-coupled**（為特定控制任務而學，如 Dreamer）與 **General-purpose**（通用模擬器，如 Cosmos、Genie）。
-- **時間軸**：同一篇綜述再分成**逐步自回歸模擬**（適合閉環控制，但誤差會累積）與**一次平行預測整段未來**（延遲低，但互動性差）。
-- **空間表徵軸**：同一篇綜述分成全域潛向量、token 特徵序列、空間潛柵格（BEV／voxel）、可渲染表徵（3DGS／NeRF），大致對應上表的 ②、①、④。
-- **功能軸**：[Understanding World or Predicting Future?（arXiv:2411.14499）](https://arxiv.org/abs/2411.14499) 分成「理解世界」（建立內部表徵，如 LLM 內隱的世界知識）與「預測未來」（模擬未來以輔助決策）。
-
 ## 來源
 
 - VLA 架構分類：[arXiv:2508.13073](https://arxiv.org/abs/2508.13073)
 - VLA 動作解碼分類：[arXiv:2509.19012](https://arxiv.org/abs/2509.19012)
 - VLA action token 分類：[arXiv:2507.01925](https://arxiv.org/abs/2507.01925)
-- 世界模型具身綜述：[arXiv:2510.16732](https://arxiv.org/abs/2510.16732)
-- 世界模型理解 vs 預測綜述：[arXiv:2411.14499](https://arxiv.org/abs/2411.14499)
