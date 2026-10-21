@@ -52,6 +52,18 @@ python3 -m http.server -d docs 8000   # 本地預覽 http://localhost:8000
 
 ## 部署
 
+### 部署到公司內部 GitLab
+
+repo 根目錄已附 `.gitlab-ci.yml`，把 `docs/` 發布成 GitLab Pages：
+
+1. 在公司 GitLab 新建專案，選「Import project → Repository by URL」，填 `https://github.com/Weizhi727/VLA-World-Model-Research.git`。內網連不到 GitHub 時，改成在能連 GitHub 的電腦上 `git clone`，再 `git remote add gitlab <公司 GitLab 專案網址>` 並 `git push gitlab main`。
+2. 推上去後 CI 會自動跑 `pages` 任務，到「Deploy → Pages」看網址。
+3. 要限制只有公司同仁能看：「Settings → General → Visibility → Pages」設成 Only Project Members（需要管理員開啟 Pages 存取控制）。
+
+前提是公司 GitLab 已啟用 Pages 功能與 CI Runner；沒有的話，把 `docs/` 放到任何內部網頁伺服器（nginx、IIS）即可。
+
+### GitHub Pages
+
 GitHub Pages 從 `main` 分支的 `/docs` 資料夾發布。修改後執行 `python3 build.py` 再 commit，推上 `main` 即自動更新。
 
 ## 參數量資料
