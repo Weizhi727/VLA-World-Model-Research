@@ -32,7 +32,7 @@
 </header>
 <div class="shell">
   <aside class="side">
-    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li><a href="origins.html"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="architectures.html"><span class="num">02</span><span>主流模型架構</span></a></li><li><a href="taxonomy.html"><span class="num">03</span><span>流派怎麼分</span></a></li><li><a href="training.html"><span class="num">04</span><span>訓練、資料與評估</span></a></li><li><a href="world-model-roles.html"><span class="num">05</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">06</span><span>訓練時 vs 推論時</span></a></li><li><a href="synthetic-data.html"><span class="num">07</span><span>具身基礎模型與合成資料</span></a></li><li><a href="industry.html" class="on"><span class="num">08</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html"><span class="num">09</span><span>案例：智平方</span></a></li><li><a href="classic-world-models.html"><span class="num">10</span><span>經典世界模型論文精讀</span></a></li><li><a href="wm-in-practice.html"><span class="num">11</span><span>世界模型代表作的實際應用</span></a></li><li><a href="glossary.html"><span class="num">12</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">13</span><span>參考資料</span></a></li></ul>
+    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li><a href="origins.html"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="architectures.html"><span class="num">02</span><span>主流模型架構</span></a></li><li><a href="taxonomy.html"><span class="num">03</span><span>流派怎麼分</span></a></li><li><a href="training.html"><span class="num">04</span><span>訓練、資料與評估</span></a></li><li><a href="world-model-roles.html"><span class="num">05</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">06</span><span>訓練時 vs 推論時</span></a></li><li><a href="synthetic-data.html"><span class="num">07</span><span>具身基礎模型與合成資料</span></a></li><li><a href="industry.html" class="on"><span class="num">08</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html"><span class="num">09</span><span>案例：智平方</span></a></li><li><a href="classic-world-models.html"><span class="num">10</span><span>經典世界模型論文精讀</span></a></li><li><a href="wm-in-practice.html"><span class="num">11</span><span>世界模型代表作的實際應用</span></a></li><li><a href="params.html"><span class="num">12</span><span>參數量總表</span></a></li><li><a href="glossary.html"><span class="num">13</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">14</span><span>參考資料</span></a></li></ul>
     <p class="side-note">整理日期：2026-10-21<br>面向技術人員的科普整理</p>
   </aside>
   <main>
@@ -410,6 +410,204 @@
 <li><strong>跑世界模型</strong>：用 Cosmos Predict 2.5 或 V-JEPA 2 做「給定動作預測未來」，再試 DreamGen 式的合成資料流程。</li>
 <li><strong>自駕方向</strong>：從 Alpamayo-R1 + AlpaSim 入手，是目前唯一完整開源的「推理 VLA + 閉環模擬」組合。</li>
 </ol>
+<!-- params:auto -->
+
+<h2 id="_11">本頁提到的模型參數量<a class="headerlink" href="#_11" title="連到此段">#</a></h2>
+<p>只列官方論文、官方頁或官方模型卡寫明的數字；查不到的標「未公開」，不推測。完整清單見 <a href="params.html">參數量總表</a>。</p>
+<p><strong>VLA</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>參數量</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RT-2</td>
+<td>5B、55B（PaLI-X 版）；12B（PaLM-E 版）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2307.15818" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>π0</td>
+<td>約 3.3B（PaliGemma 3B + 動作專家約 300M）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2410.24164" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>π0-FAST</td>
+<td>論文未另列（以 PaliGemma 3B 為底）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2501.09747" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>π0.5</td>
+<td>VLM 2B（PaliGemma）+ 動作專家 300M；總數論文未寫</td>
+<td><a class="ext" href="https://arxiv.org/abs/2504.16054" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>π0.7</td>
+<td>官方頁未公開（媒體報導 Gemma 3 4B + 860M 動作專家）</td>
+<td><a class="ext" href="https://the-decoder.com/physical-intelligence-shows-robot-model-with-llm-like-generalization-flaws-included/" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>SmolVLA</td>
+<td>450M（動作專家約 100M）；另有 0.24B、2.25B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2506.01844" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR00T N1</td>
+<td>約 2.2B（Eagle-2 VLM 1.34B + DiT 動作頭）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.14734" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR00T N1.5</td>
+<td>3B（官方權重 GR00T-N1.5-3B）</td>
+<td><a class="ext" href="https://huggingface.co/nvidia/GR00T-N1.5-3B" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR00T N1.6</td>
+<td>3B（官方模型卡）</td>
+<td><a class="ext" href="https://huggingface.co/nvidia/GR00T-N1.6-3B" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Figure Helix</td>
+<td>S2 7B VLM + S1 80M</td>
+<td><a class="ext" href="https://www.figure.ai/news/helix" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Figure Helix 02</td>
+<td>S0 10M；S1、S2 未公開</td>
+<td><a class="ext" href="https://www.figure.ai/news/helix-02" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>1X Redwood AI</td>
+<td>160M</td>
+<td><a class="ext" href="https://www.1x.tech/discover/redwood-ai" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Gemini Robotics（1.0 / 1.5 / 2 / On-Device）</td>
+<td>未公開</td>
+<td><a class="ext" href="https://arxiv.org/abs/2510.03342" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>智元 GO-1</td>
+<td>VLM InternVL2.5-2B；潛在規劃器與動作專家未公開</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.06669" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR-2</td>
+<td>預設 230M（可訓練 95M）；規模實驗可訓練 30M–719M</td>
+<td><a class="ext" href="https://arxiv.org/abs/2410.06158" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR-3</td>
+<td>約 4B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2507.15493" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>DriveVLM</td>
+<td>9.6B（Qwen-VL）；車端版選用 4B 以下模型</td>
+<td><a class="ext" href="https://arxiv.org/abs/2402.12289" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>NVIDIA Alpamayo-R1</td>
+<td>約 10B（骨幹 8.2B + 動作專家 2.3B）</td>
+<td><a class="ext" href="https://huggingface.co/nvidia/Alpamayo-R1-10B" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Waymo EMMA</td>
+<td>未公開（Gemini 為底）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2410.23262" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>理想 MindVLA</td>
+<td>未公開</td>
+<td><a class="ext" href="https://www.36kr.com/p/3728358954564999" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Wayve LINGO-2</td>
+<td>未公開</td>
+<td><a class="ext" href="https://wayve.ai/thinking/lingo-2-driving-with-language/" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Tesla FSD / Optimus</td>
+<td>未公開</td>
+<td><a class="ext" href="https://www.humanoidsdaily.com/feed/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus" target="_blank" rel="noopener">來源</a></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>世界模型</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>參數量</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>V-JEPA 2</td>
+<td>編碼器 300M / 600M / 1B；V-JEPA 2-AC 預測器 300M</td>
+<td><a class="ext" href="https://github.com/facebookresearch/vjepa2" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GAIA-1</td>
+<td>約 9.4B（tokenizer 0.3B + 世界模型 6.5B + 解碼器 2.6B）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2309.17080" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GAIA-2</td>
+<td>世界模型 8.4B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.20523" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Genie 2 / Genie 3</td>
+<td>未公開</td>
+<td><a class="ext" href="https://deepmind.google/discover/blog/genie-3-a-new-frontier-for-world-models/" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Cosmos-Predict1</td>
+<td>擴散 7B / 14B；自回歸 4B / 12B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2501.03575" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Navigation World Model（NWM）</td>
+<td>1B（CDiT）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2412.03572" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Genie Envisioner（GE）</td>
+<td>GE-Base 2B 級；GE-Act 動作解碼器 160M</td>
+<td><a class="ext" href="https://arxiv.org/abs/2508.05635" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>1X World Model</td>
+<td>骨幹 14B；IDM 未公開</td>
+<td><a class="ext" href="https://1x.tech/discover/world-model-self-learning" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>comma.ai 世界模型</td>
+<td>250M / 500M（主力）/ 1B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2504.19077" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Waymo World Model</td>
+<td>未公開（Genie 3 後訓練）</td>
+<td><a class="ext" href="https://waymo.com/blog/2026/02/the-waymo-world-model-a-new-frontier-for-autonomous-driving-simulation" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>小鵬世界基座模型</td>
+<td>72B（官方於 X9 發布會表示研發中）</td>
+<td><a class="ext" href="https://www.36kr.com/p/3463098292770179" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>華為 WE / 蔚來 NWM / Tesla 神經模擬器</td>
+<td>未公開</td>
+<td><a class="ext" href="https://www.humanoidsdaily.com/feed/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus" target="_blank" rel="noopener">來源</a></td>
+</tr>
+</tbody>
+</table></div>
       <nav class="pn"><a class="prev" href="synthetic-data.html"><small>上一篇</small>具身基礎模型與合成資料</a><a class="next" href="ai2-robotics.html"><small>下一篇</small>案例：智平方</a></nav>
       <footer class="foot">
         內容整理自本專案的調研筆記與討論（2026-10-21）。數字取自論文或官方頁；查不到的標「未公開」。外部連結均開新分頁。
@@ -418,7 +616,7 @@
   </main>
   <nav class="toc" aria-label="本頁目錄">
     <p class="toc-h">本頁目錄</p>
-    <ul><li><a href="#_2">重點摘要</a></li><li><a href="#vs">典型分工：車端／機器人端 vs 雲端</a></li><li><a href="#_3">總覽表</a></li><li><a href="#_4">機器人領域</a><ul><li><a href="#physical-intelligence0">Physical Intelligence：π0 系列 🟢📄（最推薦閱讀）</a></li><li><a href="#google-deepmindgemini-robotics-10-15-2">Google DeepMind：Gemini Robotics 1.0 → 1.5 → 2 📄🔒</a></li><li><a href="#nvidiagr00tvla-cosmos">NVIDIA：GR00T（VLA）+ Cosmos（世界模型）🟢📄</a></li><li><a href="#figure-aihelix-helix-02">Figure AI：Helix → Helix 02 🎤🔒</a></li><li><a href="#1x-technologiesneo-redwood-ai-1x-world-model">1X Technologies：NEO + Redwood AI + 1X World Model 🎤🔒</a></li><li><a href="#_5">中國機器人公司</a></li><li><a href="#_6">開源生態（入門最友善）</a></li></ul></li><li><a href="#_7">自動駕駛領域</a><ul><li><a href="#teslafsd-v12-optimus">Tesla：FSD v12+ 與 Optimus 🎤🔒</a></li><li><a href="#waymoemma-waymo-world-model">Waymo：EMMA + Waymo World Model 📄🎤🔒</a></li><li><a href="#wayvelingo-gaia">Wayve：LINGO + GAIA 📄🔒</a></li><li><a href="#nvidia-alpamayo-vla-wm">NVIDIA Alpamayo 🟢📄（自駕版「VLA + WM 全開源」）</a></li><li><a href="#commaai-openpilot-wm">comma.ai openpilot 🟢📄（最小成本的「WM 訓練策略」量產案例）</a></li><li><a href="#_8">中國車廠</a></li></ul></li><li><a href="#_9">五種共通整合模式</a></li><li><a href="#_10">想自己動手：建議順序</a></li></ul>
+    <ul><li><a href="#_2">重點摘要</a></li><li><a href="#vs">典型分工：車端／機器人端 vs 雲端</a></li><li><a href="#_3">總覽表</a></li><li><a href="#_4">機器人領域</a><ul><li><a href="#physical-intelligence0">Physical Intelligence：π0 系列 🟢📄（最推薦閱讀）</a></li><li><a href="#google-deepmindgemini-robotics-10-15-2">Google DeepMind：Gemini Robotics 1.0 → 1.5 → 2 📄🔒</a></li><li><a href="#nvidiagr00tvla-cosmos">NVIDIA：GR00T（VLA）+ Cosmos（世界模型）🟢📄</a></li><li><a href="#figure-aihelix-helix-02">Figure AI：Helix → Helix 02 🎤🔒</a></li><li><a href="#1x-technologiesneo-redwood-ai-1x-world-model">1X Technologies：NEO + Redwood AI + 1X World Model 🎤🔒</a></li><li><a href="#_5">中國機器人公司</a></li><li><a href="#_6">開源生態（入門最友善）</a></li></ul></li><li><a href="#_7">自動駕駛領域</a><ul><li><a href="#teslafsd-v12-optimus">Tesla：FSD v12+ 與 Optimus 🎤🔒</a></li><li><a href="#waymoemma-waymo-world-model">Waymo：EMMA + Waymo World Model 📄🎤🔒</a></li><li><a href="#wayvelingo-gaia">Wayve：LINGO + GAIA 📄🔒</a></li><li><a href="#nvidia-alpamayo-vla-wm">NVIDIA Alpamayo 🟢📄（自駕版「VLA + WM 全開源」）</a></li><li><a href="#commaai-openpilot-wm">comma.ai openpilot 🟢📄（最小成本的「WM 訓練策略」量產案例）</a></li><li><a href="#_8">中國車廠</a></li></ul></li><li><a href="#_9">五種共通整合模式</a></li><li><a href="#_10">想自己動手：建議順序</a></li><li><a href="#_11">本頁提到的模型參數量</a></li></ul>
   </nav>
 </div>
 <script src="assets/site.js"></script>

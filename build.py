@@ -11,6 +11,8 @@ from pathlib import Path
 
 import markdown
 
+import params_lib
+
 ROOT = Path(__file__).parent
 CONTENT = ROOT / 'content'
 OUT = ROOT / 'docs'
@@ -32,8 +34,9 @@ PAGES = [
     ('ai2-robotics', '09', '案例：智平方', '產品分類、競品比較、類腦與 SNN'),
     ('classic-world-models', '10', '經典世界模型論文精讀', 'World Models、MuZero、DreamerV3、GAIA-1、UniSim、Genie、Cosmos、V-JEPA 2'),
     ('wm-in-practice', '11', '世界模型代表作的實際應用', 'Cosmos、Wan、Veo、Genie、Dreamer、V-JEPA 被誰用；智平方、Helix、GR00T、GR-2 怎麼用'),
-    ('glossary', '12', '名詞速查', '常見術語一句話解釋'),
-    ('references', '13', '參考資料', '論文、官方頁與本專案原始產出'),
+    ('params', '12', '參數量總表', '所有出現過的 VLA 與世界模型，官方公布的參數量'),
+    ('glossary', '13', '名詞速查', '常見術語一句話解釋'),
+    ('references', '14', '參考資料', '論文、官方頁與本專案原始產出'),
 ]
 
 MD_EXT = ['tables', 'toc', 'admonition', 'attr_list', 'md_in_html', 'fenced_code', 'sane_lists', 'def_list']
@@ -122,6 +125,10 @@ def build():
     index = []
     for i, (slug, num, title, desc) in enumerate(PAGES):
         src = (CONTENT / f'{slug}.md').read_text(encoding='utf-8')
+        if slug == 'params':
+            src = src.replace('{{PARAMS_TABLES}}', params_lib.full_tables_md())
+        elif slug not in ('index', 'references', 'glossary'):
+            src = src.split(params_lib.MARK)[0].rstrip() + '\n\n' + params_lib.section_md(params_lib.mentioned(src))
         md = markdown.Markdown(extensions=MD_EXT, extension_configs=MD_CFG)
         body = postprocess(md.convert(src))
         if slug != 'references':

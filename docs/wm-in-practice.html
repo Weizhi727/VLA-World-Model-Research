@@ -32,7 +32,7 @@
 </header>
 <div class="shell">
   <aside class="side">
-    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li><a href="origins.html"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="architectures.html"><span class="num">02</span><span>主流模型架構</span></a></li><li><a href="taxonomy.html"><span class="num">03</span><span>流派怎麼分</span></a></li><li><a href="training.html"><span class="num">04</span><span>訓練、資料與評估</span></a></li><li><a href="world-model-roles.html"><span class="num">05</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">06</span><span>訓練時 vs 推論時</span></a></li><li><a href="synthetic-data.html"><span class="num">07</span><span>具身基礎模型與合成資料</span></a></li><li><a href="industry.html"><span class="num">08</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html"><span class="num">09</span><span>案例：智平方</span></a></li><li><a href="classic-world-models.html"><span class="num">10</span><span>經典世界模型論文精讀</span></a></li><li><a href="wm-in-practice.html" class="on"><span class="num">11</span><span>世界模型代表作的實際應用</span></a></li><li><a href="glossary.html"><span class="num">12</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">13</span><span>參考資料</span></a></li></ul>
+    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li><a href="origins.html"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="architectures.html"><span class="num">02</span><span>主流模型架構</span></a></li><li><a href="taxonomy.html"><span class="num">03</span><span>流派怎麼分</span></a></li><li><a href="training.html"><span class="num">04</span><span>訓練、資料與評估</span></a></li><li><a href="world-model-roles.html"><span class="num">05</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">06</span><span>訓練時 vs 推論時</span></a></li><li><a href="synthetic-data.html"><span class="num">07</span><span>具身基礎模型與合成資料</span></a></li><li><a href="industry.html"><span class="num">08</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html"><span class="num">09</span><span>案例：智平方</span></a></li><li><a href="classic-world-models.html"><span class="num">10</span><span>經典世界模型論文精讀</span></a></li><li><a href="wm-in-practice.html" class="on"><span class="num">11</span><span>世界模型代表作的實際應用</span></a></li><li><a href="params.html"><span class="num">12</span><span>參數量總表</span></a></li><li><a href="glossary.html"><span class="num">13</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">14</span><span>參考資料</span></a></li></ul>
     <p class="side-note">整理日期：2026-10-21<br>面向技術人員的科普整理</p>
   </aside>
   <main>
@@ -651,7 +651,240 @@
 <li>想讓<strong>推論</strong>受益：Cosmos Policy（I3）和 VPP／Video2Act（I1）是最成熟的開源路線；V-JEPA 2 當編碼器是 2026 年的新方向。</li>
 <li>想<strong>評估</strong>：Veo、Genie 3 效果最好，但只有 Google 體系能用；外部團隊用 Ctrl-World、Cosmos 替代。</li>
 </ol>
-      <nav class="pn"><a class="prev" href="classic-world-models.html"><small>上一篇</small>經典世界模型論文精讀</a><a class="next" href="glossary.html"><small>下一篇</small>名詞速查</a></nav>
+<!-- params:auto -->
+
+<h2 id="_10">本頁提到的模型參數量<a class="headerlink" href="#_10" title="連到此段">#</a></h2>
+<p>只列官方論文、官方頁或官方模型卡寫明的數字；查不到的標「未公開」，不推測。完整清單見 <a href="params.html">參數量總表</a>。</p>
+<p><strong>VLA</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>參數量</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OpenVLA</td>
+<td>7B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2406.09246" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>OpenVLA-OFT</td>
+<td>論文未另列（以 OpenVLA 7B 為底）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2502.19645" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>LAPA</td>
+<td>7B（LWM-Chat-1M）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2410.11758" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>π0</td>
+<td>約 3.3B（PaliGemma 3B + 動作專家約 300M）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2410.24164" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>π0-FAST</td>
+<td>論文未另列（以 PaliGemma 3B 為底）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2501.09747" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>π0.5</td>
+<td>VLM 2B（PaliGemma）+ 動作專家 300M；總數論文未寫</td>
+<td><a class="ext" href="https://arxiv.org/abs/2504.16054" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR00T N1</td>
+<td>約 2.2B（Eagle-2 VLM 1.34B + DiT 動作頭）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.14734" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR00T N1.5</td>
+<td>3B（官方權重 GR00T-N1.5-3B）</td>
+<td><a class="ext" href="https://huggingface.co/nvidia/GR00T-N1.5-3B" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Figure Helix</td>
+<td>S2 7B VLM + S1 80M</td>
+<td><a class="ext" href="https://www.figure.ai/news/helix" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Figure Helix 02</td>
+<td>S0 10M；S1、S2 未公開</td>
+<td><a class="ext" href="https://www.figure.ai/news/helix-02" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Gemini Robotics（1.0 / 1.5 / 2 / On-Device）</td>
+<td>未公開</td>
+<td><a class="ext" href="https://arxiv.org/abs/2510.03342" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>智元 τ0-VLA</td>
+<td>高階 VLM 9B + 低階 2B；世界模型未公開</td>
+<td><a class="ext" href="https://arxiv.org/abs/2608.16885" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR-2</td>
+<td>預設 230M（可訓練 95M）；規模實驗可訓練 30M–719M</td>
+<td><a class="ext" href="https://arxiv.org/abs/2410.06158" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR-3</td>
+<td>約 4B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2507.15493" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>VPP</td>
+<td>影片預測模型 1.5B（SVD）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2412.14803" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>智平方 Video2Act</td>
+<td>快系統 DiT 1B；慢系統取 HunyuanVideo（全模型 13B）前段層，截取部分未公開</td>
+<td><a class="ext" href="https://arxiv.org/abs/2512.03044" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>智平方 GOVLA 1.0（產品）</td>
+<td>未公開</td>
+<td><a class="ext" href="https://news.zol.com.cn/1184/11840628.html" target="_blank" rel="noopener">來源</a></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>世界模型</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>參數量</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DayDreamer</td>
+<td>論文未給總參數</td>
+<td><a class="ext" href="https://arxiv.org/abs/2206.14176" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>DreamerV3</td>
+<td>12M–400M（規模實驗）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2301.04104" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Dreamer 4</td>
+<td>2B（tokenizer 400M + 動力學 1.6B）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2509.24527" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>FOREWARN</td>
+<td>世界模型未公開；挑選用 VLM 為 Llama-3.2-11B-Vision</td>
+<td><a class="ext" href="https://arxiv.org/abs/2502.01828" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>V-JEPA 2</td>
+<td>編碼器 300M / 600M / 1B；V-JEPA 2-AC 預測器 300M</td>
+<td><a class="ext" href="https://github.com/facebookresearch/vjepa2" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>V-JEPA 2.1</td>
+<td>80M / 300M / 1B / 2B</td>
+<td><a class="ext" href="https://github.com/facebookresearch/vjepa2" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Genie（第一代）</td>
+<td>11B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2402.15391" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Genie 2 / Genie 3</td>
+<td>未公開</td>
+<td><a class="ext" href="https://deepmind.google/discover/blog/genie-3-a-new-frontier-for-world-models/" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Veo</td>
+<td>未公開</td>
+<td><a class="ext" href="https://arxiv.org/abs/2512.10675" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Cosmos-Predict1</td>
+<td>擴散 7B / 14B；自回歸 4B / 12B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2501.03575" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Cosmos-Predict2 / 2.5</td>
+<td>2B / 14B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2511.00062" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Cosmos Policy</td>
+<td>2B（Cosmos-Predict2-2B 微調）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2601.16163" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Wan 2.1</td>
+<td>1.3B、14B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.20314" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Wan 2.2</td>
+<td>TI2V 5B；A14B MoE 總 27B、每步啟用 14B</td>
+<td><a class="ext" href="https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>HunyuanVideo</td>
+<td>13B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2412.03603" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>CogVideoX</td>
+<td>2B、5B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2408.06072" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>LTX-Video</td>
+<td>1.9B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2501.00103" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Stable Video Diffusion</td>
+<td>1.5B（依 VPP 論文）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2412.14803" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Genie Envisioner（GE）</td>
+<td>GE-Base 2B 級；GE-Act 動作解碼器 160M</td>
+<td><a class="ext" href="https://arxiv.org/abs/2508.05635" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Ctrl-World</td>
+<td>1.5B（SVD 初始化）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2510.10125" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>iVideoGPT</td>
+<td>138M / 436M（VLA-Reasoner 用的版本 600M）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2405.15223" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>TesserAct</td>
+<td>未公開（CogVideoX 初始化）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2504.20995" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>World Labs Marble</td>
+<td>未公開</td>
+<td><a class="ext" href="https://www.worldlabs.ai/case-studies/1-robotics" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Waymo World Model</td>
+<td>未公開（Genie 3 後訓練）</td>
+<td><a class="ext" href="https://waymo.com/blog/2026/02/the-waymo-world-model-a-new-frontier-for-autonomous-driving-simulation" target="_blank" rel="noopener">來源</a></td>
+</tr>
+</tbody>
+</table></div>
+      <nav class="pn"><a class="prev" href="classic-world-models.html"><small>上一篇</small>經典世界模型論文精讀</a><a class="next" href="params.html"><small>下一篇</small>參數量總表</a></nav>
       <footer class="foot">
         內容整理自本專案的調研筆記與討論（2026-10-21）。數字取自論文或官方頁；查不到的標「未公開」。外部連結均開新分頁。
       </footer>
@@ -659,7 +892,7 @@
   </main>
   <nav class="toc" aria-label="本頁目錄">
     <p class="toc-h">本頁目錄</p>
-    <ul><li><a href="#_2">重點先講</a></li><li><a href="#_3">一、影片生成類</a><ul><li><a href="#1-nvidia-cosmospredict-transfer-tokenizer">1. NVIDIA Cosmos（Predict / Transfer / Tokenizer）</a></li><li><a href="#2-wanwan21-22">2. 阿里 Wan（WAN2.1 / 2.2）</a></li><li><a href="#3-stable-video-diffusionsvdhunyuanvideoopensora">3. Stable Video Diffusion（SVD）、HunyuanVideo、OpenSora 等開源影片模型</a></li><li><a href="#4-google-veo">4. Google Veo</a></li><li><a href="#5-genie-genie-1-genie-3">5. Genie 系列（Genie 1 / Genie 3）</a></li></ul></li><li><a href="#_4">二、潛空間動力學類</a><ul><li><a href="#1-dreamerv3">1. DreamerV3</a></li><li><a href="#2-dreamer-4">2. Dreamer 4</a></li><li><a href="#3-vla">3. 其他潛空間模型的 VLA 用法（參考）</a></li></ul></li><li><a href="#jepa-v-jepa-2">三、JEPA 類（V-JEPA 2）</a></li><li><a href="#3d4d">四、3D／4D 類</a></li><li><a href="#_5">五、智平方到底有沒有用世界模型？</a><ul><li><a href="#_6">結論</a></li><li><a href="#_7">怎麼解讀</a></li></ul></li><li><a href="#vla">六、大廠 VLA 產品：在什麼階段、怎麼用世界模型</a><ul><li><a href="#figure-helix2025-02-helix-022026-01">Figure Helix（2025-02）與 Helix 02（2026-01）</a></li><li><a href="#nvidia-gr00t-n12025-03">NVIDIA GR00T N1（2025-03）</a></li><li><a href="#nvidia-gr00t-n152025-06">NVIDIA GR00T N1.5（2025-06）</a></li><li><a href="#gr-22024-10-gr-32025-07">字節 GR-2（2024-10）與 GR-3（2025-07）</a></li><li><a href="#_8">對照：其他公開用法</a></li></ul></li><li><a href="#_9">七、總覽：四類代表作 × 用途</a></li></ul>
+    <ul><li><a href="#_2">重點先講</a></li><li><a href="#_3">一、影片生成類</a><ul><li><a href="#1-nvidia-cosmospredict-transfer-tokenizer">1. NVIDIA Cosmos（Predict / Transfer / Tokenizer）</a></li><li><a href="#2-wanwan21-22">2. 阿里 Wan（WAN2.1 / 2.2）</a></li><li><a href="#3-stable-video-diffusionsvdhunyuanvideoopensora">3. Stable Video Diffusion（SVD）、HunyuanVideo、OpenSora 等開源影片模型</a></li><li><a href="#4-google-veo">4. Google Veo</a></li><li><a href="#5-genie-genie-1-genie-3">5. Genie 系列（Genie 1 / Genie 3）</a></li></ul></li><li><a href="#_4">二、潛空間動力學類</a><ul><li><a href="#1-dreamerv3">1. DreamerV3</a></li><li><a href="#2-dreamer-4">2. Dreamer 4</a></li><li><a href="#3-vla">3. 其他潛空間模型的 VLA 用法（參考）</a></li></ul></li><li><a href="#jepa-v-jepa-2">三、JEPA 類（V-JEPA 2）</a></li><li><a href="#3d4d">四、3D／4D 類</a></li><li><a href="#_5">五、智平方到底有沒有用世界模型？</a><ul><li><a href="#_6">結論</a></li><li><a href="#_7">怎麼解讀</a></li></ul></li><li><a href="#vla">六、大廠 VLA 產品：在什麼階段、怎麼用世界模型</a><ul><li><a href="#figure-helix2025-02-helix-022026-01">Figure Helix（2025-02）與 Helix 02（2026-01）</a></li><li><a href="#nvidia-gr00t-n12025-03">NVIDIA GR00T N1（2025-03）</a></li><li><a href="#nvidia-gr00t-n152025-06">NVIDIA GR00T N1.5（2025-06）</a></li><li><a href="#gr-22024-10-gr-32025-07">字節 GR-2（2024-10）與 GR-3（2025-07）</a></li><li><a href="#_8">對照：其他公開用法</a></li></ul></li><li><a href="#_9">七、總覽：四類代表作 × 用途</a></li><li><a href="#_10">本頁提到的模型參數量</a></li></ul>
   </nav>
 </div>
 <script src="assets/site.js"></script>

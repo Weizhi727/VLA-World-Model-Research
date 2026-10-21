@@ -48,3 +48,7 @@ python3 -m http.server -d docs 8000   # 本地預覽 http://localhost:8000
 ## 部署
 
 GitHub Pages 從 `main` 分支的 `/docs` 資料夾發布。修改後執行 `python3 build.py` 再 commit，推上 `main` 即自動更新。
+
+## 參數量資料
+
+`data/params.json` 是所有模型參數量的唯一來源（只收官方明寫的數字）。`build.py` 會用它產生〈參數量總表〉，並在各章末尾自動附上「本頁提到的模型參數量」。新增模型時改這個檔案再重建即可；`update_notes.py` 可把同一份資料同步到專案的研究筆記。

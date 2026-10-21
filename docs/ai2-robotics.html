@@ -32,7 +32,7 @@
 </header>
 <div class="shell">
   <aside class="side">
-    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li><a href="origins.html"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="architectures.html"><span class="num">02</span><span>主流模型架構</span></a></li><li><a href="taxonomy.html"><span class="num">03</span><span>流派怎麼分</span></a></li><li><a href="training.html"><span class="num">04</span><span>訓練、資料與評估</span></a></li><li><a href="world-model-roles.html"><span class="num">05</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">06</span><span>訓練時 vs 推論時</span></a></li><li><a href="synthetic-data.html"><span class="num">07</span><span>具身基礎模型與合成資料</span></a></li><li><a href="industry.html"><span class="num">08</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html" class="on"><span class="num">09</span><span>案例：智平方</span></a></li><li><a href="classic-world-models.html"><span class="num">10</span><span>經典世界模型論文精讀</span></a></li><li><a href="wm-in-practice.html"><span class="num">11</span><span>世界模型代表作的實際應用</span></a></li><li><a href="glossary.html"><span class="num">12</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">13</span><span>參考資料</span></a></li></ul>
+    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li><a href="origins.html"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="architectures.html"><span class="num">02</span><span>主流模型架構</span></a></li><li><a href="taxonomy.html"><span class="num">03</span><span>流派怎麼分</span></a></li><li><a href="training.html"><span class="num">04</span><span>訓練、資料與評估</span></a></li><li><a href="world-model-roles.html"><span class="num">05</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">06</span><span>訓練時 vs 推論時</span></a></li><li><a href="synthetic-data.html"><span class="num">07</span><span>具身基礎模型與合成資料</span></a></li><li><a href="industry.html"><span class="num">08</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html" class="on"><span class="num">09</span><span>案例：智平方</span></a></li><li><a href="classic-world-models.html"><span class="num">10</span><span>經典世界模型論文精讀</span></a></li><li><a href="wm-in-practice.html"><span class="num">11</span><span>世界模型代表作的實際應用</span></a></li><li><a href="params.html"><span class="num">12</span><span>參數量總表</span></a></li><li><a href="glossary.html"><span class="num">13</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">14</span><span>參考資料</span></a></li></ul>
     <p class="side-note">整理日期：2026-10-21<br>面向技術人員的科普整理</p>
   </aside>
   <main>
@@ -543,6 +543,164 @@
 <p class="admonition-title">一句話對照</p>
 <p><strong>數位果蠅</strong>：結構照抄真實大腦、<strong>不訓練</strong>、神經元用 SNN，是「仿腦」。<strong>NeuroVLA</strong>：功能分工借鏡大腦、<strong>靠資料訓練</strong>、只有最底層用 SNN，是「類腦啟發的混合架構」。Figure Helix 02 也是三層卻沒自稱類腦；真正的技術差異在<strong>有沒有用脈衝神經元與神經形態硬體</strong>。</p>
 </div>
+<!-- params:auto -->
+
+<h2 id="_10">本頁提到的模型參數量<a class="headerlink" href="#_10" title="連到此段">#</a></h2>
+<p>只列官方論文、官方頁或官方模型卡寫明的數字；查不到的標「未公開」，不推測。完整清單見 <a href="params.html">參數量總表</a>。</p>
+<p><strong>VLA</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>參數量</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OpenVLA</td>
+<td>7B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2406.09246" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>π0</td>
+<td>約 3.3B（PaliGemma 3B + 動作專家約 300M）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2410.24164" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>π0.5</td>
+<td>VLM 2B（PaliGemma）+ 動作專家 300M；總數論文未寫</td>
+<td><a class="ext" href="https://arxiv.org/abs/2504.16054" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>CogACT</td>
+<td>約 7B（論文：與 OpenVLA 同級）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2411.19650" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>HybridVLA</td>
+<td>7B（LLaMA-2）；小版 2.7B（Phi-2）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.10631" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR00T N1</td>
+<td>約 2.2B（Eagle-2 VLM 1.34B + DiT 動作頭）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.14734" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR00T N1.5</td>
+<td>3B（官方權重 GR00T-N1.5-3B）</td>
+<td><a class="ext" href="https://huggingface.co/nvidia/GR00T-N1.5-3B" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Figure Helix</td>
+<td>S2 7B VLM + S1 80M</td>
+<td><a class="ext" href="https://www.figure.ai/news/helix" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Figure Helix 02</td>
+<td>S0 10M；S1、S2 未公開</td>
+<td><a class="ext" href="https://www.figure.ai/news/helix-02" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Gemini Robotics（1.0 / 1.5 / 2 / On-Device）</td>
+<td>未公開</td>
+<td><a class="ext" href="https://arxiv.org/abs/2510.03342" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>智元 GO-1</td>
+<td>VLM InternVL2.5-2B；潛在規劃器與動作專家未公開</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.06669" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>智平方 RoboMamba（GOVLA 0.0）</td>
+<td>Mamba 2.7B（全模型約 3.2B）；策略頭 3.7M</td>
+<td><a class="ext" href="https://arxiv.org/abs/2406.04339" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>智平方 FiS-VLA（GOVLA 0.5）</td>
+<td>LLaMA2 7B；快系統為最後 2 層（未單列）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2506.01953" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>智平方 Video2Act</td>
+<td>快系統 DiT 1B；慢系統取 HunyuanVideo（全模型 13B）前段層，截取部分未公開</td>
+<td><a class="ext" href="https://arxiv.org/abs/2512.03044" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>智平方 NeuroVLA</td>
+<td>未公開（Qwen-VL 尺寸未寫）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2601.14628" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>智平方 GOVLA 1.0（產品）</td>
+<td>未公開</td>
+<td><a class="ext" href="https://news.zol.com.cn/1184/11840628.html" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>LLaVA-1.5（VLM，附錄）</td>
+<td>7B、13B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2310.03744" target="_blank" rel="noopener">來源</a></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>世界模型</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>參數量</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>V-JEPA 2</td>
+<td>編碼器 300M / 600M / 1B；V-JEPA 2-AC 預測器 300M</td>
+<td><a class="ext" href="https://github.com/facebookresearch/vjepa2" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>V-JEPA 2.1</td>
+<td>80M / 300M / 1B / 2B</td>
+<td><a class="ext" href="https://github.com/facebookresearch/vjepa2" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Genie（第一代）</td>
+<td>11B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2402.15391" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Cosmos-Predict1</td>
+<td>擴散 7B / 14B；自回歸 4B / 12B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2501.03575" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Cosmos-Predict2 / 2.5</td>
+<td>2B / 14B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2511.00062" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Cosmos Policy</td>
+<td>2B（Cosmos-Predict2-2B 微調）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2601.16163" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Wan 2.2</td>
+<td>TI2V 5B；A14B MoE 總 27B、每步啟用 14B</td>
+<td><a class="ext" href="https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>HunyuanVideo</td>
+<td>13B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2412.03603" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>小鵬世界基座模型</td>
+<td>72B（官方於 X9 發布會表示研發中）</td>
+<td><a class="ext" href="https://www.36kr.com/p/3463098292770179" target="_blank" rel="noopener">來源</a></td>
+</tr>
+</tbody>
+</table></div>
       <nav class="pn"><a class="prev" href="industry.html"><small>上一篇</small>業界產品盤點</a><a class="next" href="classic-world-models.html"><small>下一篇</small>經典世界模型論文精讀</a></nav>
       <footer class="foot">
         內容整理自本專案的調研筆記與討論（2026-10-21）。數字取自論文或官方頁；查不到的標「未公開」。外部連結均開新分頁。
@@ -551,7 +709,7 @@
   </main>
   <nav class="toc" aria-label="本頁目錄">
     <p class="toc-h">本頁目錄</p>
-    <ul><li><a href="#_1">重點先講</a></li><li><a href="#_2">產品與模型一覽</a></li><li><a href="#_3">最有辨識度的設計：快系統「嵌」在慢系統裡</a></li><li><a href="#_4">逐一對照分類法</a><ul><li><a href="#robomamba">RoboMamba：單系統</a></li><li><a href="#govla">GOVLA：雙系統，偏「語言子任務」灰色地帶</a></li><li><a href="#fis-vla">FiS-VLA：雙系統 + 混合解碼（技術含量最高）</a></li><li><a href="#video2act">Video2Act：雙系統 +「借世界模型的眼睛」</a></li><li><a href="#neurovla">NeuroVLA：分類法之外的「類腦三層」</a></li><li><a href="#_5">總表：放到分類地圖上</a></li></ul></li><li><a href="#_6">對照競品：大模型、小模型各多大</a></li><li><a href="#_7">怎麼訓練的（只寫查得到的）</a><ul><li><a href="#fis-vla_1">FiS-VLA（訓練細節最完整）</a></li><li><a href="#video2act_1">Video2Act</a></li><li><a href="#neurovla_1">NeuroVLA</a></li><li><a href="#robomamba_1">RoboMamba</a></li><li><a href="#govla-10">GOVLA 1.0 產品：只有方向性說法</a></li></ul></li><li><a href="#_8">優勢與要打折扣的地方</a></li><li><a href="#vs-neurovla">「類腦」怎麼認定：數位果蠅 vs NeuroVLA</a><ul><li><a href="#_9">三個常被混用的詞</a></li><li><a href="#snn">數位果蠅算 SNN 嗎？要看是哪一隻</a></li><li><a href="#neurovla_2">NeuroVLA 算「類腦」嗎？算「類腦啟發」，不算「仿腦」</a></li></ul></li></ul>
+    <ul><li><a href="#_1">重點先講</a></li><li><a href="#_2">產品與模型一覽</a></li><li><a href="#_3">最有辨識度的設計：快系統「嵌」在慢系統裡</a></li><li><a href="#_4">逐一對照分類法</a><ul><li><a href="#robomamba">RoboMamba：單系統</a></li><li><a href="#govla">GOVLA：雙系統，偏「語言子任務」灰色地帶</a></li><li><a href="#fis-vla">FiS-VLA：雙系統 + 混合解碼（技術含量最高）</a></li><li><a href="#video2act">Video2Act：雙系統 +「借世界模型的眼睛」</a></li><li><a href="#neurovla">NeuroVLA：分類法之外的「類腦三層」</a></li><li><a href="#_5">總表：放到分類地圖上</a></li></ul></li><li><a href="#_6">對照競品：大模型、小模型各多大</a></li><li><a href="#_7">怎麼訓練的（只寫查得到的）</a><ul><li><a href="#fis-vla_1">FiS-VLA（訓練細節最完整）</a></li><li><a href="#video2act_1">Video2Act</a></li><li><a href="#neurovla_1">NeuroVLA</a></li><li><a href="#robomamba_1">RoboMamba</a></li><li><a href="#govla-10">GOVLA 1.0 產品：只有方向性說法</a></li></ul></li><li><a href="#_8">優勢與要打折扣的地方</a></li><li><a href="#vs-neurovla">「類腦」怎麼認定：數位果蠅 vs NeuroVLA</a><ul><li><a href="#_9">三個常被混用的詞</a></li><li><a href="#snn">數位果蠅算 SNN 嗎？要看是哪一隻</a></li><li><a href="#neurovla_2">NeuroVLA 算「類腦」嗎？算「類腦啟發」，不算「仿腦」</a></li></ul></li><li><a href="#_10">本頁提到的模型參數量</a></li></ul>
   </nav>
 </div>
 <script src="assets/site.js"></script>

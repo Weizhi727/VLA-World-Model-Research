@@ -1,0 +1,809 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>參數量總表 · VLA × 世界模型 調研</title>
+<meta name="description" content="所有出現過的 VLA 與世界模型，官方公布的參數量">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body data-page="params">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead"/>
+    </marker>
+    <marker id="arr-wm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead wm"/>
+    </marker>
+    <marker id="arr-vla" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead vla"/>
+    </marker>
+  </defs>
+</svg>
+<header class="top">
+  <button class="menu" aria-label="開啟目錄" aria-expanded="false">☰</button>
+  <a class="brand" href="index.html"><span class="dot vla"></span><span class="dot wm"></span>VLA × 世界模型 調研</a>
+  <button class="theme" aria-label="切換深淺色">◐</button>
+</header>
+<div class="shell">
+  <aside class="side">
+    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li><a href="origins.html"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="architectures.html"><span class="num">02</span><span>主流模型架構</span></a></li><li><a href="taxonomy.html"><span class="num">03</span><span>流派怎麼分</span></a></li><li><a href="training.html"><span class="num">04</span><span>訓練、資料與評估</span></a></li><li><a href="world-model-roles.html"><span class="num">05</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">06</span><span>訓練時 vs 推論時</span></a></li><li><a href="synthetic-data.html"><span class="num">07</span><span>具身基礎模型與合成資料</span></a></li><li><a href="industry.html"><span class="num">08</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html"><span class="num">09</span><span>案例：智平方</span></a></li><li><a href="classic-world-models.html"><span class="num">10</span><span>經典世界模型論文精讀</span></a></li><li><a href="wm-in-practice.html"><span class="num">11</span><span>世界模型代表作的實際應用</span></a></li><li><a href="params.html" class="on"><span class="num">12</span><span>參數量總表</span></a></li><li><a href="glossary.html"><span class="num">13</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">14</span><span>參考資料</span></a></li></ul>
+    <p class="side-note">整理日期：2026-10-21<br>面向技術人員的科普整理</p>
+  </aside>
+  <main>
+    <article class="doc">
+      <h1 id="_1">參數量總表<a class="headerlink" href="#_1" title="連到此段">#</a></h1>
+<p class="lede">把這個網站、專案研究筆記與三份簡報裡出現過的 VLA 與世界模型，逐一回到論文、官方頁或官方模型卡核對參數量。<b>只寫官方明寫的數字；官方沒說的一律標「未公開」，不推測、不引用第三方估算。</b>其他每一章的最後也會自動列出「本頁提到的模型參數量」，資料都來自這張表。</p>
+
+<div class="admonition key">
+<p class="admonition-title">重點先讀</p>
+<ol>
+<li><strong>量產級 VLA 集中在 2B–5B</strong>：π0 約 3.3B、GR00T N1 約 2.2B、GR00T N1.5／N1.6 3B、GR-3 約 4B、π*0.6 是 Gemma 3 4B 加 860M 動作專家。早期的 RT-2（55B）、PaLM-E（562B）太大，跑不動即時控制。</li>
+<li><strong>真正在高頻迴圈裡跑的「快系統」都很小</strong>：Helix S1 80M（200 Hz）、Figure Helix 02 的 S0 只有 10M（1 kHz）、1X Redwood 160M。大模型負責理解，小模型負責動。</li>
+<li><strong>世界模型從 19M 到 14B 都有</strong>：放進推論迴圈的通常是 2B 以下（Cosmos Policy 2B、V-JEPA 2-AC 預測器 300M、VLA-RFT 138M）；當資料工廠或考官的則用大的（WAN2.1 14B、Cosmos 14B、1X 14B）。</li>
+<li><strong>最強的那幾個都沒公開</strong>：Gemini Robotics、Veo、Genie 3、Sora、Tesla、理想 MindVLA、智平方 GOVLA 1.0 都查不到官方數字。</li>
+<li><strong>注意「總數」與「組成」</strong>：很多論文只寫骨幹大小（例如 π0.5 只寫 VLM 2B 與動作專家 300M，沒寫總數）。表中照原文寫組成，不自己加總；少數由原文數字相加的會註明。</li>
+</ol>
+</div>
+<figure class="dg">
+<svg viewBox="0 0 800 300" role="img" aria-label="VLA 與世界模型參數量的對數刻度分布">
+<rect class="n band" x="10" y="10" width="780" height="280" rx="14"/>
+<line x1="60" y1="40" x2="60" y2="280" class="ar dash" style="marker-end:none;opacity:.35"/><text x="60" y="32" text-anchor="middle" class="s">10M</text>
+<line x1="206" y1="40" x2="206" y2="280" class="ar dash" style="marker-end:none;opacity:.35"/><text x="206" y="32" text-anchor="middle" class="s">100M</text>
+<line x1="352" y1="40" x2="352" y2="280" class="ar dash" style="marker-end:none;opacity:.35"/><text x="352" y="32" text-anchor="middle" class="s">1B</text>
+<line x1="498" y1="40" x2="498" y2="280" class="ar dash" style="marker-end:none;opacity:.35"/><text x="498" y="32" text-anchor="middle" class="s">10B</text>
+<line x1="643" y1="40" x2="643" y2="280" class="ar dash" style="marker-end:none;opacity:.35"/><text x="643" y="32" text-anchor="middle" class="s">100B</text>
+<text x="20" y="80" class="h vla">VLA</text><text x="20" y="232" class="h wm">WM</text>
+<line x1="40" y1="150" x2="780" y2="150" class="ar"/>
+<circle cx="60" cy="143" r="5" class="n vla"/><line x1="60" y1="138" x2="60" y2="132" class="ar vla" style="marker-end:none"/><text x="60" y="128" text-anchor="middle" class="s vla">S0</text>
+<circle cx="123" cy="143" r="5" class="n vla"/><line x1="123" y1="138" x2="123" y2="108" class="ar vla" style="marker-end:none"/><text x="123" y="104" text-anchor="middle" class="s vla">Octo-S</text>
+<circle cx="192" cy="143" r="5" class="n vla"/><line x1="192" y1="138" x2="192" y2="84" class="ar vla" style="marker-end:none"/><text x="192" y="80" text-anchor="middle" class="s vla">Helix S1</text>
+<circle cx="236" cy="143" r="5" class="n vla"/><line x1="236" y1="138" x2="236" y2="132" class="ar vla" style="marker-end:none"/><text x="236" y="128" text-anchor="middle" class="s vla">Redwood</text>
+<circle cx="301" cy="143" r="5" class="n vla"/><line x1="301" y1="138" x2="301" y2="108" class="ar vla" style="marker-end:none"/><text x="301" y="104" text-anchor="middle" class="s vla">SmolVLA</text>
+<circle cx="402" cy="143" r="5" class="n vla"/><line x1="402" y1="138" x2="402" y2="84" class="ar vla" style="marker-end:none"/><text x="402" y="80" text-anchor="middle" class="s vla">GR00T N1</text>
+<circle cx="427" cy="143" r="5" class="n vla"/><line x1="427" y1="138" x2="427" y2="132" class="ar vla" style="marker-end:none"/><text x="427" y="128" text-anchor="middle" class="s vla">π0</text>
+<circle cx="439" cy="143" r="5" class="n vla"/><line x1="439" y1="138" x2="439" y2="108" class="ar vla" style="marker-end:none"/><text x="439" y="104" text-anchor="middle" class="s vla">GR-3</text>
+<circle cx="475" cy="143" r="5" class="n vla"/><line x1="475" y1="138" x2="475" y2="84" class="ar vla" style="marker-end:none"/><text x="475" y="80" text-anchor="middle" class="s vla">OpenVLA</text>
+<circle cx="605" cy="143" r="5" class="n vla"/><line x1="605" y1="138" x2="605" y2="132" class="ar vla" style="marker-end:none"/><text x="605" y="128" text-anchor="middle" class="s vla">RT-2</text>
+<circle cx="753" cy="143" r="5" class="n vla"/><line x1="753" y1="138" x2="753" y2="108" class="ar vla" style="marker-end:none"/><text x="753" y="104" text-anchor="middle" class="s vla">PaLM-E</text>
+<circle cx="101" cy="157" r="5" class="n wm"/><line x1="101" y1="162" x2="101" y2="167" class="ar wm" style="marker-end:none"/><text x="101" y="180" text-anchor="middle" class="s wm">DINO-WM</text>
+<circle cx="226" cy="157" r="5" class="n wm"/><line x1="226" y1="162" x2="226" y2="191" class="ar wm" style="marker-end:none"/><text x="226" y="204" text-anchor="middle" class="s wm">VLA-RFT</text>
+<circle cx="275" cy="157" r="5" class="n wm"/><line x1="275" y1="162" x2="275" y2="215" class="ar wm" style="marker-end:none"/><text x="275" y="228" text-anchor="middle" class="s wm">V-JEPA 2-AC</text>
+<circle cx="308" cy="157" r="5" class="n wm"/><line x1="308" y1="162" x2="308" y2="239" class="ar wm" style="marker-end:none"/><text x="308" y="252" text-anchor="middle" class="s wm">comma</text>
+<circle cx="377" cy="157" r="5" class="n wm"/><line x1="377" y1="162" x2="377" y2="167" class="ar wm" style="marker-end:none"/><text x="373" y="180" text-anchor="end" class="s wm">SVD</text>
+<circle cx="396" cy="157" r="5" class="n wm"/><line x1="396" y1="162" x2="396" y2="191" class="ar wm" style="marker-end:none"/><text x="396" y="204" text-anchor="middle" class="s wm">Dreamer 4</text>
+<circle cx="486" cy="157" r="5" class="n wm"/><line x1="486" y1="162" x2="486" y2="239" class="ar wm" style="marker-end:none"/><text x="482" y="252" text-anchor="end" class="s wm">GAIA-2</text>
+<circle cx="504" cy="157" r="5" class="n wm"/><line x1="504" y1="162" x2="504" y2="215" class="ar wm" style="marker-end:none"/><text x="508" y="228" text-anchor="start" class="s wm">Genie</text>
+<circle cx="519" cy="157" r="5" class="n wm"/><line x1="519" y1="162" x2="519" y2="167" class="ar wm" style="marker-end:none"/><text x="523" y="180" text-anchor="start" class="s wm">Cosmos／1X</text>
+</svg>
+<figcaption>對數刻度：每一格差 10 倍。上排 VLA、下排世界模型，只畫官方公布數字的代表；Gemini Robotics、Veo、Genie 3、Sora、Tesla 等未公開的不在圖上。</figcaption></figure>
+
+<h2 id="vla">VLA 與相關策略模型<a class="headerlink" href="#vla" title="連到此段">#</a></h2>
+<p>共 53 個。</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>機構與年份</th>
+<th>參數量</th>
+<th>結構重點</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RT-1</td>
+<td>Google 2022</td>
+<td>35M</td>
+<td>EfficientNet + TokenLearner + Transformer</td>
+<td><a class="ext" href="https://arxiv.org/abs/2212.06817" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Gato</td>
+<td>DeepMind 2022</td>
+<td>1.2B（精確 1.18B）</td>
+<td>24 層 decoder-only Transformer</td>
+<td><a class="ext" href="https://arxiv.org/abs/2205.06175" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>VIMA</td>
+<td>NVIDIA / Stanford 2022</td>
+<td>2M–200M（7 個規模）</td>
+<td>多模態提示的 Transformer 策略</td>
+<td><a class="ext" href="https://arxiv.org/abs/2210.03094" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>PaLM-E</td>
+<td>Google 2023</td>
+<td>最大 562B（RT-2 用 12B 版）</td>
+<td>PaLM + ViT 具身多模態模型</td>
+<td><a class="ext" href="https://arxiv.org/abs/2303.03378" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>RT-2</td>
+<td>Google DeepMind 2023</td>
+<td>5B、55B（PaLI-X 版）；12B（PaLM-E 版）</td>
+<td>VLM 原封不動，動作離散成 token</td>
+<td><a class="ext" href="https://arxiv.org/abs/2307.15818" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>ACT</td>
+<td>Stanford 2023</td>
+<td>約 80M</td>
+<td>CVAE + Transformer，動作分塊</td>
+<td><a class="ext" href="https://arxiv.org/abs/2304.13705" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Diffusion Policy</td>
+<td>Columbia / TRI 2023</td>
+<td>論文有多種設定，無單一官方數字</td>
+<td>CNN 或 Transformer 去噪網路</td>
+<td><a class="ext" href="https://arxiv.org/abs/2303.04137" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR-1</td>
+<td>ByteDance 2023</td>
+<td>195M（可訓練 46M）</td>
+<td>GPT 式影片預測 + 動作</td>
+<td><a class="ext" href="https://arxiv.org/abs/2312.13139" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Octo</td>
+<td>UC Berkeley 等 2024</td>
+<td>Octo-Small 27M、Octo-Base 93M</td>
+<td>Transformer 骨幹 + 擴散動作頭</td>
+<td><a class="ext" href="https://arxiv.org/abs/2405.12213" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>OpenVLA</td>
+<td>Stanford / Berkeley / TRI 2024</td>
+<td>7B</td>
+<td>DINOv2 + SigLIP + Llama 2 7B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2406.09246" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>OpenVLA-OFT</td>
+<td>Stanford 2025</td>
+<td>論文未另列（以 OpenVLA 7B 為底）</td>
+<td>平行解碼 + 動作塊 + 連續回歸</td>
+<td><a class="ext" href="https://arxiv.org/abs/2502.19645" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>ECoT</td>
+<td>UC Berkeley 等 2024</td>
+<td>7B（以 OpenVLA 為底）</td>
+<td>先輸出推理鏈再出動作</td>
+<td><a class="ext" href="https://arxiv.org/abs/2407.08693" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>LAPA</td>
+<td>KAIST / UW / Microsoft 等 2024</td>
+<td>7B（LWM-Chat-1M）</td>
+<td>潛在動作預訓練</td>
+<td><a class="ext" href="https://arxiv.org/abs/2410.11758" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>RDT</td>
+<td>清華 2024</td>
+<td>1.2B</td>
+<td>雙臂擴散 Transformer</td>
+<td><a class="ext" href="https://arxiv.org/abs/2410.07864" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>π0</td>
+<td>Physical Intelligence 2024</td>
+<td>約 3.3B（PaliGemma 3B + 動作專家約 300M）</td>
+<td>VLM + flow matching 動作專家</td>
+<td><a class="ext" href="https://arxiv.org/abs/2410.24164" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>π0-FAST</td>
+<td>Physical Intelligence 2025</td>
+<td>論文未另列（以 PaliGemma 3B 為底）</td>
+<td>FAST 頻域離散 tokenizer</td>
+<td><a class="ext" href="https://arxiv.org/abs/2501.09747" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>π0.5</td>
+<td>Physical Intelligence 2025</td>
+<td>VLM 2B（PaliGemma）+ 動作專家 300M；總數論文未寫</td>
+<td>同模型內分層：先出子任務再出動作</td>
+<td><a class="ext" href="https://arxiv.org/abs/2504.16054" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>π*0.6</td>
+<td>Physical Intelligence 2025</td>
+<td>VLM Gemma 3 4B + 動作專家 860M；價值函數 670M</td>
+<td>Recap：離線 RL + advantage conditioning</td>
+<td><a class="ext" href="https://arxiv.org/abs/2511.14759" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>π0.7</td>
+<td>Physical Intelligence 2026</td>
+<td>官方頁未公開（媒體報導 Gemma 3 4B + 860M 動作專家）</td>
+<td>組合式泛化</td>
+<td><a class="ext" href="https://the-decoder.com/physical-intelligence-shows-robot-model-with-llm-like-generalization-flaws-included/" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Hi Robot</td>
+<td>Physical Intelligence 2025</td>
+<td>高低階皆以 PaliGemma-3B 為底</td>
+<td>高階 VLM 出語言子任務，低階 π0</td>
+<td><a class="ext" href="https://arxiv.org/abs/2502.19417" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>CogACT</td>
+<td>Microsoft / 清華 2024</td>
+<td>約 7B（論文：與 OpenVLA 同級）</td>
+<td>VLM + 擴散動作模組</td>
+<td><a class="ext" href="https://arxiv.org/abs/2411.19650" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>HybridVLA</td>
+<td>北大等 2025</td>
+<td>7B（LLaMA-2）；小版 2.7B（Phi-2）</td>
+<td>同一 LLM 內混合自回歸與擴散</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.10631" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>UniVLA</td>
+<td>HKU / OpenDriveLab 2025</td>
+<td>7B 骨幹（Prismatic-7B）；動作解碼頭約 12.6M</td>
+<td>DINOv2 特徵空間的任務導向潛在動作</td>
+<td><a class="ext" href="https://arxiv.org/abs/2505.06111" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Seer</td>
+<td>上海 AI Lab 等 2024</td>
+<td>316M（可訓練 65M）</td>
+<td>預測式逆動力學</td>
+<td><a class="ext" href="https://arxiv.org/abs/2412.15109" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>VLA-Adapter</td>
+<td>2025</td>
+<td>骨幹 0.5B</td>
+<td>小骨幹 + 橋接注意力</td>
+<td><a class="ext" href="https://arxiv.org/abs/2509.09372" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>SmolVLA</td>
+<td>Hugging Face 2025</td>
+<td>450M（動作專家約 100M）；另有 0.24B、2.25B</td>
+<td>SmolVLM2 前半層 + 動作專家</td>
+<td><a class="ext" href="https://arxiv.org/abs/2506.01844" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR00T N1</td>
+<td>NVIDIA 2025</td>
+<td>約 2.2B（Eagle-2 VLM 1.34B + DiT 動作頭）</td>
+<td>雙系統</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.14734" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR00T N1.5</td>
+<td>NVIDIA 2025</td>
+<td>3B（官方權重 GR00T-N1.5-3B）</td>
+<td>凍結 VLM + FLARE</td>
+<td><a class="ext" href="https://huggingface.co/nvidia/GR00T-N1.5-3B" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR00T N1.6</td>
+<td>NVIDIA 2025</td>
+<td>3B（官方模型卡）</td>
+<td>SigLIP2 + DiT 動作頭</td>
+<td><a class="ext" href="https://huggingface.co/nvidia/GR00T-N1.6-3B" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Figure Helix</td>
+<td>Figure AI 2025</td>
+<td>S2 7B VLM + S1 80M</td>
+<td>雙系統，S1 200 Hz</td>
+<td><a class="ext" href="https://www.figure.ai/news/helix" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Figure Helix 02</td>
+<td>Figure AI 2026</td>
+<td>S0 10M；S1、S2 未公開</td>
+<td>三層：S2 / S1 / S0 全身控制器 1 kHz</td>
+<td><a class="ext" href="https://www.figure.ai/news/helix-02" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>1X Redwood AI</td>
+<td>1X 2025</td>
+<td>160M</td>
+<td>NEO 機上 GPU，約 5 Hz</td>
+<td><a class="ext" href="https://www.1x.tech/discover/redwood-ai" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Gemini Robotics（1.0 / 1.5 / 2 / On-Device）</td>
+<td>Google DeepMind 2025–2026</td>
+<td>未公開</td>
+<td>ER 規劃 VLM + 動作 VLA</td>
+<td><a class="ext" href="https://arxiv.org/abs/2510.03342" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>智元 GO-1</td>
+<td>AgiBot 2025</td>
+<td>VLM InternVL2.5-2B；潛在規劃器與動作專家未公開</td>
+<td>VLM → 潛在規劃器 → 動作專家</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.06669" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>智元 τ0-VLA</td>
+<td>AgiBot 2026</td>
+<td>高階 VLM 9B + 低階 2B；世界模型未公開</td>
+<td>信心路由 + 世界模型 beam search</td>
+<td><a class="ext" href="https://arxiv.org/abs/2608.16885" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR-2</td>
+<td>ByteDance 2024</td>
+<td>預設 230M（可訓練 95M）；規模實驗可訓練 30M–719M</td>
+<td>影片生成預訓練 + cVAE 動作頭</td>
+<td><a class="ext" href="https://arxiv.org/abs/2410.06158" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR-3</td>
+<td>ByteDance 2025</td>
+<td>約 4B</td>
+<td>Qwen2.5-VL-3B + 動作 DiT</td>
+<td><a class="ext" href="https://arxiv.org/abs/2507.15493" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>CoT-VLA</td>
+<td>NVIDIA / Stanford 2025</td>
+<td>7B（VILA-U）</td>
+<td>先生成子目標影像再出動作</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.22020" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>DreamVLA</td>
+<td>2025</td>
+<td>骨幹約 345M（GPT-2 Medium）+ DiT-B 動作頭</td>
+<td>訓練時預測動態區域、深度、語意</td>
+<td><a class="ext" href="https://arxiv.org/abs/2507.04447" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>WorldVLA</td>
+<td>阿里達摩院 2025</td>
+<td>論文未寫（由 Chameleon 初始化）</td>
+<td>動作模型與世界模型合一</td>
+<td><a class="ext" href="https://arxiv.org/abs/2506.21539" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>VPP</td>
+<td>清華等 2024</td>
+<td>影片預測模型 1.5B（SVD）</td>
+<td>1 步取特徵 + 擴散策略頭</td>
+<td><a class="ext" href="https://arxiv.org/abs/2412.14803" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>智平方 RoboMamba（GOVLA 0.0）</td>
+<td>北大 / 智平方 2024</td>
+<td>Mamba 2.7B（全模型約 3.2B）；策略頭 3.7M</td>
+<td>單系統</td>
+<td><a class="ext" href="https://arxiv.org/abs/2406.04339" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>智平方 FiS-VLA（GOVLA 0.5）</td>
+<td>智平方等 2025</td>
+<td>LLaMA2 7B；快系統為最後 2 層（未單列）</td>
+<td>快系統嵌在 VLM 內</td>
+<td><a class="ext" href="https://arxiv.org/abs/2506.01953" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>智平方 Video2Act</td>
+<td>北大 / 智平方等 2025</td>
+<td>快系統 DiT 1B；慢系統取 HunyuanVideo（全模型 13B）前段層，截取部分未公開</td>
+<td>借影片擴散特徵</td>
+<td><a class="ext" href="https://arxiv.org/abs/2512.03044" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>智平方 NeuroVLA</td>
+<td>智平方等 2026</td>
+<td>未公開（Qwen-VL 尺寸未寫）</td>
+<td>大腦 / 小腦 / 脊髓三層，SNN</td>
+<td><a class="ext" href="https://arxiv.org/abs/2601.14628" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>智平方 GOVLA 1.0（產品）</td>
+<td>智平方 2025</td>
+<td>未公開</td>
+<td>全域全身 VLA</td>
+<td><a class="ext" href="https://news.zol.com.cn/1184/11840628.html" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>DriveVLM</td>
+<td>清華 / 理想 2024</td>
+<td>9.6B（Qwen-VL）；車端版選用 4B 以下模型</td>
+<td>VLM + 傳統規劃雙系統</td>
+<td><a class="ext" href="https://arxiv.org/abs/2402.12289" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>NVIDIA Alpamayo-R1</td>
+<td>NVIDIA 2025</td>
+<td>約 10B（骨幹 8.2B + 動作專家 2.3B）</td>
+<td>Cosmos-Reason 骨幹 + 擴散軌跡解碼</td>
+<td><a class="ext" href="https://huggingface.co/nvidia/Alpamayo-R1-10B" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Waymo EMMA</td>
+<td>Waymo 2024</td>
+<td>未公開（Gemini 為底）</td>
+<td>軌跡以文字輸出</td>
+<td><a class="ext" href="https://arxiv.org/abs/2410.23262" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>理想 MindVLA</td>
+<td>理想 2025–2026</td>
+<td>未公開</td>
+<td>官方只說是原生多模態 MoE Transformer</td>
+<td><a class="ext" href="https://www.36kr.com/p/3728358954564999" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Wayve LINGO-2</td>
+<td>Wayve 2024</td>
+<td>未公開</td>
+<td>駕駛 + 語言解說</td>
+<td><a class="ext" href="https://wayve.ai/thinking/lingo-2-driving-with-language/" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Tesla FSD / Optimus</td>
+<td>Tesla</td>
+<td>未公開</td>
+<td>端到端網路</td>
+<td><a class="ext" href="https://www.humanoidsdaily.com/feed/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>LLaVA-1.5（VLM，附錄）</td>
+<td>Wisconsin / Microsoft 2023</td>
+<td>7B、13B</td>
+<td>CLIP ViT-L + MLP + Vicuna</td>
+<td><a class="ext" href="https://arxiv.org/abs/2310.03744" target="_blank" rel="noopener">來源</a></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_2">世界模型與影片生成模型<a class="headerlink" href="#_2" title="連到此段">#</a></h2>
+<p>共 43 個。</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>機構與年份</th>
+<th>參數量</th>
+<th>結構重點</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>World Models（Ha &amp; Schmidhuber）</td>
+<td>2018</td>
+<td>約 470 萬（VAE 4.3M + MDN-RNN 422K + 控制器 867）</td>
+<td>VAE + RNN + 線性控制器</td>
+<td><a class="ext" href="https://arxiv.org/abs/1803.10122" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>MuZero</td>
+<td>DeepMind 2019</td>
+<td>論文未給總參數（16 個殘差塊）</td>
+<td>只預測價值、獎勵、策略</td>
+<td><a class="ext" href="https://arxiv.org/abs/1911.08265" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>DayDreamer</td>
+<td>UC Berkeley 2022</td>
+<td>論文未給總參數</td>
+<td>Dreamer 直接在真機上學</td>
+<td><a class="ext" href="https://arxiv.org/abs/2206.14176" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>DreamerV3</td>
+<td>Google DeepMind 2023</td>
+<td>12M–400M（規模實驗）</td>
+<td>RSSM 潛空間 RL</td>
+<td><a class="ext" href="https://arxiv.org/abs/2301.04104" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Dreamer 4</td>
+<td>Google DeepMind 2025</td>
+<td>2B（tokenizer 400M + 動力學 1.6B）</td>
+<td>shortcut forcing</td>
+<td><a class="ext" href="https://arxiv.org/abs/2509.24527" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>TD-MPC2</td>
+<td>UCSD 2023</td>
+<td>最大 317M</td>
+<td>潛空間 MPC</td>
+<td><a class="ext" href="https://arxiv.org/abs/2310.16828" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>FOREWARN</td>
+<td>CMU 2025</td>
+<td>世界模型未公開；挑選用 VLM 為 Llama-3.2-11B-Vision</td>
+<td>DreamerV3 式預演 + VLM 挑選</td>
+<td><a class="ext" href="https://arxiv.org/abs/2502.01828" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>V-JEPA 2</td>
+<td>Meta 2025</td>
+<td>編碼器 300M / 600M / 1B；V-JEPA 2-AC 預測器 300M</td>
+<td>表徵空間預測</td>
+<td><a class="ext" href="https://github.com/facebookresearch/vjepa2" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>V-JEPA 2.1</td>
+<td>Meta 2026</td>
+<td>80M / 300M / 1B / 2B</td>
+<td>加入密集預測損失</td>
+<td><a class="ext" href="https://github.com/facebookresearch/vjepa2" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>DINO-WM</td>
+<td>NYU 2024</td>
+<td>預測器約 19M（DINOv2 編碼器凍結）</td>
+<td>DINOv2 特徵空間預測</td>
+<td><a class="ext" href="https://arxiv.org/abs/2411.04983" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GAIA-1</td>
+<td>Wayve 2023</td>
+<td>約 9.4B（tokenizer 0.3B + 世界模型 6.5B + 解碼器 2.6B）</td>
+<td>自回歸 + 擴散解碼</td>
+<td><a class="ext" href="https://arxiv.org/abs/2309.17080" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GAIA-2</td>
+<td>Wayve 2025</td>
+<td>世界模型 8.4B</td>
+<td>潛空間 flow matching</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.20523" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>UniSim</td>
+<td>Google DeepMind 2023</td>
+<td>5.6B</td>
+<td>Video U-Net 擴散</td>
+<td><a class="ext" href="https://arxiv.org/abs/2310.06114" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>UniPi</td>
+<td>Google 2023</td>
+<td>未公開</td>
+<td>影片擴散 + IDM</td>
+<td><a class="ext" href="https://arxiv.org/abs/2302.00111" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Genie（第一代）</td>
+<td>Google DeepMind 2024</td>
+<td>11B</td>
+<td>tokenizer + 潛在動作 + 動力學</td>
+<td><a class="ext" href="https://arxiv.org/abs/2402.15391" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Genie 2 / Genie 3</td>
+<td>Google DeepMind 2024–2025</td>
+<td>未公開</td>
+<td>即時互動世界</td>
+<td><a class="ext" href="https://deepmind.google/discover/blog/genie-3-a-new-frontier-for-world-models/" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Veo</td>
+<td>Google DeepMind</td>
+<td>未公開</td>
+<td>影片生成</td>
+<td><a class="ext" href="https://arxiv.org/abs/2512.10675" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Sora</td>
+<td>OpenAI 2024</td>
+<td>未公開</td>
+<td>影片生成</td>
+<td><a class="ext" href="https://openai.com/index/video-generation-models-as-world-simulators/" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Cosmos-Predict1</td>
+<td>NVIDIA 2025</td>
+<td>擴散 7B / 14B；自回歸 4B / 12B</td>
+<td>世界基礎模型</td>
+<td><a class="ext" href="https://arxiv.org/abs/2501.03575" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Cosmos-Predict2 / 2.5</td>
+<td>NVIDIA 2025</td>
+<td>2B / 14B</td>
+<td>flow 影片模型</td>
+<td><a class="ext" href="https://arxiv.org/abs/2511.00062" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Cosmos-Transfer1</td>
+<td>NVIDIA 2025</td>
+<td>7B 底模（控制分支未單列）</td>
+<td>多種空間控制條件</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.14492" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Cosmos-Reason1（物理推理 VLM）</td>
+<td>NVIDIA 2025</td>
+<td>7B、56B</td>
+<td>不是世界模型，常一起出現</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.15558" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Cosmos Policy</td>
+<td>NVIDIA 2026</td>
+<td>2B（Cosmos-Predict2-2B 微調）</td>
+<td>動作、未來、價值都當潛影格</td>
+<td><a class="ext" href="https://arxiv.org/abs/2601.16163" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Wan 2.1</td>
+<td>阿里 2025</td>
+<td>1.3B、14B</td>
+<td>GR00T N1 用 I2V-14B 造資料</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.20314" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Wan 2.2</td>
+<td>阿里 2025</td>
+<td>TI2V 5B；A14B MoE 總 27B、每步啟用 14B</td>
+<td>MoE 影片擴散</td>
+<td><a class="ext" href="https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>HunyuanVideo</td>
+<td>騰訊 2024</td>
+<td>13B</td>
+<td>Video2Act 取前段層</td>
+<td><a class="ext" href="https://arxiv.org/abs/2412.03603" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>CogVideoX</td>
+<td>智譜 / 清華 2024</td>
+<td>2B、5B</td>
+<td>TesserAct 以它初始化</td>
+<td><a class="ext" href="https://arxiv.org/abs/2408.06072" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>LTX-Video</td>
+<td>Lightricks 2024</td>
+<td>1.9B</td>
+<td>GE-Base 可選骨幹</td>
+<td><a class="ext" href="https://arxiv.org/abs/2501.00103" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Stable Video Diffusion</td>
+<td>Stability AI 2023</td>
+<td>1.5B（依 VPP 論文）</td>
+<td>VPP、Ctrl-World 的骨幹</td>
+<td><a class="ext" href="https://arxiv.org/abs/2412.14803" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Navigation World Model（NWM）</td>
+<td>Meta 2024</td>
+<td>1B（CDiT）</td>
+<td>導航用條件擴散 Transformer</td>
+<td><a class="ext" href="https://arxiv.org/abs/2412.03572" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Genie Envisioner（GE）</td>
+<td>智元 2025</td>
+<td>GE-Base 2B 級；GE-Act 動作解碼器 160M</td>
+<td>GE-Base / GE-Act / GE-Sim</td>
+<td><a class="ext" href="https://arxiv.org/abs/2508.05635" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>1X World Model</td>
+<td>1X 2026</td>
+<td>骨幹 14B；IDM 未公開</td>
+<td>影片想像 → IDM 出動作</td>
+<td><a class="ext" href="https://1x.tech/discover/world-model-self-learning" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>comma.ai 世界模型</td>
+<td>comma.ai 2025</td>
+<td>250M / 500M（主力）/ 1B</td>
+<td>3D DiT + Plan Head</td>
+<td><a class="ext" href="https://arxiv.org/abs/2504.19077" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Ctrl-World</td>
+<td>清華 / Stanford 2025</td>
+<td>1.5B（SVD 初始化）</td>
+<td>多視角動作條件模擬器</td>
+<td><a class="ext" href="https://arxiv.org/abs/2510.10125" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>VLA-RFT 世界模型</td>
+<td>2025</td>
+<td>138M</td>
+<td>LLaMA 式自回歸</td>
+<td><a class="ext" href="https://arxiv.org/abs/2510.00406" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>iVideoGPT</td>
+<td>清華 2024</td>
+<td>138M / 436M（VLA-Reasoner 用的版本 600M）</td>
+<td>自回歸影片 Transformer</td>
+<td><a class="ext" href="https://arxiv.org/abs/2405.15223" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>WMPO 世界模型</td>
+<td>2025</td>
+<td>未公開（OpenSora 骨幹）</td>
+<td>像素級影片擴散</td>
+<td><a class="ext" href="https://arxiv.org/abs/2511.09515" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>TesserAct</td>
+<td>UMass 等 2025</td>
+<td>未公開（CogVideoX 初始化）</td>
+<td>RGB + 深度 + 法向量的 4D 世界模型</td>
+<td><a class="ext" href="https://arxiv.org/abs/2504.20995" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>宇樹 UnifoLM-WMA-0</td>
+<td>Unitree 2025</td>
+<td>未公開</td>
+<td>世界模型 + 動作頭</td>
+<td><a class="ext" href="https://github.com/unitreerobotics/unifolm-world-model-action" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>World Labs Marble</td>
+<td>World Labs 2025</td>
+<td>未公開</td>
+<td>3D 高斯場景生成</td>
+<td><a class="ext" href="https://www.worldlabs.ai/case-studies/1-robotics" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Waymo World Model</td>
+<td>Waymo 2026</td>
+<td>未公開（Genie 3 後訓練）</td>
+<td>相機 + LiDAR 模擬器</td>
+<td><a class="ext" href="https://waymo.com/blog/2026/02/the-waymo-world-model-a-new-frontier-for-autonomous-driving-simulation" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>小鵬世界基座模型</td>
+<td>小鵬 2025</td>
+<td>72B（官方於 X9 發布會表示研發中）</td>
+<td>雲端基座，蒸餾到車端</td>
+<td><a class="ext" href="https://www.36kr.com/p/3463098292770179" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>華為 WE / 蔚來 NWM / Tesla 神經模擬器</td>
+<td>—</td>
+<td>未公開</td>
+<td>只有發表會或演講</td>
+<td><a class="ext" href="https://www.humanoidsdaily.com/feed/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus" target="_blank" rel="noopener">來源</a></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_3">怎麼核對的<a class="headerlink" href="#_3" title="連到此段">#</a></h2>
+<ul>
+<li><strong>優先順序</strong>：論文正文或附錄 → 官方專案頁、部落格 → 官方模型卡（Hugging Face 上的官方帳號）→ 官方發布會原話的報導。</li>
+<li><strong>媒體報導只在官方完全沒寫時列出，並明寫是媒體說法</strong>：目前只有 π0.7（<a class="ext" href="https://the-decoder.com/physical-intelligence-shows-robot-model-with-llm-like-generalization-flaws-included/" target="_blank" rel="noopener">The Decoder</a> 報導 Gemma 3 4B + 860M，<a class="ext" href="https://pi.website/blog/pi07" target="_blank" rel="noopener">官方頁</a>沒寫）。</li>
+<li><strong>論文前後不一致時照實寫</strong>：π0.5 的圖寫 Gemma 2B 與 2.6B 兩種；UniVLA 的動作頭在引言寫 10.8M、正文寫 12.6M，表中取正文。</li>
+</ul>
+      <nav class="pn"><a class="prev" href="wm-in-practice.html"><small>上一篇</small>世界模型代表作的實際應用</a><a class="next" href="glossary.html"><small>下一篇</small>名詞速查</a></nav>
+      <footer class="foot">
+        內容整理自本專案的調研筆記與討論（2026-10-21）。數字取自論文或官方頁；查不到的標「未公開」。外部連結均開新分頁。
+      </footer>
+    </article>
+  </main>
+  <nav class="toc" aria-label="本頁目錄">
+    <p class="toc-h">本頁目錄</p>
+    <ul><li><a href="#vla">VLA 與相關策略模型</a></li><li><a href="#_2">世界模型與影片生成模型</a></li><li><a href="#_3">怎麼核對的</a></li></ul>
+  </nav>
+</div>
+<script src="assets/site.js"></script>
+<script src="assets/search-index.js"></script>
+<script src="assets/qa.js"></script>
+</body>
+</html>

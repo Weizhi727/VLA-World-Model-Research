@@ -32,7 +32,7 @@
 </header>
 <div class="shell">
   <aside class="side">
-    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li><a href="origins.html" class="on"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="architectures.html"><span class="num">02</span><span>主流模型架構</span></a></li><li><a href="taxonomy.html"><span class="num">03</span><span>流派怎麼分</span></a></li><li><a href="training.html"><span class="num">04</span><span>訓練、資料與評估</span></a></li><li><a href="world-model-roles.html"><span class="num">05</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">06</span><span>訓練時 vs 推論時</span></a></li><li><a href="synthetic-data.html"><span class="num">07</span><span>具身基礎模型與合成資料</span></a></li><li><a href="industry.html"><span class="num">08</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html"><span class="num">09</span><span>案例：智平方</span></a></li><li><a href="classic-world-models.html"><span class="num">10</span><span>經典世界模型論文精讀</span></a></li><li><a href="wm-in-practice.html"><span class="num">11</span><span>世界模型代表作的實際應用</span></a></li><li><a href="glossary.html"><span class="num">12</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">13</span><span>參考資料</span></a></li></ul>
+    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li><a href="origins.html" class="on"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="architectures.html"><span class="num">02</span><span>主流模型架構</span></a></li><li><a href="taxonomy.html"><span class="num">03</span><span>流派怎麼分</span></a></li><li><a href="training.html"><span class="num">04</span><span>訓練、資料與評估</span></a></li><li><a href="world-model-roles.html"><span class="num">05</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">06</span><span>訓練時 vs 推論時</span></a></li><li><a href="synthetic-data.html"><span class="num">07</span><span>具身基礎模型與合成資料</span></a></li><li><a href="industry.html"><span class="num">08</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html"><span class="num">09</span><span>案例：智平方</span></a></li><li><a href="classic-world-models.html"><span class="num">10</span><span>經典世界模型論文精讀</span></a></li><li><a href="wm-in-practice.html"><span class="num">11</span><span>世界模型代表作的實際應用</span></a></li><li><a href="params.html"><span class="num">12</span><span>參數量總表</span></a></li><li><a href="glossary.html"><span class="num">13</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">14</span><span>參考資料</span></a></li></ul>
     <p class="side-note">整理日期：2026-10-21<br>面向技術人員的科普整理</p>
   </aside>
   <main>
@@ -361,6 +361,169 @@
 <li><a class="ext" href="https://worldmodels.github.io/" target="_blank" rel="noopener">World Models 互動論文</a>：理解世界模型直覺最好的入門材料</li>
 <li><a class="ext" href="https://openai.com/index/video-generation-models-as-world-simulators/" target="_blank" rel="noopener">Sora 技術報告</a>：生成式世界模擬器的代表性主張</li>
 </ul>
+<!-- params:auto -->
+
+<h2 id="_9">本頁提到的模型參數量<a class="headerlink" href="#_9" title="連到此段">#</a></h2>
+<p>只列官方論文、官方頁或官方模型卡寫明的數字；查不到的標「未公開」，不推測。完整清單見 <a href="params.html">參數量總表</a>。</p>
+<p><strong>VLA</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>參數量</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RT-1</td>
+<td>35M</td>
+<td><a class="ext" href="https://arxiv.org/abs/2212.06817" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Gato</td>
+<td>1.2B（精確 1.18B）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2205.06175" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>VIMA</td>
+<td>2M–200M（7 個規模）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2210.03094" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>PaLM-E</td>
+<td>最大 562B（RT-2 用 12B 版）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2303.03378" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>RT-2</td>
+<td>5B、55B（PaLI-X 版）；12B（PaLM-E 版）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2307.15818" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>ACT</td>
+<td>約 80M</td>
+<td><a class="ext" href="https://arxiv.org/abs/2304.13705" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Diffusion Policy</td>
+<td>論文有多種設定，無單一官方數字</td>
+<td><a class="ext" href="https://arxiv.org/abs/2303.04137" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR-1</td>
+<td>195M（可訓練 46M）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2312.13139" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Octo</td>
+<td>Octo-Small 27M、Octo-Base 93M</td>
+<td><a class="ext" href="https://arxiv.org/abs/2405.12213" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>OpenVLA</td>
+<td>7B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2406.09246" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>π0</td>
+<td>約 3.3B（PaliGemma 3B + 動作專家約 300M）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2410.24164" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>π0.5</td>
+<td>VLM 2B（PaliGemma）+ 動作專家 300M；總數論文未寫</td>
+<td><a class="ext" href="https://arxiv.org/abs/2504.16054" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR00T N1</td>
+<td>約 2.2B（Eagle-2 VLM 1.34B + DiT 動作頭）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.14734" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Figure Helix</td>
+<td>S2 7B VLM + S1 80M</td>
+<td><a class="ext" href="https://www.figure.ai/news/helix" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Gemini Robotics（1.0 / 1.5 / 2 / On-Device）</td>
+<td>未公開</td>
+<td><a class="ext" href="https://arxiv.org/abs/2510.03342" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Tesla FSD / Optimus</td>
+<td>未公開</td>
+<td><a class="ext" href="https://www.humanoidsdaily.com/feed/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus" target="_blank" rel="noopener">來源</a></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>世界模型</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>參數量</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>World Models（Ha &amp; Schmidhuber）</td>
+<td>約 470 萬（VAE 4.3M + MDN-RNN 422K + 控制器 867）</td>
+<td><a class="ext" href="https://arxiv.org/abs/1803.10122" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>MuZero</td>
+<td>論文未給總參數（16 個殘差塊）</td>
+<td><a class="ext" href="https://arxiv.org/abs/1911.08265" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>DreamerV3</td>
+<td>12M–400M（規模實驗）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2301.04104" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>V-JEPA 2</td>
+<td>編碼器 300M / 600M / 1B；V-JEPA 2-AC 預測器 300M</td>
+<td><a class="ext" href="https://github.com/facebookresearch/vjepa2" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GAIA-1</td>
+<td>約 9.4B（tokenizer 0.3B + 世界模型 6.5B + 解碼器 2.6B）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2309.17080" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>UniSim</td>
+<td>5.6B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2310.06114" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>UniPi</td>
+<td>未公開</td>
+<td><a class="ext" href="https://arxiv.org/abs/2302.00111" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Genie（第一代）</td>
+<td>11B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2402.15391" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Genie 2 / Genie 3</td>
+<td>未公開</td>
+<td><a class="ext" href="https://deepmind.google/discover/blog/genie-3-a-new-frontier-for-world-models/" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Sora</td>
+<td>未公開</td>
+<td><a class="ext" href="https://openai.com/index/video-generation-models-as-world-simulators/" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Cosmos-Predict1</td>
+<td>擴散 7B / 14B；自回歸 4B / 12B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2501.03575" target="_blank" rel="noopener">來源</a></td>
+</tr>
+</tbody>
+</table></div>
       <nav class="pn"><a class="prev" href="index.html"><small>上一篇</small>首頁</a><a class="next" href="architectures.html"><small>下一篇</small>主流模型架構</a></nav>
       <footer class="foot">
         內容整理自本專案的調研筆記與討論（2026-10-21）。數字取自論文或官方頁；查不到的標「未公開」。外部連結均開新分頁。
@@ -369,7 +532,7 @@
   </main>
   <nav class="toc" aria-label="本頁目錄">
     <p class="toc-h">本頁目錄</p>
-    <ul><li><a href="#_1">兩條路線的時間軸</a></li><li><a href="#vla_1">一、VLA 之前：機器人學卡在哪裡</a><ul><li><a href="#1">瓶頸 1：模組化管線太脆弱</a></li><li><a href="#2">瓶頸 2：端到端學習有了，但泛化很差</a></li><li><a href="#3-sim2real-gap">瓶頸 3：強化學習在真實世界太貴，模擬又有 sim2real gap</a></li><li><a href="#4">瓶頸 4：機器人資料沒有「網路規模」</a></li><li><a href="#5">瓶頸 5：語意理解與開放指令</a></li><li><a href="#_2">轉折點：大型語言模型與視覺語言模型成熟</a></li></ul></li><li><a href="#vla_2">二、VLA 的發展歷程</a></li><li><a href="#_3">三、世界模型之前：智能體卡在哪裡</a><ul><li><a href="#_4">思想源頭：認知科學與控制理論</a></li><li><a href="#1_1">瓶頸 1：無模型強化學習的樣本效率太差</a></li><li><a href="#2_1">瓶頸 2：反應式策略不會「想」</a></li><li><a href="#3-rl">瓶頸 3：早期模型式 RL 的「模型誤差」</a></li><li><a href="#4_1">瓶頸 4：大語言模型不懂物理世界</a></li><li><a href="#5_1">瓶頸 5：自駕與機器人的長尾場景</a></li></ul></li><li><a href="#_5">四、世界模型的發展歷程</a></li><li><a href="#_6">五、兩條路線的交會</a><ul><li><a href="#_7">仍未解決的問題</a></li><li><a href="#_8">延伸閱讀</a></li></ul></li></ul>
+    <ul><li><a href="#_1">兩條路線的時間軸</a></li><li><a href="#vla_1">一、VLA 之前：機器人學卡在哪裡</a><ul><li><a href="#1">瓶頸 1：模組化管線太脆弱</a></li><li><a href="#2">瓶頸 2：端到端學習有了，但泛化很差</a></li><li><a href="#3-sim2real-gap">瓶頸 3：強化學習在真實世界太貴，模擬又有 sim2real gap</a></li><li><a href="#4">瓶頸 4：機器人資料沒有「網路規模」</a></li><li><a href="#5">瓶頸 5：語意理解與開放指令</a></li><li><a href="#_2">轉折點：大型語言模型與視覺語言模型成熟</a></li></ul></li><li><a href="#vla_2">二、VLA 的發展歷程</a></li><li><a href="#_3">三、世界模型之前：智能體卡在哪裡</a><ul><li><a href="#_4">思想源頭：認知科學與控制理論</a></li><li><a href="#1_1">瓶頸 1：無模型強化學習的樣本效率太差</a></li><li><a href="#2_1">瓶頸 2：反應式策略不會「想」</a></li><li><a href="#3-rl">瓶頸 3：早期模型式 RL 的「模型誤差」</a></li><li><a href="#4_1">瓶頸 4：大語言模型不懂物理世界</a></li><li><a href="#5_1">瓶頸 5：自駕與機器人的長尾場景</a></li></ul></li><li><a href="#_5">四、世界模型的發展歷程</a></li><li><a href="#_6">五、兩條路線的交會</a><ul><li><a href="#_7">仍未解決的問題</a></li><li><a href="#_8">延伸閱讀</a></li></ul></li><li><a href="#_9">本頁提到的模型參數量</a></li></ul>
   </nav>
 </div>
 <script src="assets/site.js"></script>

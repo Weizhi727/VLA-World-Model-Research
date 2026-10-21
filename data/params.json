@@ -1,0 +1,992 @@
+{
+ "vla": [
+  {
+   "name": "RT-1",
+   "org": "Google 2022",
+   "params": "35M",
+   "detail": "EfficientNet + TokenLearner + Transformer",
+   "src": "https://arxiv.org/abs/2212.06817",
+   "alias": [
+    "RT-1"
+   ]
+  },
+  {
+   "name": "Gato",
+   "org": "DeepMind 2022",
+   "params": "1.2B（精確 1.18B）",
+   "detail": "24 層 decoder-only Transformer",
+   "src": "https://arxiv.org/abs/2205.06175",
+   "alias": [
+    "Gato"
+   ]
+  },
+  {
+   "name": "VIMA",
+   "org": "NVIDIA / Stanford 2022",
+   "params": "2M–200M（7 個規模）",
+   "detail": "多模態提示的 Transformer 策略",
+   "src": "https://arxiv.org/abs/2210.03094",
+   "alias": [
+    "VIMA"
+   ]
+  },
+  {
+   "name": "PaLM-E",
+   "org": "Google 2023",
+   "params": "最大 562B（RT-2 用 12B 版）",
+   "detail": "PaLM + ViT 具身多模態模型",
+   "src": "https://arxiv.org/abs/2303.03378",
+   "alias": [
+    "PaLM-E"
+   ]
+  },
+  {
+   "name": "RT-2",
+   "org": "Google DeepMind 2023",
+   "params": "5B、55B（PaLI-X 版）；12B（PaLM-E 版）",
+   "detail": "VLM 原封不動，動作離散成 token",
+   "src": "https://arxiv.org/abs/2307.15818",
+   "alias": [
+    "RT-2",
+    "RT-2-X"
+   ]
+  },
+  {
+   "name": "ACT",
+   "org": "Stanford 2023",
+   "params": "約 80M",
+   "detail": "CVAE + Transformer，動作分塊",
+   "src": "https://arxiv.org/abs/2304.13705",
+   "alias": [
+    "ACT"
+   ]
+  },
+  {
+   "name": "Diffusion Policy",
+   "org": "Columbia / TRI 2023",
+   "params": "論文有多種設定，無單一官方數字",
+   "detail": "CNN 或 Transformer 去噪網路",
+   "src": "https://arxiv.org/abs/2303.04137",
+   "alias": [
+    "Diffusion Policy"
+   ]
+  },
+  {
+   "name": "GR-1",
+   "org": "ByteDance 2023",
+   "params": "195M（可訓練 46M）",
+   "detail": "GPT 式影片預測 + 動作",
+   "src": "https://arxiv.org/abs/2312.13139",
+   "alias": [
+    "GR-1"
+   ]
+  },
+  {
+   "name": "Octo",
+   "org": "UC Berkeley 等 2024",
+   "params": "Octo-Small 27M、Octo-Base 93M",
+   "detail": "Transformer 骨幹 + 擴散動作頭",
+   "src": "https://arxiv.org/abs/2405.12213",
+   "alias": [
+    "Octo"
+   ]
+  },
+  {
+   "name": "OpenVLA",
+   "org": "Stanford / Berkeley / TRI 2024",
+   "params": "7B",
+   "detail": "DINOv2 + SigLIP + Llama 2 7B",
+   "src": "https://arxiv.org/abs/2406.09246",
+   "alias": [
+    "OpenVLA"
+   ]
+  },
+  {
+   "name": "OpenVLA-OFT",
+   "org": "Stanford 2025",
+   "params": "論文未另列（以 OpenVLA 7B 為底）",
+   "detail": "平行解碼 + 動作塊 + 連續回歸",
+   "src": "https://arxiv.org/abs/2502.19645",
+   "alias": [
+    "OpenVLA-OFT"
+   ]
+  },
+  {
+   "name": "ECoT",
+   "org": "UC Berkeley 等 2024",
+   "params": "7B（以 OpenVLA 為底）",
+   "detail": "先輸出推理鏈再出動作",
+   "src": "https://arxiv.org/abs/2407.08693",
+   "alias": [
+    "ECoT",
+    "Embodied Chain-of-Thought"
+   ]
+  },
+  {
+   "name": "LAPA",
+   "org": "KAIST / UW / Microsoft 等 2024",
+   "params": "7B（LWM-Chat-1M）",
+   "detail": "潛在動作預訓練",
+   "src": "https://arxiv.org/abs/2410.11758",
+   "alias": [
+    "LAPA"
+   ]
+  },
+  {
+   "name": "RDT",
+   "org": "清華 2024",
+   "params": "1.2B",
+   "detail": "雙臂擴散 Transformer",
+   "src": "https://arxiv.org/abs/2410.07864",
+   "alias": [
+    "RDT"
+   ]
+  },
+  {
+   "name": "π0",
+   "org": "Physical Intelligence 2024",
+   "params": "約 3.3B（PaliGemma 3B + 動作專家約 300M）",
+   "detail": "VLM + flow matching 動作專家",
+   "src": "https://arxiv.org/abs/2410.24164",
+   "alias": [
+    "π0",
+    "pi0"
+   ]
+  },
+  {
+   "name": "π0-FAST",
+   "org": "Physical Intelligence 2025",
+   "params": "論文未另列（以 PaliGemma 3B 為底）",
+   "detail": "FAST 頻域離散 tokenizer",
+   "src": "https://arxiv.org/abs/2501.09747",
+   "alias": [
+    "π0-FAST"
+   ]
+  },
+  {
+   "name": "π0.5",
+   "org": "Physical Intelligence 2025",
+   "params": "VLM 2B（PaliGemma）+ 動作專家 300M；總數論文未寫",
+   "detail": "同模型內分層：先出子任務再出動作",
+   "src": "https://arxiv.org/abs/2504.16054",
+   "alias": [
+    "π0.5"
+   ]
+  },
+  {
+   "name": "π*0.6",
+   "org": "Physical Intelligence 2025",
+   "params": "VLM Gemma 3 4B + 動作專家 860M；價值函數 670M",
+   "detail": "Recap：離線 RL + advantage conditioning",
+   "src": "https://arxiv.org/abs/2511.14759",
+   "alias": [
+    "π*0.6",
+    "π0.6"
+   ]
+  },
+  {
+   "name": "π0.7",
+   "org": "Physical Intelligence 2026",
+   "params": "官方頁未公開（媒體報導 Gemma 3 4B + 860M 動作專家）",
+   "detail": "組合式泛化",
+   "src": "https://the-decoder.com/physical-intelligence-shows-robot-model-with-llm-like-generalization-flaws-included/",
+   "alias": [
+    "π0.7"
+   ]
+  },
+  {
+   "name": "Hi Robot",
+   "org": "Physical Intelligence 2025",
+   "params": "高低階皆以 PaliGemma-3B 為底",
+   "detail": "高階 VLM 出語言子任務，低階 π0",
+   "src": "https://arxiv.org/abs/2502.19417",
+   "alias": [
+    "Hi Robot"
+   ]
+  },
+  {
+   "name": "CogACT",
+   "org": "Microsoft / 清華 2024",
+   "params": "約 7B（論文：與 OpenVLA 同級）",
+   "detail": "VLM + 擴散動作模組",
+   "src": "https://arxiv.org/abs/2411.19650",
+   "alias": [
+    "CogACT"
+   ]
+  },
+  {
+   "name": "HybridVLA",
+   "org": "北大等 2025",
+   "params": "7B（LLaMA-2）；小版 2.7B（Phi-2）",
+   "detail": "同一 LLM 內混合自回歸與擴散",
+   "src": "https://arxiv.org/abs/2503.10631",
+   "alias": [
+    "HybridVLA"
+   ]
+  },
+  {
+   "name": "UniVLA",
+   "org": "HKU / OpenDriveLab 2025",
+   "params": "7B 骨幹（Prismatic-7B）；動作解碼頭約 12.6M",
+   "detail": "DINOv2 特徵空間的任務導向潛在動作",
+   "src": "https://arxiv.org/abs/2505.06111",
+   "alias": [
+    "UniVLA"
+   ]
+  },
+  {
+   "name": "Seer",
+   "org": "上海 AI Lab 等 2024",
+   "params": "316M（可訓練 65M）",
+   "detail": "預測式逆動力學",
+   "src": "https://arxiv.org/abs/2412.15109",
+   "alias": [
+    "Seer"
+   ]
+  },
+  {
+   "name": "VLA-Adapter",
+   "org": "2025",
+   "params": "骨幹 0.5B",
+   "detail": "小骨幹 + 橋接注意力",
+   "src": "https://arxiv.org/abs/2509.09372",
+   "alias": [
+    "VLA-Adapter"
+   ]
+  },
+  {
+   "name": "SmolVLA",
+   "org": "Hugging Face 2025",
+   "params": "450M（動作專家約 100M）；另有 0.24B、2.25B",
+   "detail": "SmolVLM2 前半層 + 動作專家",
+   "src": "https://arxiv.org/abs/2506.01844",
+   "alias": [
+    "SmolVLA"
+   ]
+  },
+  {
+   "name": "GR00T N1",
+   "org": "NVIDIA 2025",
+   "params": "約 2.2B（Eagle-2 VLM 1.34B + DiT 動作頭）",
+   "detail": "雙系統",
+   "src": "https://arxiv.org/abs/2503.14734",
+   "alias": [
+    "GR00T N1"
+   ]
+  },
+  {
+   "name": "GR00T N1.5",
+   "org": "NVIDIA 2025",
+   "params": "3B（官方權重 GR00T-N1.5-3B）",
+   "detail": "凍結 VLM + FLARE",
+   "src": "https://huggingface.co/nvidia/GR00T-N1.5-3B",
+   "alias": [
+    "GR00T N1.5",
+    "N1.5"
+   ]
+  },
+  {
+   "name": "GR00T N1.6",
+   "org": "NVIDIA 2025",
+   "params": "3B（官方模型卡）",
+   "detail": "SigLIP2 + DiT 動作頭",
+   "src": "https://huggingface.co/nvidia/GR00T-N1.6-3B",
+   "alias": [
+    "GR00T N1.6",
+    "N1.6"
+   ]
+  },
+  {
+   "name": "Figure Helix",
+   "org": "Figure AI 2025",
+   "params": "S2 7B VLM + S1 80M",
+   "detail": "雙系統，S1 200 Hz",
+   "src": "https://www.figure.ai/news/helix",
+   "alias": [
+    "Helix"
+   ]
+  },
+  {
+   "name": "Figure Helix 02",
+   "org": "Figure AI 2026",
+   "params": "S0 10M；S1、S2 未公開",
+   "detail": "三層：S2 / S1 / S0 全身控制器 1 kHz",
+   "src": "https://www.figure.ai/news/helix-02",
+   "alias": [
+    "Helix 02"
+   ]
+  },
+  {
+   "name": "1X Redwood AI",
+   "org": "1X 2025",
+   "params": "160M",
+   "detail": "NEO 機上 GPU，約 5 Hz",
+   "src": "https://www.1x.tech/discover/redwood-ai",
+   "alias": [
+    "Redwood"
+   ]
+  },
+  {
+   "name": "Gemini Robotics（1.0 / 1.5 / 2 / On-Device）",
+   "org": "Google DeepMind 2025–2026",
+   "params": "未公開",
+   "detail": "ER 規劃 VLM + 動作 VLA",
+   "src": "https://arxiv.org/abs/2510.03342",
+   "alias": [
+    "Gemini Robotics"
+   ]
+  },
+  {
+   "name": "智元 GO-1",
+   "org": "AgiBot 2025",
+   "params": "VLM InternVL2.5-2B；潛在規劃器與動作專家未公開",
+   "detail": "VLM → 潛在規劃器 → 動作專家",
+   "src": "https://arxiv.org/abs/2503.06669",
+   "alias": [
+    "GO-1"
+   ]
+  },
+  {
+   "name": "智元 τ0-VLA",
+   "org": "AgiBot 2026",
+   "params": "高階 VLM 9B + 低階 2B；世界模型未公開",
+   "detail": "信心路由 + 世界模型 beam search",
+   "src": "https://arxiv.org/abs/2608.16885",
+   "alias": [
+    "τ0-VLA",
+    "τ0"
+   ]
+  },
+  {
+   "name": "GR-2",
+   "org": "ByteDance 2024",
+   "params": "預設 230M（可訓練 95M）；規模實驗可訓練 30M–719M",
+   "detail": "影片生成預訓練 + cVAE 動作頭",
+   "src": "https://arxiv.org/abs/2410.06158",
+   "alias": [
+    "GR-2"
+   ]
+  },
+  {
+   "name": "GR-3",
+   "org": "ByteDance 2025",
+   "params": "約 4B",
+   "detail": "Qwen2.5-VL-3B + 動作 DiT",
+   "src": "https://arxiv.org/abs/2507.15493",
+   "alias": [
+    "GR-3"
+   ]
+  },
+  {
+   "name": "CoT-VLA",
+   "org": "NVIDIA / Stanford 2025",
+   "params": "7B（VILA-U）",
+   "detail": "先生成子目標影像再出動作",
+   "src": "https://arxiv.org/abs/2503.22020",
+   "alias": [
+    "CoT-VLA"
+   ]
+  },
+  {
+   "name": "DreamVLA",
+   "org": "2025",
+   "params": "骨幹約 345M（GPT-2 Medium）+ DiT-B 動作頭",
+   "detail": "訓練時預測動態區域、深度、語意",
+   "src": "https://arxiv.org/abs/2507.04447",
+   "alias": [
+    "DreamVLA"
+   ]
+  },
+  {
+   "name": "WorldVLA",
+   "org": "阿里達摩院 2025",
+   "params": "論文未寫（由 Chameleon 初始化）",
+   "detail": "動作模型與世界模型合一",
+   "src": "https://arxiv.org/abs/2506.21539",
+   "alias": [
+    "WorldVLA"
+   ]
+  },
+  {
+   "name": "VPP",
+   "org": "清華等 2024",
+   "params": "影片預測模型 1.5B（SVD）",
+   "detail": "1 步取特徵 + 擴散策略頭",
+   "src": "https://arxiv.org/abs/2412.14803",
+   "alias": [
+    "VPP"
+   ]
+  },
+  {
+   "name": "智平方 RoboMamba（GOVLA 0.0）",
+   "org": "北大 / 智平方 2024",
+   "params": "Mamba 2.7B（全模型約 3.2B）；策略頭 3.7M",
+   "detail": "單系統",
+   "src": "https://arxiv.org/abs/2406.04339",
+   "alias": [
+    "RoboMamba"
+   ]
+  },
+  {
+   "name": "智平方 FiS-VLA（GOVLA 0.5）",
+   "org": "智平方等 2025",
+   "params": "LLaMA2 7B；快系統為最後 2 層（未單列）",
+   "detail": "快系統嵌在 VLM 內",
+   "src": "https://arxiv.org/abs/2506.01953",
+   "alias": [
+    "FiS-VLA"
+   ]
+  },
+  {
+   "name": "智平方 Video2Act",
+   "org": "北大 / 智平方等 2025",
+   "params": "快系統 DiT 1B；慢系統取 HunyuanVideo（全模型 13B）前段層，截取部分未公開",
+   "detail": "借影片擴散特徵",
+   "src": "https://arxiv.org/abs/2512.03044",
+   "alias": [
+    "Video2Act"
+   ]
+  },
+  {
+   "name": "智平方 NeuroVLA",
+   "org": "智平方等 2026",
+   "params": "未公開（Qwen-VL 尺寸未寫）",
+   "detail": "大腦 / 小腦 / 脊髓三層，SNN",
+   "src": "https://arxiv.org/abs/2601.14628",
+   "alias": [
+    "NeuroVLA"
+   ]
+  },
+  {
+   "name": "智平方 GOVLA 1.0（產品）",
+   "org": "智平方 2025",
+   "params": "未公開",
+   "detail": "全域全身 VLA",
+   "src": "https://news.zol.com.cn/1184/11840628.html",
+   "alias": [
+    "GOVLA"
+   ]
+  },
+  {
+   "name": "DriveVLM",
+   "org": "清華 / 理想 2024",
+   "params": "9.6B（Qwen-VL）；車端版選用 4B 以下模型",
+   "detail": "VLM + 傳統規劃雙系統",
+   "src": "https://arxiv.org/abs/2402.12289",
+   "alias": [
+    "DriveVLM"
+   ]
+  },
+  {
+   "name": "NVIDIA Alpamayo-R1",
+   "org": "NVIDIA 2025",
+   "params": "約 10B（骨幹 8.2B + 動作專家 2.3B）",
+   "detail": "Cosmos-Reason 骨幹 + 擴散軌跡解碼",
+   "src": "https://huggingface.co/nvidia/Alpamayo-R1-10B",
+   "alias": [
+    "Alpamayo"
+   ]
+  },
+  {
+   "name": "Waymo EMMA",
+   "org": "Waymo 2024",
+   "params": "未公開（Gemini 為底）",
+   "detail": "軌跡以文字輸出",
+   "src": "https://arxiv.org/abs/2410.23262",
+   "alias": [
+    "EMMA"
+   ]
+  },
+  {
+   "name": "理想 MindVLA",
+   "org": "理想 2025–2026",
+   "params": "未公開",
+   "detail": "官方只說是原生多模態 MoE Transformer",
+   "src": "https://www.36kr.com/p/3728358954564999",
+   "alias": [
+    "MindVLA"
+   ]
+  },
+  {
+   "name": "Wayve LINGO-2",
+   "org": "Wayve 2024",
+   "params": "未公開",
+   "detail": "駕駛 + 語言解說",
+   "src": "https://wayve.ai/thinking/lingo-2-driving-with-language/",
+   "alias": [
+    "LINGO"
+   ]
+  },
+  {
+   "name": "Tesla FSD / Optimus",
+   "org": "Tesla",
+   "params": "未公開",
+   "detail": "端到端網路",
+   "src": "https://www.humanoidsdaily.com/feed/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus",
+   "alias": [
+    "Tesla"
+   ]
+  },
+  {
+   "name": "LLaVA-1.5（VLM，附錄）",
+   "org": "Wisconsin / Microsoft 2023",
+   "params": "7B、13B",
+   "detail": "CLIP ViT-L + MLP + Vicuna",
+   "src": "https://arxiv.org/abs/2310.03744",
+   "alias": [
+    "LLaVA"
+   ]
+  }
+ ],
+ "wm": [
+  {
+   "name": "World Models（Ha & Schmidhuber）",
+   "org": "2018",
+   "params": "約 470 萬（VAE 4.3M + MDN-RNN 422K + 控制器 867）",
+   "detail": "VAE + RNN + 線性控制器",
+   "src": "https://arxiv.org/abs/1803.10122",
+   "alias": [
+    "World Models"
+   ]
+  },
+  {
+   "name": "MuZero",
+   "org": "DeepMind 2019",
+   "params": "論文未給總參數（16 個殘差塊）",
+   "detail": "只預測價值、獎勵、策略",
+   "src": "https://arxiv.org/abs/1911.08265",
+   "alias": [
+    "MuZero"
+   ]
+  },
+  {
+   "name": "DayDreamer",
+   "org": "UC Berkeley 2022",
+   "params": "論文未給總參數",
+   "detail": "Dreamer 直接在真機上學",
+   "src": "https://arxiv.org/abs/2206.14176",
+   "alias": [
+    "DayDreamer"
+   ]
+  },
+  {
+   "name": "DreamerV3",
+   "org": "Google DeepMind 2023",
+   "params": "12M–400M（規模實驗）",
+   "detail": "RSSM 潛空間 RL",
+   "src": "https://arxiv.org/abs/2301.04104",
+   "alias": [
+    "DreamerV3"
+   ]
+  },
+  {
+   "name": "Dreamer 4",
+   "org": "Google DeepMind 2025",
+   "params": "2B（tokenizer 400M + 動力學 1.6B）",
+   "detail": "shortcut forcing",
+   "src": "https://arxiv.org/abs/2509.24527",
+   "alias": [
+    "Dreamer 4"
+   ]
+  },
+  {
+   "name": "TD-MPC2",
+   "org": "UCSD 2023",
+   "params": "最大 317M",
+   "detail": "潛空間 MPC",
+   "src": "https://arxiv.org/abs/2310.16828",
+   "alias": [
+    "TD-MPC2"
+   ]
+  },
+  {
+   "name": "FOREWARN",
+   "org": "CMU 2025",
+   "params": "世界模型未公開；挑選用 VLM 為 Llama-3.2-11B-Vision",
+   "detail": "DreamerV3 式預演 + VLM 挑選",
+   "src": "https://arxiv.org/abs/2502.01828",
+   "alias": [
+    "FOREWARN"
+   ]
+  },
+  {
+   "name": "V-JEPA 2",
+   "org": "Meta 2025",
+   "params": "編碼器 300M / 600M / 1B；V-JEPA 2-AC 預測器 300M",
+   "detail": "表徵空間預測",
+   "src": "https://github.com/facebookresearch/vjepa2",
+   "alias": [
+    "V-JEPA 2",
+    "V-JEPA 2-AC"
+   ]
+  },
+  {
+   "name": "V-JEPA 2.1",
+   "org": "Meta 2026",
+   "params": "80M / 300M / 1B / 2B",
+   "detail": "加入密集預測損失",
+   "src": "https://github.com/facebookresearch/vjepa2",
+   "alias": [
+    "V-JEPA 2.1"
+   ]
+  },
+  {
+   "name": "DINO-WM",
+   "org": "NYU 2024",
+   "params": "預測器約 19M（DINOv2 編碼器凍結）",
+   "detail": "DINOv2 特徵空間預測",
+   "src": "https://arxiv.org/abs/2411.04983",
+   "alias": [
+    "DINO-WM"
+   ]
+  },
+  {
+   "name": "GAIA-1",
+   "org": "Wayve 2023",
+   "params": "約 9.4B（tokenizer 0.3B + 世界模型 6.5B + 解碼器 2.6B）",
+   "detail": "自回歸 + 擴散解碼",
+   "src": "https://arxiv.org/abs/2309.17080",
+   "alias": [
+    "GAIA-1"
+   ]
+  },
+  {
+   "name": "GAIA-2",
+   "org": "Wayve 2025",
+   "params": "世界模型 8.4B",
+   "detail": "潛空間 flow matching",
+   "src": "https://arxiv.org/abs/2503.20523",
+   "alias": [
+    "GAIA-2"
+   ]
+  },
+  {
+   "name": "UniSim",
+   "org": "Google DeepMind 2023",
+   "params": "5.6B",
+   "detail": "Video U-Net 擴散",
+   "src": "https://arxiv.org/abs/2310.06114",
+   "alias": [
+    "UniSim"
+   ]
+  },
+  {
+   "name": "UniPi",
+   "org": "Google 2023",
+   "params": "未公開",
+   "detail": "影片擴散 + IDM",
+   "src": "https://arxiv.org/abs/2302.00111",
+   "alias": [
+    "UniPi"
+   ]
+  },
+  {
+   "name": "Genie（第一代）",
+   "org": "Google DeepMind 2024",
+   "params": "11B",
+   "detail": "tokenizer + 潛在動作 + 動力學",
+   "src": "https://arxiv.org/abs/2402.15391",
+   "alias": [
+    "Genie 1",
+    "Genie（第一代）",
+    "re:(?<![A-Za-z])Genie(?![A-Za-z0-9]| ?[0-9]| ?Envisioner| Operator)"
+   ]
+  },
+  {
+   "name": "Genie 2 / Genie 3",
+   "org": "Google DeepMind 2024–2025",
+   "params": "未公開",
+   "detail": "即時互動世界",
+   "src": "https://deepmind.google/discover/blog/genie-3-a-new-frontier-for-world-models/",
+   "alias": [
+    "Genie 3",
+    "Genie 2"
+   ]
+  },
+  {
+   "name": "Veo",
+   "org": "Google DeepMind",
+   "params": "未公開",
+   "detail": "影片生成",
+   "src": "https://arxiv.org/abs/2512.10675",
+   "alias": [
+    "Veo"
+   ]
+  },
+  {
+   "name": "Sora",
+   "org": "OpenAI 2024",
+   "params": "未公開",
+   "detail": "影片生成",
+   "src": "https://openai.com/index/video-generation-models-as-world-simulators/",
+   "alias": [
+    "Sora"
+   ]
+  },
+  {
+   "name": "Cosmos-Predict1",
+   "org": "NVIDIA 2025",
+   "params": "擴散 7B / 14B；自回歸 4B / 12B",
+   "detail": "世界基礎模型",
+   "src": "https://arxiv.org/abs/2501.03575",
+   "alias": [
+    "Cosmos-Predict1",
+    "Cosmos"
+   ]
+  },
+  {
+   "name": "Cosmos-Predict2 / 2.5",
+   "org": "NVIDIA 2025",
+   "params": "2B / 14B",
+   "detail": "flow 影片模型",
+   "src": "https://arxiv.org/abs/2511.00062",
+   "alias": [
+    "Cosmos-Predict2",
+    "Cosmos-Predict2.5",
+    "Cosmos Predict 2"
+   ]
+  },
+  {
+   "name": "Cosmos-Transfer1",
+   "org": "NVIDIA 2025",
+   "params": "7B 底模（控制分支未單列）",
+   "detail": "多種空間控制條件",
+   "src": "https://arxiv.org/abs/2503.14492",
+   "alias": [
+    "Cosmos-Transfer",
+    "Cosmos Transfer"
+   ]
+  },
+  {
+   "name": "Cosmos-Reason1（物理推理 VLM）",
+   "org": "NVIDIA 2025",
+   "params": "7B、56B",
+   "detail": "不是世界模型，常一起出現",
+   "src": "https://arxiv.org/abs/2503.15558",
+   "alias": [
+    "Cosmos-Reason",
+    "Cosmos Reason"
+   ]
+  },
+  {
+   "name": "Cosmos Policy",
+   "org": "NVIDIA 2026",
+   "params": "2B（Cosmos-Predict2-2B 微調）",
+   "detail": "動作、未來、價值都當潛影格",
+   "src": "https://arxiv.org/abs/2601.16163",
+   "alias": [
+    "Cosmos Policy"
+   ]
+  },
+  {
+   "name": "Wan 2.1",
+   "org": "阿里 2025",
+   "params": "1.3B、14B",
+   "detail": "GR00T N1 用 I2V-14B 造資料",
+   "src": "https://arxiv.org/abs/2503.20314",
+   "alias": [
+    "WAN2.1",
+    "Wan 2.1",
+    "Wan2.1"
+   ]
+  },
+  {
+   "name": "Wan 2.2",
+   "org": "阿里 2025",
+   "params": "TI2V 5B；A14B MoE 總 27B、每步啟用 14B",
+   "detail": "MoE 影片擴散",
+   "src": "https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B",
+   "alias": [
+    "Wan 2.2",
+    "Wan2.2"
+   ]
+  },
+  {
+   "name": "HunyuanVideo",
+   "org": "騰訊 2024",
+   "params": "13B",
+   "detail": "Video2Act 取前段層",
+   "src": "https://arxiv.org/abs/2412.03603",
+   "alias": [
+    "HunyuanVideo",
+    "Hunyuan"
+   ]
+  },
+  {
+   "name": "CogVideoX",
+   "org": "智譜 / 清華 2024",
+   "params": "2B、5B",
+   "detail": "TesserAct 以它初始化",
+   "src": "https://arxiv.org/abs/2408.06072",
+   "alias": [
+    "CogVideoX"
+   ]
+  },
+  {
+   "name": "LTX-Video",
+   "org": "Lightricks 2024",
+   "params": "1.9B",
+   "detail": "GE-Base 可選骨幹",
+   "src": "https://arxiv.org/abs/2501.00103",
+   "alias": [
+    "LTX-Video"
+   ]
+  },
+  {
+   "name": "Stable Video Diffusion",
+   "org": "Stability AI 2023",
+   "params": "1.5B（依 VPP 論文）",
+   "detail": "VPP、Ctrl-World 的骨幹",
+   "src": "https://arxiv.org/abs/2412.14803",
+   "alias": [
+    "SVD",
+    "Stable Video Diffusion"
+   ]
+  },
+  {
+   "name": "Navigation World Model（NWM）",
+   "org": "Meta 2024",
+   "params": "1B（CDiT）",
+   "detail": "導航用條件擴散 Transformer",
+   "src": "https://arxiv.org/abs/2412.03572",
+   "alias": [
+    "NWM"
+   ]
+  },
+  {
+   "name": "Genie Envisioner（GE）",
+   "org": "智元 2025",
+   "params": "GE-Base 2B 級；GE-Act 動作解碼器 160M",
+   "detail": "GE-Base / GE-Act / GE-Sim",
+   "src": "https://arxiv.org/abs/2508.05635",
+   "alias": [
+    "Genie Envisioner",
+    "GE-Act",
+    "GE-Base",
+    "GE-Sim"
+   ]
+  },
+  {
+   "name": "1X World Model",
+   "org": "1X 2026",
+   "params": "骨幹 14B；IDM 未公開",
+   "detail": "影片想像 → IDM 出動作",
+   "src": "https://1x.tech/discover/world-model-self-learning",
+   "alias": [
+    "1X World Model"
+   ]
+  },
+  {
+   "name": "comma.ai 世界模型",
+   "org": "comma.ai 2025",
+   "params": "250M / 500M（主力）/ 1B",
+   "detail": "3D DiT + Plan Head",
+   "src": "https://arxiv.org/abs/2504.19077",
+   "alias": [
+    "comma"
+   ]
+  },
+  {
+   "name": "Ctrl-World",
+   "org": "清華 / Stanford 2025",
+   "params": "1.5B（SVD 初始化）",
+   "detail": "多視角動作條件模擬器",
+   "src": "https://arxiv.org/abs/2510.10125",
+   "alias": [
+    "Ctrl-World"
+   ]
+  },
+  {
+   "name": "VLA-RFT 世界模型",
+   "org": "2025",
+   "params": "138M",
+   "detail": "LLaMA 式自回歸",
+   "src": "https://arxiv.org/abs/2510.00406",
+   "alias": [
+    "VLA-RFT"
+   ]
+  },
+  {
+   "name": "iVideoGPT",
+   "org": "清華 2024",
+   "params": "138M / 436M（VLA-Reasoner 用的版本 600M）",
+   "detail": "自回歸影片 Transformer",
+   "src": "https://arxiv.org/abs/2405.15223",
+   "alias": [
+    "iVideoGPT",
+    "VLA-Reasoner"
+   ]
+  },
+  {
+   "name": "WMPO 世界模型",
+   "org": "2025",
+   "params": "未公開（OpenSora 骨幹）",
+   "detail": "像素級影片擴散",
+   "src": "https://arxiv.org/abs/2511.09515",
+   "alias": [
+    "WMPO"
+   ]
+  },
+  {
+   "name": "TesserAct",
+   "org": "UMass 等 2025",
+   "params": "未公開（CogVideoX 初始化）",
+   "detail": "RGB + 深度 + 法向量的 4D 世界模型",
+   "src": "https://arxiv.org/abs/2504.20995",
+   "alias": [
+    "TesserAct"
+   ]
+  },
+  {
+   "name": "宇樹 UnifoLM-WMA-0",
+   "org": "Unitree 2025",
+   "params": "未公開",
+   "detail": "世界模型 + 動作頭",
+   "src": "https://github.com/unitreerobotics/unifolm-world-model-action",
+   "alias": [
+    "UnifoLM"
+   ]
+  },
+  {
+   "name": "World Labs Marble",
+   "org": "World Labs 2025",
+   "params": "未公開",
+   "detail": "3D 高斯場景生成",
+   "src": "https://www.worldlabs.ai/case-studies/1-robotics",
+   "alias": [
+    "Marble"
+   ]
+  },
+  {
+   "name": "Waymo World Model",
+   "org": "Waymo 2026",
+   "params": "未公開（Genie 3 後訓練）",
+   "detail": "相機 + LiDAR 模擬器",
+   "src": "https://waymo.com/blog/2026/02/the-waymo-world-model-a-new-frontier-for-autonomous-driving-simulation",
+   "alias": [
+    "Waymo World Model"
+   ]
+  },
+  {
+   "name": "小鵬世界基座模型",
+   "org": "小鵬 2025",
+   "params": "72B（官方於 X9 發布會表示研發中）",
+   "detail": "雲端基座，蒸餾到車端",
+   "src": "https://www.36kr.com/p/3463098292770179",
+   "alias": [
+    "小鵬"
+   ]
+  },
+  {
+   "name": "華為 WE / 蔚來 NWM / Tesla 神經模擬器",
+   "org": "—",
+   "params": "未公開",
+   "detail": "只有發表會或演講",
+   "src": "https://www.humanoidsdaily.com/feed/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus",
+   "alias": [
+    "華為",
+    "蔚來"
+   ]
+  }
+ ]
+}

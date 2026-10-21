@@ -58,11 +58,12 @@
 
 | 你想知道的 | 從這裡讀 |
 |---|---|
-| 完全沒概念，想先知道為什麼有這兩個東西 | [01 起源與歷史](origins.html) → [12 名詞速查](glossary.html) |
+| 完全沒概念，想先知道為什麼有這兩個東西 | [01 起源與歷史](origins.html) → [13 名詞速查](glossary.html) |
 | 想懂模型長什麼樣、怎麼選型 | [02 主流模型架構](architectures.html) → [03 流派怎麼分](taxonomy.html) |
 | 要自己動手訓練或評估 | [04 訓練、資料與評估](training.html) |
 | 想知道世界模型到底怎麼幫 VLA | [05 四類與五種角色](world-model-roles.html) → [06 訓練時 vs 推論時](train-vs-inference.html) → [07 合成資料](synthetic-data.html) |
 | 想讀懂世界模型的經典論文 | [10 經典世界模型論文精讀](classic-world-models.html) |
+| 想查某個模型有多大 | [12 參數量總表](params.html) |
 | 想知道某個世界模型到底被誰用過 | [11 世界模型代表作的實際應用](wm-in-practice.html) |
 | 想知道業界誰在做什麼 | [08 業界產品盤點](industry.html) → [09 案例：智平方](ai2-robotics.html) |
 
@@ -80,8 +81,9 @@
 <a class="card" href="ai2-robotics.html"><span class="n">09</span><b>案例：智平方</b><small>GOVLA、FiS-VLA、Video2Act、NeuroVLA；與 π0、Helix、GR00T 比較；類腦與 SNN。</small></a>
 <a class="card" href="classic-world-models.html"><span class="n">10</span><b>經典世界模型論文精讀</b><small>8 篇論文逐篇拆解：背景、問題、方法、架構、資料集、評估指標與局限。</small></a>
 <a class="card" href="wm-in-practice.html"><span class="n">11</span><b>世界模型代表作的實際應用</b><small>四類代表作各被誰用、用在哪個階段；智平方 AlphaBrain、Helix、GR00T N1／N1.5、GR-2／GR-3 逐一核對。</small></a>
-<a class="card" href="glossary.html"><span class="n">12</span><b>名詞速查</b><small>action chunk、flow matching、IDM、RSSM、JEPA、FVD……一句話解釋。</small></a>
-<a class="card" href="references.html"><span class="n">13</span><b>參考資料</b><small>依主題整理的論文清單，以及本專案的原始報告與簡報。</small></a>
+<a class="card" href="params.html"><span class="n">12</span><b>參數量總表</b><small>約 95 個 VLA 與世界模型，只列官方公布的參數量與組成，附來源。</small></a>
+<a class="card" href="glossary.html"><span class="n">13</span><b>名詞速查</b><small>action chunk、flow matching、IDM、RSSM、JEPA、FVD……一句話解釋。</small></a>
+<a class="card" href="references.html"><span class="n">14</span><b>參考資料</b><small>依主題整理的論文清單，以及本專案的原始報告與簡報。</small></a>
 </div>
 
 ## 關於資料來源
