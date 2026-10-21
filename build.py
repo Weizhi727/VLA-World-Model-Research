@@ -47,8 +47,8 @@ GROUPS = [
     ('綜合應用：VLA × 世界模型', [
         ('world-model-roles', '世界模型四類與五種角色', '每類吃什麼、吐什麼，VLA 怎麼用它',
          '每類的輸入輸出與用途；DreamGen、GR-2、VPP、WMPO、UniPi、Veo 評測。'),
-        ('train-vs-inference', '訓練時 vs 推論時', '世界模型實際出現在哪裡、結構與參數量',
-         'T1–T4 與 I0–I3 分級、共通骨架、28 個模型的參數量表。'),
+        ('train-vs-inference', '訓練時 vs 推論時', '世界模型實際出現在哪裡、怎麼跟 VLA 接線、數據量與參數量',
+         'T1–T4 與 I0–I3 各一張流程圖與連動卡：輸入輸出、世界模型的角色、數據量、參數量。'),
         ('synthetic-data', '具身基礎模型與合成資料', '「融合」是什麼意思、生成影片怎麼把關物理',
          '「機器人版 GPT」指什麼；生成影片的物理問題與四層把關。'),
         ('wm-in-practice', '世界模型代表作的實際應用', 'Cosmos、Wan、Veo、Genie、Dreamer、V-JEPA 被誰用；智平方、Helix、GR00T、GR-2 怎麼用',
