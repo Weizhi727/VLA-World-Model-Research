@@ -20,30 +20,84 @@ OUT = ROOT / 'docs'
 SITE_TITLE = 'VLA × 世界模型 調研'
 UPDATED = '2026-10-21'
 
-# (slug, 側欄編號, 標題, 一句話說明)
-PAGES = [
-    ('index', '', '首頁', '這個網站在講什麼、怎麼讀'),
-    ('origins', '01', '起源與歷史', '遇到什麼瓶頸，才發展出 VLA 與世界模型'),
-    ('architectures', '02', '主流模型架構', 'VLA 四條路線、世界模型四條路線'),
-    ('taxonomy', '03', '流派怎麼分', 'VLA 的三條分類軸、世界模型的四個流派'),
-    ('training', '04', '訓練、資料與評估', '怎麼訓練、資料怎麼建、輸入輸出、怎麼用、怎麼評估'),
-    ('world-model-roles', '05', '世界模型四類與五種角色', '每類吃什麼、吐什麼，VLA 怎麼用它'),
-    ('train-vs-inference', '06', '訓練時 vs 推論時', '世界模型實際出現在哪裡、結構與參數量'),
-    ('synthetic-data', '07', '具身基礎模型與合成資料', '「融合」是什麼意思、生成影片怎麼把關物理'),
-    ('industry', '08', '業界產品盤點', '機器人與自駕公司各自怎麼做'),
-    ('ai2-robotics', '09', '案例：智平方', '產品分類、競品比較、類腦與 SNN'),
-    ('classic-world-models', '10', '經典世界模型論文精讀', 'World Models、MuZero、DreamerV3、GAIA-1、UniSim、Genie、Cosmos、V-JEPA 2'),
-    ('wm-in-practice', '11', '世界模型代表作的實際應用', 'Cosmos、Wan、Veo、Genie、Dreamer、V-JEPA 被誰用；智平方、Helix、GR00T、GR-2 怎麼用'),
-    ('params', '12', '參數量總表', '所有出現過的 VLA 與世界模型，官方公布的參數量'),
-    ('glossary', '13', '名詞速查', '常見術語一句話解釋'),
-    ('references', '14', '參考資料', '論文、官方頁與本專案原始產出'),
+# 側欄分組：(分組名稱, [(slug, 標題, 一句話說明, 首頁卡片說明), ...])
+# 編號依這裡的順序自動產生；文中 [NN 標題](slug.html) 與 [NN](slug.html) 的 NN 也會在建置時改成最新編號。
+GROUPS = [
+    ('', [
+        ('index', '首頁', '這個網站在講什麼、怎麼讀', ''),
+    ]),
+    ('入門總覽', [
+        ('origins', '起源與歷史', '遇到什麼瓶頸，才發展出 VLA 與世界模型',
+         '機器人學與強化學習各自卡在哪裡，以及兩條路線怎麼在 2025 年匯流。'),
+        ('training', '訓練、資料與評估', 'VLA 與世界模型並排：怎麼訓練、資料怎麼建、輸入輸出、怎麼用、怎麼評估',
+         '四階段訓練、資料金字塔、一條軌跡長什麼樣、閉環部署、真機與模擬評估；每題都把 VLA 與世界模型並排對照。'),
+    ]),
+    ('VLA', [
+        ('vla-architectures', 'VLA 主流架構', '離散 token、連續動作專家、雙系統、預測式 VLA',
+         '四條路線的資料流、代表模型比較表，以及 2026 年的收斂趨勢與動手建議。'),
+        ('vla-taxonomy', 'VLA 流派怎麼分', '系統架構、動作解碼、中間表徵三條軸與兩軸地圖',
+         '「端到端 vs 分層」只是其中一條軸。三篇 VLA 綜述的切法，與建議的兩軸地圖。'),
+    ]),
+    ('世界模型', [
+        ('wm-architectures', '世界模型路線與流派', '影片生成、潛空間動力學、JEPA、3D 四大類',
+         '四大類各在哪個空間預測未來、代表作、長處與代價，以及綜述用的其他切法。'),
+        ('classic-world-models', '經典世界模型論文精讀', 'World Models、MuZero、DreamerV3、GAIA-1、UniSim、Genie、Cosmos、V-JEPA 2',
+         '8 篇論文逐篇拆解：背景、問題、方法、架構、資料集、評估指標與局限。'),
+    ]),
+    ('綜合應用：VLA × 世界模型', [
+        ('world-model-roles', '世界模型四類與五種角色', '每類吃什麼、吐什麼，VLA 怎麼用它',
+         '每類的輸入輸出與用途；DreamGen、GR-2、VPP、WMPO、UniPi、Veo 評測。'),
+        ('train-vs-inference', '訓練時 vs 推論時', '世界模型實際出現在哪裡、結構與參數量',
+         'T1–T4 與 I0–I3 分級、共通骨架、28 個模型的參數量表。'),
+        ('synthetic-data', '具身基礎模型與合成資料', '「融合」是什麼意思、生成影片怎麼把關物理',
+         '「機器人版 GPT」指什麼；生成影片的物理問題與四層把關。'),
+        ('wm-in-practice', '世界模型代表作的實際應用', 'Cosmos、Wan、Veo、Genie、Dreamer、V-JEPA 被誰用；智平方、Helix、GR00T、GR-2 怎麼用',
+         '四類代表作各被誰用、用在哪個階段；智平方 AlphaBrain、Helix、GR00T N1／N1.5、GR-2／GR-3 逐一核對。'),
+        ('industry', '業界產品盤點', '機器人與自駕公司各自怎麼做',
+         'π、Gemini Robotics、GR00T＋Cosmos、Figure、1X、Tesla、Waymo、華為、小鵬等。'),
+        ('ai2-robotics', '案例：智平方', '產品分類、競品比較、類腦與 SNN',
+         'GOVLA、FiS-VLA、Video2Act、NeuroVLA；與 π0、Helix、GR00T 比較；類腦與 SNN。'),
+    ]),
+    ('查詢工具', [
+        ('params', '參數量總表', '所有出現過的 VLA 與世界模型，官方公布的參數量',
+         '約 95 個 VLA 與世界模型，只列官方公布的參數量與組成，附來源。'),
+        ('glossary', '名詞速查', '常見術語一句話解釋',
+         'action chunk、flow matching、IDM、RSSM、JEPA、FVD……一句話解釋。'),
+        ('references', '參考資料', '論文、官方頁與本專案原始產出',
+         '依主題整理的論文清單，以及本專案的原始報告與簡報。'),
+    ]),
 ]
+
+# (slug, 側欄編號, 標題, 一句話說明, 分組, 卡片說明)
+PAGES = []
+for _g, _items in GROUPS:
+    for _slug, _title, _desc, _card in _items:
+        _num = f'{len(PAGES):02d}' if PAGES else ''
+        PAGES.append((_slug, _num, _title, _desc, _g, _card))
+NUM = {p[0]: p[1] for p in PAGES}
+
+# 拆頁後的舊網址：轉到新頁（依錨點決定去 VLA 還是世界模型那頁）
+REDIRECTS = {
+    'architectures': ('vla-architectures', 'wm-architectures', ['rl', 'jepa', '3d', '_1', '_2', '_3']),
+    'taxonomy': ('vla-taxonomy', 'wm-architectures', ['_6']),
+}
 
 MD_EXT = ['tables', 'toc', 'admonition', 'attr_list', 'md_in_html', 'fenced_code', 'sane_lists', 'def_list']
 MD_CFG = {'toc': {'permalink': '#', 'permalink_title': '連到此段', 'toc_depth': '2-3'}}
 
 
+def renumber(body: str) -> str:
+    """站內連結文字開頭的章節編號一律換成目前的編號，重排章節時不必手改。"""
+    def sub(m):
+        slug = m.group(2)
+        if slug not in NUM or not NUM[slug]:
+            return m.group(0)
+        return m.group(1) + NUM[slug] + m.group(4)
+    return re.sub(r'(<a href="([a-z0-9-]+)\.html(?:#[^"]*)?">)(\d\d)(\s|</a>)', sub, body)
+
+
 def postprocess(body: str) -> str:
+    body = renumber(body)
     # 表格外包一層，窄螢幕可橫向捲動
     body = re.sub(r'<table>', '<div class="tbl"><table>', body)
     body = re.sub(r'</table>', '</table></div>', body)
@@ -77,11 +131,42 @@ def flat_tokens(tokens):
 
 def nav_html(current: str) -> str:
     rows = []
-    for slug, num, title, _ in PAGES:
+    group = None
+    for slug, num, title, _, g, _c in PAGES:
+        if g != group:
+            group = g
+            if g:
+                rows.append(f'<li class="grp">{html.escape(g)}</li>')
         cls = ' class="on"' if slug == current else ''
         n = f'<span class="num">{num}</span>' if num else '<span class="num">⌂</span>'
         rows.append(f'<li><a href="{slug}.html"{cls}>{n}<span>{html.escape(title)}</span></a></li>')
     return '<ul class="nav">' + ''.join(rows) + '</ul>'
+
+
+def cards_md() -> str:
+    """首頁「全部章節」：依分組產生卡片。"""
+    out = []
+    for g, items in GROUPS:
+        if not g:
+            continue
+        out += [f'### {g}', '', '<div class="cards">']
+        for slug, title, _, card in items:
+            out.append(f'<a class="card" href="{slug}.html"><span class="n">{NUM[slug]}</span>'
+                       f'<b>{html.escape(title)}</b><small>{html.escape(card)}</small></a>')
+        out += ['</div>', '']
+    return '\n'.join(out)
+
+
+def redirect_html(old: str, vla: str, wm: str, wm_anchors) -> str:
+    return f'''<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta http-equiv="refresh" content="0; url={vla}.html">
+<title>本頁已搬家</title>
+<script>var h=location.hash.slice(1),w={json.dumps(wm_anchors)};
+location.replace((w.indexOf(h)>=0?'{wm}':'{vla}')+'.html'+(w.indexOf(h)>=0?'':location.hash));</script>
+</head><body><p>這一頁已拆成 <a href="{vla}.html">{html.escape(dict((p[0], p[2]) for p in PAGES)[vla])}</a>
+與 <a href="{wm}.html">{html.escape(dict((p[0], p[2]) for p in PAGES)[wm])}</a>。</p></body></html>
+'''
 
 
 def strip_tags(frag: str) -> str:
@@ -123,8 +208,10 @@ TEMPLATE = (ROOT / 'template.html').read_text(encoding='utf-8')
 def build():
     OUT.mkdir(exist_ok=True)
     index = []
-    for i, (slug, num, title, desc) in enumerate(PAGES):
+    for i, (slug, num, title, desc, _g, _c) in enumerate(PAGES):
         src = (CONTENT / f'{slug}.md').read_text(encoding='utf-8')
+        if slug == 'index':
+            src = src.replace('{{CHAPTER_CARDS}}', cards_md())
         if slug == 'params':
             src = src.replace('{{PARAMS_TABLES}}', params_lib.full_tables_md())
         elif slug not in ('index', 'references', 'glossary'):
@@ -155,6 +242,8 @@ def build():
                .replace('{{SLUG}}', slug))
         (OUT / f'{slug}.html').write_text(out, encoding='utf-8')
         print('built', slug)
+    for old, (vla, wm, anchors) in REDIRECTS.items():
+        (OUT / f'{old}.html').write_text(redirect_html(old, vla, wm, anchors), encoding='utf-8')
     (OUT / '.nojekyll').write_text('')
     # 用 .js 而不是 .json：直接開本機檔案（file://）也能載入
     (OUT / 'assets' / 'search-index.js').write_text(

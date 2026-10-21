@@ -48,44 +48,40 @@
 !!! key "重點"
     1. **VLA 為了解決「機器人學不會泛化」而生**：2023 年 [RT-2](https://arxiv.org/abs/2307.15818) 把動作當成語言 token，借用網路規模的視覺語言知識，VLA 一詞由此而來。詳見 [起源與歷史](origins.html)。
     2. **世界模型為了解決「在真實世界試錯太貴、不會規劃」而生**：從 1943 年 Craik 的心智模型、1991 年 Dyna，到 2018 年 [World Models](https://arxiv.org/abs/1803.10122)，2024 年 Sora、Genie 把「影片生成＝世界模擬器」推向業界。
-    3. **2026 年 VLA 的主流設計**是「預訓練 VLM 骨幹＋flow matching／擴散動作頭＋動作分塊」，人形機器人則普遍再加一層「慢腦＋快腦」雙系統。詳見 [主流模型架構](architectures.html)。
-    4. **「流派」其實是好幾條軸的組合**：VLA 至少有「系統架構」「動作怎麼解碼」「中間表徵是什麼」三條軸；世界模型最常見的切法是「在哪個空間預測未來」：影片、潛空間、JEPA、3D。詳見 [流派怎麼分](taxonomy.html)。
+    3. **2026 年 VLA 的主流設計**是「預訓練 VLM 骨幹＋flow matching／擴散動作頭＋動作分塊」，人形機器人則普遍再加一層「慢腦＋快腦」雙系統。詳見 [VLA 主流架構](vla-architectures.html)。
+    4. **「流派」其實是好幾條軸的組合**：VLA 至少有「系統架構」「動作怎麼解碼」「中間表徵是什麼」三條軸；世界模型最常見的切法是「在哪個空間預測未來」：影片、潛空間、JEPA、3D。詳見 [VLA 流派怎麼分](vla-taxonomy.html) 與 [世界模型路線與流派](wm-architectures.html)。
     5. **世界模型對 VLA 有五種角色**：資料引擎、輔助預測、想像中 RL、先想再做、評測模擬器。詳見 [世界模型四類與五種角色](world-model-roles.html)。
     6. **訓練時用世界模型已是主流，推論時用仍是少數**：量產機器人上幾乎只跑 VLA；推論時用到世界模型的，多是只跑一步取特徵，或在 VLA 沒把握時才拿來預演。詳見 [訓練時 vs 推論時](train-vs-inference.html)。
     7. **生成影片「看起來真」不等於「物理對」**：業界的做法是多層把關，最後以真機成功率驗收。詳見 [具身基礎模型與合成資料](synthetic-data.html)。
+
+## 網站怎麼分
+
+全站分成五區，側欄也照這個順序排：
+
+| 分區 | 讀什麼 |
+|---|---|
+| **入門總覽** | 兩者為什麼出現、怎麼訓練與評估。VLA 與世界模型並排對照，適合先讀 |
+| **VLA** | VLA 本身的架構路線與分類方法 |
+| **世界模型** | 世界模型的四大類，以及 8 篇經典論文精讀 |
+| **綜合應用：VLA × 世界模型** | 世界模型怎麼幫 VLA、在訓練還是推論時用、合成資料、業界產品與智平方案例 |
+| **查詢工具** | 參數量總表、名詞速查、參考資料 |
 
 ## 建議閱讀順序
 
 | 你想知道的 | 從這裡讀 |
 |---|---|
-| 完全沒概念，想先知道為什麼有這兩個東西 | [01 起源與歷史](origins.html) → [13 名詞速查](glossary.html) |
-| 想懂模型長什麼樣、怎麼選型 | [02 主流模型架構](architectures.html) → [03 流派怎麼分](taxonomy.html) |
-| 要自己動手訓練或評估 | [04 訓練、資料與評估](training.html) |
-| 想知道世界模型到底怎麼幫 VLA | [05 四類與五種角色](world-model-roles.html) → [06 訓練時 vs 推論時](train-vs-inference.html) → [07 合成資料](synthetic-data.html) |
-| 想讀懂世界模型的經典論文 | [10 經典世界模型論文精讀](classic-world-models.html) |
-| 想查某個模型有多大 | [12 參數量總表](params.html) |
-| 想知道某個世界模型到底被誰用過 | [11 世界模型代表作的實際應用](wm-in-practice.html) |
-| 想知道業界誰在做什麼 | [08 業界產品盤點](industry.html) → [09 案例：智平方](ai2-robotics.html) |
+| 完全沒概念，想先知道為什麼有這兩個東西 | [01 起源與歷史](origins.html) → [14 名詞速查](glossary.html) |
+| 想懂 VLA 長什麼樣、怎麼選型 | [03 VLA 主流架構](vla-architectures.html) → [04 VLA 流派怎麼分](vla-taxonomy.html) |
+| 想懂世界模型有哪幾類 | [05 世界模型路線與流派](wm-architectures.html) → [06 經典世界模型論文精讀](classic-world-models.html) |
+| 要自己動手訓練或評估 | [02 訓練、資料與評估](training.html) |
+| 想知道世界模型到底怎麼幫 VLA | [07 四類與五種角色](world-model-roles.html) → [08 訓練時 vs 推論時](train-vs-inference.html) → [09 合成資料](synthetic-data.html) |
+| 想知道某個世界模型到底被誰用過 | [10 世界模型代表作的實際應用](wm-in-practice.html) |
+| 想知道業界誰在做什麼 | [11 業界產品盤點](industry.html) → [12 案例：智平方](ai2-robotics.html) |
+| 想查某個模型有多大 | [13 參數量總表](params.html) |
 
 ## 全部章節
 
-<div class="cards">
-<a class="card" href="origins.html"><span class="n">01</span><b>起源與歷史</b><small>機器人學與強化學習各自卡在哪裡，以及兩條路線怎麼在 2025 年匯流。</small></a>
-<a class="card" href="architectures.html"><span class="n">02</span><b>主流模型架構</b><small>離散 token、連續動作專家、雙系統、預測式 VLA；潛空間、JEPA、影片生成、3D 世界模型。</small></a>
-<a class="card" href="taxonomy.html"><span class="n">03</span><b>流派怎麼分</b><small>「端到端 vs 分層」只是其中一條軸。三篇 VLA 綜述與兩篇世界模型綜述的切法。</small></a>
-<a class="card" href="training.html"><span class="n">04</span><b>訓練、資料與評估</b><small>四階段訓練、資料金字塔、一條軌跡長什麼樣、閉環部署、真機與模擬評估。</small></a>
-<a class="card" href="world-model-roles.html"><span class="n">05</span><b>世界模型四類與五種角色</b><small>每類的輸入輸出與用途；DreamGen、GR-2、VPP、WMPO、UniPi、Veo 評測。</small></a>
-<a class="card" href="train-vs-inference.html"><span class="n">06</span><b>訓練時 vs 推論時</b><small>T1–T4 與 I0–I3 分級、共通骨架、28 個模型的參數量表。</small></a>
-<a class="card" href="synthetic-data.html"><span class="n">07</span><b>具身基礎模型與合成資料</b><small>「機器人版 GPT」指什麼；生成影片的物理問題與四層把關。</small></a>
-<a class="card" href="industry.html"><span class="n">08</span><b>業界產品盤點</b><small>π、Gemini Robotics、GR00T＋Cosmos、Figure、1X、Tesla、Waymo、華為、小鵬等。</small></a>
-<a class="card" href="ai2-robotics.html"><span class="n">09</span><b>案例：智平方</b><small>GOVLA、FiS-VLA、Video2Act、NeuroVLA；與 π0、Helix、GR00T 比較；類腦與 SNN。</small></a>
-<a class="card" href="classic-world-models.html"><span class="n">10</span><b>經典世界模型論文精讀</b><small>8 篇論文逐篇拆解：背景、問題、方法、架構、資料集、評估指標與局限。</small></a>
-<a class="card" href="wm-in-practice.html"><span class="n">11</span><b>世界模型代表作的實際應用</b><small>四類代表作各被誰用、用在哪個階段；智平方 AlphaBrain、Helix、GR00T N1／N1.5、GR-2／GR-3 逐一核對。</small></a>
-<a class="card" href="params.html"><span class="n">12</span><b>參數量總表</b><small>約 95 個 VLA 與世界模型，只列官方公布的參數量與組成，附來源。</small></a>
-<a class="card" href="glossary.html"><span class="n">13</span><b>名詞速查</b><small>action chunk、flow matching、IDM、RSSM、JEPA、FVD……一句話解釋。</small></a>
-<a class="card" href="references.html"><span class="n">14</span><b>參考資料</b><small>依主題整理的論文清單，以及本專案的原始報告與簡報。</small></a>
-</div>
-
+{{CHAPTER_CARDS}}
 ## 關於資料來源
 
 - **離線版**：公司網路打不開這個網站時，可以下載 [離線壓縮包](https://github.com/Weizhi727/VLA-World-Model-Research/releases/download/offline-latest/VLA-World-Model-Research-offline.zip)，解壓縮後打開 `index.html` 即可閱讀。
