@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>世界模型代表作的實際應用 · VLA × 世界模型 調研</title>
+<meta name="description" content="Cosmos、Wan、Veo、Genie、Dreamer、V-JEPA 被誰用；智平方、Helix、GR00T、GR-2 怎麼用">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body data-page="wm-in-practice">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead"/>
+    </marker>
+    <marker id="arr-wm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead wm"/>
+    </marker>
+    <marker id="arr-vla" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead vla"/>
+    </marker>
+  </defs>
+</svg>
+<header class="top">
+  <button class="menu" aria-label="開啟目錄" aria-expanded="false">☰</button>
+  <a class="brand" href="index.html"><span class="dot vla"></span><span class="dot wm"></span>VLA × 世界模型 調研</a>
+  <button class="theme" aria-label="切換深淺色">◐</button>
+</header>
+<div class="shell">
+  <aside class="side">
+    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li><a href="origins.html"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="architectures.html"><span class="num">02</span><span>主流模型架構</span></a></li><li><a href="taxonomy.html"><span class="num">03</span><span>流派怎麼分</span></a></li><li><a href="training.html"><span class="num">04</span><span>訓練、資料與評估</span></a></li><li><a href="world-model-roles.html"><span class="num">05</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">06</span><span>訓練時 vs 推論時</span></a></li><li><a href="synthetic-data.html"><span class="num">07</span><span>具身基礎模型與合成資料</span></a></li><li><a href="industry.html"><span class="num">08</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html"><span class="num">09</span><span>案例：智平方</span></a></li><li><a href="classic-world-models.html"><span class="num">10</span><span>經典世界模型論文精讀</span></a></li><li><a href="wm-in-practice.html" class="on"><span class="num">11</span><span>世界模型代表作的實際應用</span></a></li><li><a href="glossary.html"><span class="num">12</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">13</span><span>參考資料</span></a></li></ul>
+    <p class="side-note">整理日期：2026-10-21<br>面向技術人員的科普整理</p>
+  </aside>
+  <main>
+    <article class="doc">
+      <h1 id="_1">世界模型代表作的實際應用<a class="headerlink" href="#_1" title="連到此段">#</a></h1>
+<p class="lede">回答兩個追問：影片生成、潛空間動力學、JEPA、3D／4D 四類世界模型的代表作（Cosmos、Wan、Veo、Genie、DreamerV3／Dreamer 4、V-JEPA 2、Marble 等），實際被哪些 VLA 或其他系統用過；以及智平方、Figure Helix、GR00T N1／N1.5、GR-2／GR-3 在哪個階段、怎麼用世界模型。<b>只收有論文、官方頁或技術文章明寫的案例，查不到就寫「未找到公開證據」。</b>階段代號沿用 <a href="train-vs-inference.html">訓練時 vs 推論時</a>：T1 預訓練／輔助目標、T2 資料工廠、T3 想像中 RL、T4 評估器；I0 推論不參與、I1 借一部分特徵、I2 先想再做、I3 預演挑動作。</p>
+
+<figure class="dg">
+<svg viewBox="0 0 800 330" role="img" aria-label="四類世界模型代表作與主要使用者、使用階段">
+<rect class="n band" x="10" y="10" width="780" height="310" rx="14"/>
+<text x="110" y="38" text-anchor="middle" class="h">世界模型代表作</text>
+<text x="400" y="38" text-anchor="middle" class="h">實際使用者（有公開來源）</text>
+<text x="690" y="38" text-anchor="middle" class="h">主要階段</text>
+<rect class="n wm" x="25" y="55" width="170" height="56" rx="10"/><text x="110" y="80" text-anchor="middle" class="b wm">影片生成</text><text x="110" y="99" text-anchor="middle" class="s">Cosmos · Wan · Veo 等</text>
+<rect class="n" x="250" y="55" width="300" height="56" rx="10"/><text x="265" y="80" class="b">GR00T、Cosmos Policy、GE、VPP</text><text x="265" y="99" class="s">Gemini 評估、Waymo、SIMA 2、AlphaBrain</text>
+<rect class="n key" x="605" y="55" width="170" height="56" rx="10"/><text x="690" y="88" text-anchor="middle" class="b">T2 · T4 · I1 · I3</text>
+<rect class="n wm" x="25" y="125" width="170" height="56" rx="10"/><text x="110" y="150" text-anchor="middle" class="b wm">潛空間動力學</text><text x="110" y="169" text-anchor="middle" class="s">DreamerV3 · Dreamer 4</text>
+<rect class="n" x="250" y="125" width="300" height="56" rx="10"/><text x="265" y="150" class="b">FOREWARN、DayDreamer</text><text x="265" y="169" class="s">未找到大型商用 VLA 採用</text>
+<rect class="n" x="605" y="125" width="170" height="56" rx="10"/><text x="690" y="158" text-anchor="middle" class="b">T3 · I3</text>
+<rect class="n wm" x="25" y="195" width="170" height="56" rx="10"/><text x="110" y="220" text-anchor="middle" class="b wm">JEPA</text><text x="110" y="239" text-anchor="middle" class="s">V-JEPA 2 / 2.1</text>
+<rect class="n" x="250" y="195" width="300" height="56" rx="10"/><text x="265" y="220" class="b">V-JEPA 2-AC、JEPA-VLA、AlphaBrain</text><text x="265" y="239" class="s">從規劃器變成 VLA 的視覺編碼器</text>
+<rect class="n" x="605" y="195" width="170" height="56" rx="10"/><text x="690" y="228" text-anchor="middle" class="b">I3 · T1／編碼器</text>
+<rect class="n wm" x="25" y="265" width="170" height="46" rx="10"/><text x="110" y="286" text-anchor="middle" class="b wm">3D／4D</text><text x="110" y="303" text-anchor="middle" class="s">Marble · TesserAct</text>
+<rect class="n" x="250" y="265" width="300" height="46" rx="10"/><text x="265" y="286" class="b">Isaac Sim、BEHAVIOR-1K、Waymo LiDAR</text><text x="265" y="303" class="s">主要用來快速造模擬場景</text>
+<rect class="n" x="605" y="265" width="170" height="46" rx="10"/><text x="690" y="293" text-anchor="middle" class="b">建場景 · T4</text>
+<path class="ar wm" d="M195,83 H248"/><path class="ar wm" d="M195,153 H248"/><path class="ar wm" d="M195,223 H248"/><path class="ar wm" d="M195,288 H248"/>
+<path class="ar" d="M550,83 H603"/><path class="ar" d="M550,153 H603"/><path class="ar" d="M550,223 H603"/><path class="ar" d="M550,288 H603"/>
+</svg>
+<figcaption>被 VLA 實際用得最多的是可微調的開源影片模型（Wan、Cosmos、SVD）；Veo、Genie 3 只在 Google 體系內使用。</figcaption>
+</figure>
+
+<h2 id="_2">重點先講<a class="headerlink" href="#_2" title="連到此段">#</a></h2>
+<ol>
+<li><strong>被 VLA 實際用得最多的是「開源影片生成模型」，不是最有名的那幾個。</strong> WAN2.1 是 GR00T N1 與 DreamGen 造資料的主力；Stable Video Diffusion（SVD）被 VPP、Ctrl-World 拿來當骨幹；Cosmos-Predict2 被 Cosmos Policy、智元 GE、智平方 AlphaBrain 拿來當策略骨幹。<strong>Genie 3、Veo 只有 Google 自家（Waymo、SIMA 2、Gemini Robotics）在用</strong>，因為沒有開放權重。</li>
+<li><strong>各類代表作的「落點」很不一樣：</strong><ul>
+<li><strong>影片生成類</strong>（Cosmos、Wan、SVD、Veo、Genie 3）：多用在 <strong>T2 造資料、T4 評估、以及 I1／I3 當策略骨幹</strong>。</li>
+<li><strong>潛空間動力學類</strong>（DreamerV3、Dreamer 4）：主要用在 <strong>RL 與「預演挑動作」（FOREWARN）</strong>，<strong>沒有找到被大型商用 VLA 採用的公開證據</strong>。</li>
+<li><strong>JEPA 類</strong>（V-JEPA 2）：用在 <strong>零樣本規劃（I3）</strong>，以及 2026 年起被拿來<strong>當 VLA 的視覺編碼器</strong>（JEPA-VLA）。</li>
+<li><strong>3D／4D 類</strong>（Marble、TesserAct、Waymo World Model 的 LiDAR 輸出）：目前主要是 <strong>建模擬場景、評估</strong>，直接進 VLA 訓練的案例還很少。</li>
+</ul>
+</li>
+<li><strong>智平方：主力產品 VLA 沒有公開使用世界模型，但它的開源平台有。</strong> 2026-04 發布的開源框架 <strong>AlphaBrain</strong> 原生整合 <strong>NVIDIA Cosmos Policy 權重</strong>，並支援 <strong>Cosmos 2／2.5、Wan 2.2、V-JEPA 2.1</strong> 三類世界模型骨幹一鍵切換（<a class="ext" href="https://github.com/AlphaBrainGroup/AlphaBrain" target="_blank" rel="noopener">GitHub README</a>）。這是<strong>研究平台</strong>；GOVLA／AlphaBrain 產品模型本身是否用到，<strong>未找到公開證據</strong>。Video2Act 只借影片擴散模型（HunyuanVideo）的特徵，不生成未來畫面。</li>
+<li><strong>大廠產品的用法：</strong></li>
+</ol>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>產品</th>
+<th>有沒有用世界模型</th>
+<th>用在哪個階段</th>
+<th>怎麼用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Figure Helix / Helix 02</strong></td>
+<td><strong>未找到公開證據</strong></td>
+<td>—</td>
+<td>官方頁只提遙操作資料、VLM 自動標註、物理模擬做 RL；沒提世界模型</td>
+</tr>
+<tr>
+<td><strong>GR00T N1</strong></td>
+<td>✅</td>
+<td>T2 造資料</td>
+<td>用 <strong>WAN2.1-I2V-14B</strong> 從 88 小時真機資料生成 <strong>827 小時</strong>「神經軌跡」，再用潛在動作與 IDM 補標籤</td>
+</tr>
+<tr>
+<td><strong>GR00T N1.5</strong></td>
+<td>✅</td>
+<td>T1 輔助目標 + T2 造資料</td>
+<td><strong>FLARE</strong> 未來表徵對齊損失；<strong>DreamGen</strong> 合成資料進預訓練</td>
+</tr>
+<tr>
+<td><strong>GR-2</strong></td>
+<td>✅</td>
+<td>T1 預訓練</td>
+<td>3,800 萬段影片做「預測下一幀」生成式預訓練，再微調出動作</td>
+</tr>
+<tr>
+<td><strong>GR-3</strong></td>
+<td>❌（論文未使用）</td>
+<td>—</td>
+<td>改成 VLM（Qwen2.5-VL-3B）+ 動作 DiT，搭配視覺語言資料與 VR 人類軌跡共訓</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="_3">一、影片生成類<a class="headerlink" href="#_3" title="連到此段">#</a></h2>
+<h3 id="1-nvidia-cosmospredict-transfer-tokenizer">1. NVIDIA Cosmos（Predict / Transfer / Tokenizer）<a class="headerlink" href="#1-nvidia-cosmospredict-transfer-tokenizer" title="連到此段">#</a></h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>誰用</th>
+<th>怎麼用</th>
+<th>階段</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cosmos Policy</strong>（NVIDIA）</td>
+<td>把 Cosmos-Predict2-2B 直接微調成策略：動作、未來狀態、價值都當「潛空間影格」生成，再用 Best-of-N 規劃</td>
+<td>I3</td>
+<td><a class="ext" href="https://arxiv.org/abs/2601.16163" target="_blank" rel="noopener">arXiv:2601.16163</a></td>
+</tr>
+<tr>
+<td><strong>智元 Genie Envisioner（GE-Base）</strong></td>
+<td>影片骨幹可選 LTX-Video 2B 或 <strong>Cosmos2 2B</strong></td>
+<td>T1 / I1</td>
+<td><a class="ext" href="https://arxiv.org/abs/2508.05635" target="_blank" rel="noopener">arXiv:2508.05635</a></td>
+</tr>
+<tr>
+<td><strong>DreamGen</strong>（NVIDIA）</td>
+<td>比較了 WAN2.1、Hunyuan、CogVideoX、<strong>Cosmos</strong> 當資料工廠</td>
+<td>T2</td>
+<td><a class="ext" href="https://arxiv.org/abs/2505.12705" target="_blank" rel="noopener">arXiv:2505.12705</a></td>
+</tr>
+<tr>
+<td><strong>智平方 AlphaBrain</strong></td>
+<td>原生載入 Cosmos Policy 權重；Cosmos Predict 2 / 2.5（約 2.1B）可當世界模型骨幹</td>
+<td>研究平台</td>
+<td><a class="ext" href="https://github.com/AlphaBrainGroup/AlphaBrain" target="_blank" rel="noopener">GitHub</a></td>
+</tr>
+<tr>
+<td><strong>1X</strong></td>
+<td>World Model Challenge 的資料集用 <strong>Cosmos Tokenizer</strong> 壓縮</td>
+<td>資料／競賽</td>
+<td><a class="ext" href="https://www.globenewswire.com/news-release/2025/01/07/3005070/0/en/index.html" target="_blank" rel="noopener">NVIDIA 新聞稿 2025-01-07</a></td>
+</tr>
+<tr>
+<td><strong>Agility Robotics</strong></td>
+<td>CTO 表示用 Cosmos「生成與擴增擬真場景」，減少真實資料採集</td>
+<td>T2</td>
+<td>同上</td>
+</tr>
+<tr>
+<td><strong>小鵬（人形機器人）、Hillbot、Skild AI</strong></td>
+<td>新聞稿只說「用 Cosmos 加速機器人開發」，<strong>未說明細節</strong></td>
+<td>不明</td>
+<td>同上</td>
+</tr>
+<tr>
+<td><strong>Waabi、Foretellix、Uber（自駕）</strong></td>
+<td>資料整理、生成測試情境與訓練資料</td>
+<td>T2 / T4</td>
+<td>同上</td>
+</tr>
+<tr>
+<td><strong>Wayve</strong></td>
+<td>評估用 Cosmos 搜尋邊角案例</td>
+<td>T4</td>
+<td>同上</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>注意：新聞稿也列了 Figure、Fourier、Galbot、Neura 等為早期採用者，但<strong>沒寫用途</strong>。不能據此說 Helix 用了 Cosmos。</p>
+</blockquote>
+<h3 id="2-wanwan21-22">2. 阿里 Wan（WAN2.1 / 2.2）<a class="headerlink" href="#2-wanwan21-22" title="連到此段">#</a></h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>誰用</th>
+<th>怎麼用</th>
+<th>階段</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GR00T N1</strong></td>
+<td>LoRA 微調 <strong>WAN2.1-I2V-14B</strong>，88 小時遙操作 → 生成 827 小時影片（約 10 倍，花約 10.5 萬 L40 GPU 小時）；與真實軌跡 1:1 共訓，RoboCasa +4.2%～+8.8%、真機平均 +5.8%</td>
+<td>T2</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.14734" target="_blank" rel="noopener">arXiv:2503.14734</a></td>
+</tr>
+<tr>
+<td><strong>DreamGen → GR00T N1.5</strong></td>
+<td>主力影片模型是 WAN2.1；生成的神經軌跡進入 N1.5 預訓練，12 個新動詞成功率 13.1% → 38.3%</td>
+<td>T2</td>
+<td><a class="ext" href="https://arxiv.org/abs/2505.12705" target="_blank" rel="noopener">arXiv:2505.12705</a>、<a class="ext" href="https://research.nvidia.com/labs/gear/gr00t-n1_5/" target="_blank" rel="noopener">GR00T N1.5 官方頁</a></td>
+</tr>
+<tr>
+<td><strong>智平方 AlphaBrain</strong></td>
+<td>Wan 2.2（約 5B）可當世界模型骨幹</td>
+<td>研究平台</td>
+<td><a class="ext" href="https://github.com/AlphaBrainGroup/AlphaBrain" target="_blank" rel="noopener">GitHub</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-stable-video-diffusionsvdhunyuanvideoopensora">3. Stable Video Diffusion（SVD）、HunyuanVideo、OpenSora 等開源影片模型<a class="headerlink" href="#3-stable-video-diffusionsvdhunyuanvideoopensora" title="連到此段">#</a></h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>骨幹</th>
+<th>誰用</th>
+<th>怎麼用</th>
+<th>階段</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SVD 1.5B</td>
+<td><strong>VPP</strong></td>
+<td>只跑一次前向取 U-Net 特徵給擴散策略</td>
+<td>I1</td>
+<td><a class="ext" href="https://arxiv.org/abs/2412.14803" target="_blank" rel="noopener">arXiv:2412.14803</a></td>
+</tr>
+<tr>
+<td>SVD 1.5B</td>
+<td><strong>Ctrl-World</strong></td>
+<td>動作條件多視角模擬器，評估並後訓練 π0 系列（38.7% → 83.4%）</td>
+<td>T3 / T4</td>
+<td><a class="ext" href="https://arxiv.org/abs/2510.10125" target="_blank" rel="noopener">arXiv:2510.10125</a></td>
+</tr>
+<tr>
+<td>HunyuanVideo（13B 全模型，取前段層）</td>
+<td><strong>智平方 Video2Act</strong></td>
+<td>借影片擴散模型的中間特徵給慢系統，不生成未來畫面</td>
+<td>I1</td>
+<td><a class="ext" href="https://arxiv.org/abs/2512.03044" target="_blank" rel="noopener">arXiv:2512.03044</a></td>
+</tr>
+<tr>
+<td>OpenSora</td>
+<td><strong>WMPO</strong></td>
+<td>在像素級影片世界模型裡對 OpenVLA-OFT 做 GRPO</td>
+<td>T3</td>
+<td><a class="ext" href="https://arxiv.org/abs/2511.09515" target="_blank" rel="noopener">arXiv:2511.09515</a></td>
+</tr>
+<tr>
+<td>Step1X-Edit</td>
+<td><strong>智元 τ0-VLA</strong></td>
+<td>預測子任務完成畫面，在 VLA 沒把握時做 beam search</td>
+<td>I3</td>
+<td><a class="ext" href="https://arxiv.org/abs/2608.16885" target="_blank" rel="noopener">arXiv:2608.16885</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-google-veo">4. Google Veo<a class="headerlink" href="#4-google-veo" title="連到此段">#</a></h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>誰用</th>
+<th>怎麼用</th>
+<th>階段</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Gemini Robotics 團隊</strong></td>
+<td>以 Veo 為基礎做策略評估：一般表現、分佈外泛化、安全紅隊；用 8 個 Gemini Robotics 檢查點、1,600 次以上真機評估驗證排名一致</td>
+<td>T4</td>
+<td><a class="ext" href="https://arxiv.org/abs/2512.10675" target="_blank" rel="noopener">arXiv:2512.10675</a></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>沒找到</strong> Veo 被用來生成 VLA 訓練資料或放進推論迴圈的公開資料。</p>
+<h3 id="5-genie-genie-1-genie-3">5. Genie 系列（Genie 1 / Genie 3）<a class="headerlink" href="#5-genie-genie-1-genie-3" title="連到此段">#</a></h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>誰用</th>
+<th>用了什麼</th>
+<th>怎麼用</th>
+<th>階段</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Waymo World Model</strong>（2026-02）</td>
+<td>Genie 3</td>
+<td>後訓練成同時輸出<strong>相機 + LiDAR</strong> 的駕駛模擬器；可用駕駛動作、場景佈局、文字控制；生成龍捲風、動物上路等罕見情境做安全評估</td>
+<td>T4（官方未說用來訓練 Driver）</td>
+<td><a class="ext" href="https://waymo.com/blog/2026/02/the-waymo-world-model-a-new-frontier-for-autonomous-driving-simulation" target="_blank" rel="noopener">Waymo 官方部落格</a></td>
+</tr>
+<tr>
+<td><strong>SIMA 2</strong>（DeepMind 通用遊戲代理人）</td>
+<td>Genie 3</td>
+<td>在 Genie 3 生成的擬真世界裡導航，並在其中<strong>自我改進</strong></td>
+<td>T3 / T4</td>
+<td><a class="ext" href="https://arxiv.org/abs/2512.04797" target="_blank" rel="noopener">arXiv:2512.04797</a></td>
+</tr>
+<tr>
+<td><strong>LAPA</strong>（ICLR 2025）</td>
+<td>Genie 1 的<strong>潛在動作模型</strong>想法</td>
+<td>從沒有動作標籤的影片學離散潛動作，預訓練 VLA；真機平均 50.1%，高於 OpenVLA 的 43.9%</td>
+<td>T1</td>
+<td><a class="ext" href="https://arxiv.org/abs/2410.11758" target="_blank" rel="noopener">arXiv:2410.11758</a></td>
+</tr>
+<tr>
+<td><strong>GR00T N1</strong></td>
+<td>同一條潛在動作路線（VQ-VAE，當成「LAPA 機體」）</td>
+<td>替人類影片與神經軌跡補上潛在動作標籤</td>
+<td>T1 / T2</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.14734" target="_blank" rel="noopener">arXiv:2503.14734</a></td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>Genie 1 本身沒有被當模擬器用在 VLA 上；它對 VLA 的影響是「<strong>潛在動作</strong>」這個概念。</p>
+</blockquote>
+<hr />
+<h2 id="_4">二、潛空間動力學類<a class="headerlink" href="#_4" title="連到此段">#</a></h2>
+<h3 id="1-dreamerv3">1. DreamerV3<a class="headerlink" href="#1-dreamerv3" title="連到此段">#</a></h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>誰用</th>
+<th>怎麼用</th>
+<th>階段</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>FOREWARN</strong>（CMU）</td>
+<td>DreamerV3 式潛空間模型預測 100 個候選動作的 64 步後果，再由 Llama-3.2-11B-Vision 讀潛向量挑一個；比基礎模仿策略好 30% 以上</td>
+<td>I3</td>
+<td><a class="ext" href="https://arxiv.org/abs/2502.01828" target="_blank" rel="noopener">arXiv:2502.01828</a></td>
+</tr>
+<tr>
+<td><strong>DayDreamer</strong>（UC Berkeley）</td>
+<td>用 Dreamer 演算法直接在真機上學：四足機器人約 1 小時學會走路、機械手臂學抓放</td>
+<td>T3（線上）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2206.14176" target="_blank" rel="noopener">arXiv:2206.14176</a></td>
+</tr>
+<tr>
+<td>原論文</td>
+<td>150+ 任務、Minecraft 從零挖鑽石</td>
+<td>研究</td>
+<td><a class="ext" href="https://arxiv.org/abs/2301.04104" target="_blank" rel="noopener">arXiv:2301.04104</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-dreamer-4">2. Dreamer 4<a class="headerlink" href="#2-dreamer-4" title="連到此段">#</a></h3>
+<ul>
+<li>2B 潛空間模型，只用離線資料在 Minecraft 想像中訓練就挖到鑽石（<a class="ext" href="https://arxiv.org/abs/2509.24527" target="_blank" rel="noopener">arXiv:2509.24527</a>）。</li>
+<li><strong>未找到</strong>被 VLA 或機器人產品採用的公開證據。</li>
+</ul>
+<h3 id="3-vla">3. 其他潛空間模型的 VLA 用法（參考）<a class="headerlink" href="#3-vla" title="連到此段">#</a></h3>
+<ul>
+<li><strong>TD-MPC2</strong>（最大 317M）：潛空間 MPC，單一代理人 80 個任務（<a class="ext" href="https://arxiv.org/abs/2310.16828" target="_blank" rel="noopener">arXiv:2310.16828</a>）。</li>
+<li><strong>VLA-Reasoner</strong>：600M iVideoGPT 式模型 + MCTS 幫 OpenVLA／π0-FAST 挑動作（<a class="ext" href="https://arxiv.org/abs/2509.22643" target="_blank" rel="noopener">arXiv:2509.22643</a>）。</li>
+</ul>
+<p><strong>一句話</strong>：潛空間動力學是「RL 和規劃」的工具，學界常用來幫 VLA 做預演，但<strong>沒有大型商用 VLA 公開說自己用 Dreamer</strong>。</p>
+<hr />
+<h2 id="jepa-v-jepa-2">三、JEPA 類（V-JEPA 2）<a class="headerlink" href="#jepa-v-jepa-2" title="連到此段">#</a></h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>誰用</th>
+<th>怎麼用</th>
+<th>階段</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>V-JEPA 2-AC</strong>（Meta）</td>
+<td>300M 動作條件預測器 + CEM 規劃，零樣本抓放 65–80%</td>
+<td>I3</td>
+<td><a class="ext" href="https://arxiv.org/abs/2506.09985" target="_blank" rel="noopener">arXiv:2506.09985</a></td>
+</tr>
+<tr>
+<td><strong>JEPA-VLA</strong>（2026-02）</td>
+<td>把 V-JEPA 2 的預測式影片嵌入<strong>加進現有 VLA 當視覺表徵</strong>；在 LIBERO、LIBERO-plus、RoboTwin2.0、真機都有提升（摘要未給數字）</td>
+<td>T1 / 推論時當編碼器</td>
+<td><a class="ext" href="https://arxiv.org/abs/2602.11832" target="_blank" rel="noopener">arXiv:2602.11832</a></td>
+</tr>
+<tr>
+<td><strong>VLA-JEPA</strong>（2026-02）</td>
+<td>借 JEPA <strong>訓練目標</strong>：學生只看當前畫面，預測未來畫面的潛表徵；兩階段（JEPA 預訓練 → 微調動作頭）</td>
+<td>T1</td>
+<td><a class="ext" href="https://arxiv.org/abs/2602.10098" target="_blank" rel="noopener">arXiv:2602.10098</a></td>
+</tr>
+<tr>
+<td><strong>智平方 AlphaBrain</strong></td>
+<td>V-JEPA 2.1（約 1.8B）可當世界模型骨幹</td>
+<td>研究平台</td>
+<td><a class="ext" href="https://github.com/AlphaBrainGroup/AlphaBrain" target="_blank" rel="noopener">GitHub</a></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>趨勢</strong>：V-JEPA 2 正在從「規劃器」變成「<strong>VLA 的視覺編碼器</strong>」。理由是它的表徵捨棄了不可預測的雜訊，保留了跟任務有關的時間動態。</p>
+<hr />
+<h2 id="3d4d">四、3D／4D 類<a class="headerlink" href="#3d4d" title="連到此段">#</a></h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>誰用</th>
+<th>用了什麼</th>
+<th>怎麼用</th>
+<th>階段</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>NVIDIA Isaac Sim 教學</strong>（2025-12）</td>
+<td>World Labs <strong>Marble</strong></td>
+<td>文字或圖片 → 3D 高斯點雲（視覺）+ 碰撞網格（物理）→ 匯入 Isaac Sim 讓機器人跑</td>
+<td>建模擬場景（T4 / 為 RL 準備環境）</td>
+<td><a class="ext" href="https://developer.nvidia.com/blog/simulate-robotic-environments-faster-with-nvidia-isaac-sim-and-world-labs-marble" target="_blank" rel="noopener">NVIDIA 技術部落格</a></td>
+</tr>
+<tr>
+<td><strong>BEHAVIOR-1K、RoboSuite 研究者</strong>（2025-11）</td>
+<td>Marble</td>
+<td>生成住家、倉庫場景，在 Isaac Sim、MuJoCo 跑 ANYmal、Spot、UR10、Franka；官方稱場景整理時間降 90% 以上</td>
+<td>建模擬場景</td>
+<td><a class="ext" href="https://www.worldlabs.ai/case-studies/1-robotics" target="_blank" rel="noopener">World Labs 案例</a></td>
+</tr>
+<tr>
+<td><strong>TesserAct</strong>（2025）</td>
+<td>自家 4D 世界模型</td>
+<td>微調影片模型同時預測 RGB、深度、法向量，重建 4D 場景，再學逆動力學模型出動作</td>
+<td>研究（I2 類）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2504.20995" target="_blank" rel="noopener">arXiv:2504.20995</a></td>
+</tr>
+<tr>
+<td><strong>Waymo World Model</strong></td>
+<td>Genie 3 後訓練</td>
+<td>輸出<strong>可互動的 4D LiDAR 點雲</strong>，把 2D 影片知識轉成 3D 感測器輸出</td>
+<td>T4</td>
+<td><a class="ext" href="https://waymo.com/blog/2026/02/the-waymo-world-model-a-new-frontier-for-autonomous-driving-simulation" target="_blank" rel="noopener">Waymo 官方部落格</a></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>一句話</strong>：3D／4D 世界模型現在主要是「<strong>快速造模擬場景</strong>」，再交給傳統物理模擬器去跑機器人；直接拿來訓練 VLA 的公開案例還很少。</p>
+<hr />
+<h2 id="_5">五、智平方到底有沒有用世界模型？<a class="headerlink" href="#_5" title="連到此段">#</a></h2>
+<h3 id="_6">結論<a class="headerlink" href="#_6" title="連到此段">#</a></h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>層面</th>
+<th>有沒有用</th>
+<th>證據</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>產品 VLA（GOVLA／AlphaBrain 大腦）</strong></td>
+<td><strong>未找到公開證據</strong></td>
+<td>產品架構描述是「全域全身 VLA」；<a class="ext" href="https://www.huxiu.com/article/4873816.html" target="_blank" rel="noopener">虎嗅 2026 報導</a>只提到業界在討論「VLA → 世界模型」範式切換，智平方的回應是持續升級 VLA</td>
+</tr>
+<tr>
+<td><strong>Video2Act 論文</strong></td>
+<td><strong>借用一部分</strong></td>
+<td>用 HunyuanVideo 的前段層特徵輔助慢系統；<strong>不生成未來畫面、不做想像規劃</strong>（<a class="ext" href="https://arxiv.org/abs/2512.03044" target="_blank" rel="noopener">arXiv:2512.03044</a>）。屬於 I1 類「借眼睛」</td>
+</tr>
+<tr>
+<td><strong>NeuroVLA</strong></td>
+<td>否</td>
+<td>類腦三層架構 + SNN，與世界模型無關（<a class="ext" href="https://arxiv.org/abs/2601.14628" target="_blank" rel="noopener">arXiv:2601.14628</a>）</td>
+</tr>
+<tr>
+<td><strong>AlphaBrain 開源平台</strong>（2026-04-22 發布）</td>
+<td><strong>有，而且四種骨幹</strong></td>
+<td>原生整合 <strong>Cosmos Policy 原始權重</strong>；V-JEPA 2.1（~1.8B）、Cosmos Predict 2.5（~2.1B）、Cosmos Predict 2（~2.1B）、Wan 2.2（~5B）一鍵切換，共用動作解碼器（<a class="ext" href="https://github.com/AlphaBrainGroup/AlphaBrain" target="_blank" rel="noopener">GitHub README</a>、<a class="ext" href="https://news.bjd.com.cn/2026/04/22/11704136.shtml" target="_blank" rel="noopener">京報網報導</a>、<a class="ext" href="https://news.zol.com.cn/1184/11840628.html" target="_blank" rel="noopener">中關村在線</a>）</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="_7">怎麼解讀<a class="headerlink" href="#_7" title="連到此段">#</a></h3>
+<ul>
+<li>AlphaBrain 平台把世界模型當「<strong>可插拔的策略骨幹</strong>」：同一個任務可以換不同世界模型比較，用法和 Cosmos Policy 一樣（I3 類：世界模型直接當策略，並可預演）。報導原話是讓機器人「在行動前預演多種可能路徑，選擇最優解」。</li>
+<li>但這是<strong>開源研究框架</strong>（README 寫明主要 fork 自 starVLA），<strong>不等於</strong>他們的量產機器人在用。目前沒有看到智平方發表「自研世界模型」的論文或產品。</li>
+<li>所以更新後的定位：<strong>智平方是 VLA 公司，已經在開源平台上把第三方世界模型（Cosmos、Wan、V-JEPA）整合進來；自家產品是否使用未公開。</strong></li>
+</ul>
+<hr />
+<h2 id="vla">六、大廠 VLA 產品：在什麼階段、怎麼用世界模型<a class="headerlink" href="#vla" title="連到此段">#</a></h2>
+<h3 id="figure-helix2025-02-helix-022026-01">Figure Helix（2025-02）與 Helix 02（2026-01）<a class="headerlink" href="#figure-helix2025-02-helix-022026-01" title="連到此段">#</a></h3>
+<ul>
+<li><strong>Helix</strong>：S2 是 7B VLM（7–9 Hz），S1 是 80M Transformer（200 Hz）；約 500 小時遙操作資料，用 VLM 自動回填指令標註；S1 的視覺骨幹「完全在模擬中預訓練」（<a class="ext" href="https://www.figure.ai/news/helix" target="_blank" rel="noopener">官方頁</a>）。</li>
+<li><strong>Helix 02</strong>：加入 S0（10M 參數、1 kHz 全身控制器），在 20 萬個以上平行模擬環境中做 sim-to-real RL，並用 1,000 小時以上人體動作資料（<a class="ext" href="https://www.figure.ai/news/helix-02" target="_blank" rel="noopener">官方頁</a>）。</li>
+<li><strong>結論</strong>：兩篇官方頁都<strong>沒有提到世界模型或影片預測</strong>。他們用的是傳統物理模擬器，不是學出來的世界模型。</li>
+</ul>
+<h3 id="nvidia-gr00t-n12025-03">NVIDIA GR00T N1（2025-03）<a class="headerlink" href="#nvidia-gr00t-n12025-03" title="連到此段">#</a></h3>
+<ul>
+<li><strong>T2 資料工廠</strong>：WAN2.1-I2V-14B 生成 827 小時「神經影片」，進入預訓練資料（<a class="ext" href="https://arxiv.org/abs/2503.14734" target="_blank" rel="noopener">arXiv:2503.14734</a>）。</li>
+<li><strong>T1 潛在動作</strong>：用 VQ-VAE 從連續影格抽潛在動作，給人類影片和神經軌跡當監督訊號（Genie／LAPA 路線）。</li>
+<li><strong>推論時</strong>：只跑 VLA（I0）。</li>
+</ul>
+<h3 id="nvidia-gr00t-n152025-06">NVIDIA GR00T N1.5（2025-06）<a class="headerlink" href="#nvidia-gr00t-n152025-06" title="連到此段">#</a></h3>
+<ul>
+<li><strong>T1 輔助目標</strong>：<strong>FLARE</strong> 在動作 DiT 中加入未來 token，對齊未來觀測的嵌入，不生成畫面（<a class="ext" href="https://arxiv.org/abs/2505.15659" target="_blank" rel="noopener">arXiv:2505.15659</a>）。</li>
+<li><strong>T2 資料工廠</strong>：<strong>DreamGen</strong> 神經軌跡進預訓練，12 個新動詞成功率 13.1% → 38.3%（<a class="ext" href="https://research.nvidia.com/labs/gear/gr00t-n1_5/" target="_blank" rel="noopener">官方頁</a>）。</li>
+<li><strong>推論時</strong>：只跑 VLA（I0）。</li>
+</ul>
+<h3 id="gr-22024-10-gr-32025-07">字節 GR-2（2024-10）與 GR-3（2025-07）<a class="headerlink" href="#gr-22024-10-gr-32025-07" title="連到此段">#</a></h3>
+<ul>
+<li><strong>GR-2</strong>：<strong>T1 生成式預訓練</strong>。3,800 萬段網路影片（500 億 token）學「預測未來畫面」，再用機器人軌跡同時微調影片生成與動作（<a class="ext" href="https://arxiv.org/abs/2410.06158" target="_blank" rel="noopener">arXiv:2410.06158</a>）。這是「世界模型直接當 VLA 預訓練」的代表。</li>
+<li><strong>GR-3</strong>：<strong>拿掉了</strong>影片預測。改用 Qwen2.5-VL-3B + 動作 DiT（約 4B），靠視覺語言資料和 VR 人類軌跡共訓（<a class="ext" href="https://arxiv.org/abs/2507.15493" target="_blank" rel="noopener">arXiv:2507.15493</a>）。論文只在相關研究提到 GR-2 的未來預測路線。</li>
+</ul>
+<h3 id="_8">對照：其他公開用法<a class="headerlink" href="#_8" title="連到此段">#</a></h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>產品</th>
+<th>階段</th>
+<th>怎麼用</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gemini Robotics</td>
+<td>T4</td>
+<td>Veo 當策略評估器</td>
+<td><a class="ext" href="https://arxiv.org/abs/2512.10675" target="_blank" rel="noopener">arXiv:2512.10675</a></td>
+</tr>
+<tr>
+<td>1X NEO</td>
+<td>I2 + T4</td>
+<td>14B 影片模型想像 → IDM 出動作；也當評估器</td>
+<td><a class="ext" href="https://1x.tech/discover/world-model-self-learning" target="_blank" rel="noopener">1X 官方</a></td>
+</tr>
+<tr>
+<td>智元 GE / τ0-VLA</td>
+<td>T1 / I1 / T4 / I3</td>
+<td>GE-Base 預訓練、GE-Act 單步特徵、GE-Sim 評估、τ0 預演挑動作</td>
+<td><a class="ext" href="https://arxiv.org/abs/2508.05635" target="_blank" rel="noopener">arXiv:2508.05635</a>、<a class="ext" href="https://arxiv.org/abs/2608.16885" target="_blank" rel="noopener">arXiv:2608.16885</a></td>
+</tr>
+<tr>
+<td>π0 / π0.5</td>
+<td>—</td>
+<td>公開論文沒有使用世界模型</td>
+<td><a class="ext" href="https://arxiv.org/abs/2504.16054" target="_blank" rel="noopener">π0.5 arXiv:2504.16054</a></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="_9">七、總覽：四類代表作 × 用途<a class="headerlink" href="#_9" title="連到此段">#</a></h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>類別</th>
+<th>代表作</th>
+<th>誰在用</th>
+<th>主要階段</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>影片生成</td>
+<td>Cosmos</td>
+<td>Cosmos Policy、GE、AlphaBrain、Agility、自駕公司</td>
+<td>T2、T4、I3</td>
+</tr>
+<tr>
+<td>影片生成</td>
+<td>Wan</td>
+<td><strong>GR00T N1／N1.5（DreamGen）</strong>、AlphaBrain</td>
+<td>T2</td>
+</tr>
+<tr>
+<td>影片生成</td>
+<td>SVD</td>
+<td>VPP、Ctrl-World</td>
+<td>I1、T3、T4</td>
+</tr>
+<tr>
+<td>影片生成</td>
+<td>Veo</td>
+<td>Gemini Robotics 評估</td>
+<td>T4</td>
+</tr>
+<tr>
+<td>影片生成</td>
+<td>Genie 3</td>
+<td>Waymo、SIMA 2</td>
+<td>T4、T3</td>
+</tr>
+<tr>
+<td>影片生成</td>
+<td>Genie 1</td>
+<td>潛在動作概念 → LAPA、GR00T N1</td>
+<td>T1</td>
+</tr>
+<tr>
+<td>潛空間</td>
+<td>DreamerV3</td>
+<td>FOREWARN、DayDreamer</td>
+<td>I3、T3</td>
+</tr>
+<tr>
+<td>潛空間</td>
+<td>Dreamer 4</td>
+<td>未找到外部採用</td>
+<td>—</td>
+</tr>
+<tr>
+<td>JEPA</td>
+<td>V-JEPA 2</td>
+<td>V-JEPA 2-AC、JEPA-VLA、AlphaBrain</td>
+<td>I3、T1／編碼器</td>
+</tr>
+<tr>
+<td>3D／4D</td>
+<td>Marble</td>
+<td>Isaac Sim、BEHAVIOR-1K、RoboSuite 研究者</td>
+<td>建模擬場景</td>
+</tr>
+<tr>
+<td>3D／4D</td>
+<td>TesserAct</td>
+<td>研究</td>
+<td>I2 類</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>判斷</strong>：</p>
+<ol>
+<li>想<strong>造資料</strong>：選開源、可微調的影片模型（Wan、Cosmos），這是 GR00T 的實際做法。</li>
+<li>想讓<strong>推論</strong>受益：Cosmos Policy（I3）和 VPP／Video2Act（I1）是最成熟的開源路線；V-JEPA 2 當編碼器是 2026 年的新方向。</li>
+<li>想<strong>評估</strong>：Veo、Genie 3 效果最好，但只有 Google 體系能用；外部團隊用 Ctrl-World、Cosmos 替代。</li>
+</ol>
+      <nav class="pn"><a class="prev" href="classic-world-models.html"><small>上一篇</small>經典世界模型論文精讀</a><a class="next" href="glossary.html"><small>下一篇</small>名詞速查</a></nav>
+      <footer class="foot">
+        內容整理自本專案的調研筆記與討論（2026-10-21）。數字取自論文或官方頁；查不到的標「未公開」。外部連結均開新分頁。
+      </footer>
+    </article>
+  </main>
+  <nav class="toc" aria-label="本頁目錄">
+    <p class="toc-h">本頁目錄</p>
+    <ul><li><a href="#_2">重點先講</a></li><li><a href="#_3">一、影片生成類</a><ul><li><a href="#1-nvidia-cosmospredict-transfer-tokenizer">1. NVIDIA Cosmos（Predict / Transfer / Tokenizer）</a></li><li><a href="#2-wanwan21-22">2. 阿里 Wan（WAN2.1 / 2.2）</a></li><li><a href="#3-stable-video-diffusionsvdhunyuanvideoopensora">3. Stable Video Diffusion（SVD）、HunyuanVideo、OpenSora 等開源影片模型</a></li><li><a href="#4-google-veo">4. Google Veo</a></li><li><a href="#5-genie-genie-1-genie-3">5. Genie 系列（Genie 1 / Genie 3）</a></li></ul></li><li><a href="#_4">二、潛空間動力學類</a><ul><li><a href="#1-dreamerv3">1. DreamerV3</a></li><li><a href="#2-dreamer-4">2. Dreamer 4</a></li><li><a href="#3-vla">3. 其他潛空間模型的 VLA 用法（參考）</a></li></ul></li><li><a href="#jepa-v-jepa-2">三、JEPA 類（V-JEPA 2）</a></li><li><a href="#3d4d">四、3D／4D 類</a></li><li><a href="#_5">五、智平方到底有沒有用世界模型？</a><ul><li><a href="#_6">結論</a></li><li><a href="#_7">怎麼解讀</a></li></ul></li><li><a href="#vla">六、大廠 VLA 產品：在什麼階段、怎麼用世界模型</a><ul><li><a href="#figure-helix2025-02-helix-022026-01">Figure Helix（2025-02）與 Helix 02（2026-01）</a></li><li><a href="#nvidia-gr00t-n12025-03">NVIDIA GR00T N1（2025-03）</a></li><li><a href="#nvidia-gr00t-n152025-06">NVIDIA GR00T N1.5（2025-06）</a></li><li><a href="#gr-22024-10-gr-32025-07">字節 GR-2（2024-10）與 GR-3（2025-07）</a></li><li><a href="#_8">對照：其他公開用法</a></li></ul></li><li><a href="#_9">七、總覽：四類代表作 × 用途</a></li></ul>
+  </nav>
+</div>
+<script src="assets/site.js"></script>
+<script src="assets/search-index.js"></script>
+<script src="assets/qa.js"></script>
+</body>
+</html>

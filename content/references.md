@@ -120,6 +120,23 @@
 - [Alpamayo-R1（arXiv:2511.00088）](https://arxiv.org/abs/2511.00088)
 - [Learning to Drive from a World Model（arXiv:2504.19077）](https://arxiv.org/abs/2504.19077)｜[openpilot](https://github.com/commaai/openpilot)
 
+## 世界模型代表作的實際使用者 {#wm-in-practice}
+
+- [GR00T N1（WAN2.1 神經軌跡、潛在動作）arXiv:2503.14734](https://arxiv.org/abs/2503.14734)
+- [LAPA：沿用 Genie 的潛在動作模型 arXiv:2410.11758](https://arxiv.org/abs/2410.11758)
+- [SIMA 2：在 Genie 3 世界中自我改進 arXiv:2512.04797](https://arxiv.org/abs/2512.04797)
+- [Waymo World Model（基於 Genie 3）官方部落格](https://waymo.com/blog/2026/02/the-waymo-world-model-a-new-frontier-for-autonomous-driving-simulation)
+- [NVIDIA Cosmos 發布新聞稿（早期採用者與用途）](https://www.globenewswire.com/news-release/2025/01/07/3005070/0/en/index.html)
+- [JEPA-VLA：V-JEPA 2 嵌入加入 VLA arXiv:2602.11832](https://arxiv.org/abs/2602.11832)
+- [VLA-JEPA arXiv:2602.10098](https://arxiv.org/abs/2602.10098)
+- [DayDreamer arXiv:2206.14176](https://arxiv.org/abs/2206.14176)
+- [TesserAct：4D 具身世界模型 arXiv:2504.20995](https://arxiv.org/abs/2504.20995)
+- [NVIDIA Isaac Sim × World Labs Marble](https://developer.nvidia.com/blog/simulate-robotic-environments-faster-with-nvidia-isaac-sim-and-world-labs-marble)
+- [World Labs 機器人案例](https://www.worldlabs.ai/case-studies/1-robotics)
+- [智平方 AlphaBrain 開源框架（GitHub）](https://github.com/AlphaBrainGroup/AlphaBrain)
+- [GR-3 技術報告 arXiv:2507.15493](https://arxiv.org/abs/2507.15493)
+- [Figure Helix 02 官方頁](https://www.figure.ai/news/helix-02)
+
 ## 世界模型 × VLA 的結合
 
 - [UniPi（arXiv:2302.00111）](https://arxiv.org/abs/2302.00111)：先生成影片再反推動作
@@ -180,4 +197,4 @@
 | [非技術版簡報](https://claude.ai/artifact/FjNw2SX9ALNwFMG7hbmz1m) | 32 頁，給非工程背景讀者 | 首頁 |
 | [世界模型種類簡報](https://claude.ai/artifact/XasR8g8FD5Saj3dBfrd5jk) | 四類世界模型、五種角色 | 05 |
 
-專案共享資料夾內的調研筆記（流派分類、訓練時 vs 推論時、業界產品、智平方）分別對應第 03、06、08、09 章。
+專案共享資料夾內的調研筆記（流派分類、訓練時 vs 推論時、業界產品、智平方）分別對應第 03、06、08、09 章；〈世界模型代表作的實際應用〉筆記對應第 11 章。
