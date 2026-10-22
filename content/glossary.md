@@ -31,6 +31,7 @@
 | **Latent Action** | 從無標註影片學出的抽象「動作」表示，可用來給網路影片補動作標籤 | [04](training.html) |
 | **IDM**（逆動力學模型） | 看前後兩幀，推回中間做了什麼動作；合成資料流程的關鍵 | [05](world-model-roles.html) |
 | **Embodied CoT** | 出動作前先輸出推理文字、子任務或視覺預測，例如 CoT-VLA | [06](train-vs-inference.html) |
+| **情境內模仿學習**（In-Context Imitation Learning, ICIL） | 把幾條示範放進模型輸入當提示，模型不更新權重就照著做新任務，例如 ICRT、Instant Policy、RICL | [05](in-context-imitation.html) |
 
 ## 世界模型
 
