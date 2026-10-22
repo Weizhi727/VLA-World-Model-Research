@@ -688,6 +688,26 @@
    "alias": [
     "GEN-1.5"
    ]
+  },
+  {
+   "name": "ICWM（In-Context World Modeling）",
+   "org": "復旦／上海創智學院／同濟 2026",
+   "params": "可讀到的版本未寫（底座 VLA 名稱未列）",
+   "detail": "context 放試探轉移，隱式推出相機視角等系統設定",
+   "src": "https://arxiv.org/abs/2606.26025",
+   "alias": [
+    "ICWM"
+   ]
+  },
+  {
+   "name": "Zero-WAM",
+   "org": "Robbyant／港科大 2026",
+   "params": "論文未另列總數（以 Wan 2.2 TI2V-5B 改造）",
+   "detail": "人類影片提示的因果影片–動作模型",
+   "src": "https://arxiv.org/abs/2608.26103",
+   "alias": [
+    "Zero-WAM"
+   ]
   }
  ],
  "wm": [

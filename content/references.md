@@ -88,6 +88,8 @@
 - [In-Context Imitation Learning with Visual Reasoning（arXiv:2603.07530）](https://arxiv.org/abs/2603.07530)
 - [Behavior Prompting Policy（arXiv:2606.30457）](https://arxiv.org/abs/2606.30457)
 - [ICI-VLA（arXiv:2609.07581）](https://arxiv.org/abs/2609.07581)
+- [In-Context World Modeling／ICWM（arXiv:2606.26025）](https://arxiv.org/abs/2606.26025)
+- [Zero-WAM（arXiv:2608.26103）](https://arxiv.org/abs/2608.26103)
 - [Skild AI S1 官方部落格](https://www.skild.ai/blogs/s1)
 - [Generalist GEN-1.5 官方部落格](https://generalistai.com/blog/gen-1.5)
 
