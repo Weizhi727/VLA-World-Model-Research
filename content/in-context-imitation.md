@@ -4,13 +4,14 @@
 
 ## 重點先講
 
-!!! key "六句話看懂 In-Context 模仿學習"
+!!! key "七句話看懂 In-Context 模仿學習"
     1. **一句話定義**：把幾條「示範」直接放進模型的輸入（context），模型看完就照著做新任務，**權重完全不更新**。這就是大型語言模型「few-shot 提示」的機器人版：提示詞從文字換成示範（[Instant Policy](https://arxiv.org/abs/2411.12633)、[ICRT](https://arxiv.org/abs/2408.15980)）。
     2. **要解決的問題**：現在的 VLA 學新任務，通常要再收幾十到幾千條示範、重新微調。ICIL 想把這一步變成「示範 1～20 次，馬上會做」，而且示範比語言更能說清楚「怎麼做」。
     3. **技術上分四條路**：A 用元學習專門訓練一個「會看示範」的策略（[ICRT](https://arxiv.org/abs/2408.15980)、[Instant Policy](https://arxiv.org/abs/2411.12633)）；B 把畫面與動作寫成文字，直接借 GPT-4 的 few-shot 能力（[KAT](https://arxiv.org/abs/2403.19578)、[RoboPrompt](https://arxiv.org/abs/2410.12782)）；C 從示範庫檢索最相近的片段塞進現成 VLA（[RICL](https://arxiv.org/abs/2508.02062)、[ICI-VLA](https://arxiv.org/abs/2609.07581)）；D 靠大規模預訓練讓能力自己長出來（[Generalist GEN-1.5](https://generalistai.com/blog/gen-1.5)、[Skild S1](https://www.skild.ai/blogs/s1)）。
     4. **和 VLA 的關係**：一般 VLA 用「語言」指定任務；ICIL 改用「示範」指定任務，或兩者並用。2025 年起開始有人把它**直接裝到 VLA 上**：RICL 讓 π0-FAST 在不更新權重的情況下，完整任務成功率從 2.5% 提到 31.25%。
     5. **2026 年進入產品**：Skild AI 的 S1（2026-08）宣稱是「從頭設計成情境內學習者」，看一段人類影片就能做長達約 10 分鐘的任務；Generalist 的 GEN-1.5（2026-08）宣稱 3～12 秒的示範就能做新任務。兩者都只有官方部落格，**沒有論文、參數量未公開**。
-    6. **還沒解決的**：學不到訓練時沒見過的「動作原語」（[ICRT](https://arxiv.org/abs/2408.15980)、[BPP](https://arxiv.org/abs/2606.30457) 都承認）；示範越多不一定越好（[KAT](https://arxiv.org/abs/2403.19578)、[MimicDroid](https://arxiv.org/abs/2509.09769)）；目前情境內學出來的技能仍比微調脆弱（[GEN-1.5](https://generalistai.com/blog/gen-1.5)）。
+    6. **context 也可以拿來「認識系統」**：[ICWM](https://arxiv.org/abs/2606.26025)（2026-06）不放示範，而是讓機器人先隨機試動幾下，把「動作→畫面變化」放進 context，VLA 就能推出相機換了角度，不微調就適應新視角（LIBERO-Long 新視角 25.0% vs 多視角基線 19.8%）。
+    7. **還沒解決的**：學不到訓練時沒見過的「動作原語」（[ICRT](https://arxiv.org/abs/2408.15980)、[BPP](https://arxiv.org/abs/2606.30457) 都承認）；示範越多不一定越好（[KAT](https://arxiv.org/abs/2403.19578)、[MimicDroid](https://arxiv.org/abs/2509.09769)）；目前情境內學出來的技能仍比微調脆弱（[GEN-1.5](https://generalistai.com/blog/gen-1.5)）。
 
 ## 一張圖看懂：微調 vs 情境內模仿
 
@@ -48,6 +49,18 @@
 </svg>
 <figcaption>情境內模仿學習（ICIL）把「示範」當成提示詞（prompt），推論時讀進模型，不做梯度更新。對比：微調要額外收資料並重新訓練。示範數量取自 <a href="https://arxiv.org/abs/2508.02062">RICL</a>（10～20 條）與 <a href="https://arxiv.org/abs/2411.12633">Instant Policy</a>（1～2 條）。</figcaption>
 </figure>
+
+## 三篇重點論文速覽
+
+| | [ICLR 視覺推理](#iclr-visual-reasoning) | [ICWM](#icwm) | [Instant Policy](#instant-policy) |
+|---|---|---|---|
+| 一句話 | 示範裡加「意圖軌跡」，模型先畫軌跡再出動作 | context 放機器人自己試動的紀錄，推出相機與身體設定 | 示範、當下、動作全畫成圖，用圖擴散出動作 |
+| context 裡放什麼 | 3 條示範＋每步的 5 點夾爪軌跡 | 5 段（起始畫面、動作、結束畫面） | 1～2 條示範，每條 10 個路徑點的點雲圖 |
+| 要適應的是 | 新**任務**（看懂意圖） | 新**系統設定**（新視角、新身體） | 新**任務**（幾何關係） |
+| 訓練資料 | LIBERO＋真機 825 條遙操作 | LIBERO-Long 多視角＋真機 12 相機 | 全部是模擬生成的偽示範（約 70 萬條） |
+| 輸出 | 推理軌跡 → 16 步動作 | 連續動作 | 未來 8 步 SE(3)＋夾爪 |
+| 代表成績 | 真機抓放 60.0%（ICRT 22.5%） | 新視角 25.0%（多視角基線 19.8%） | 真機 16 任務 88.75%（Vid2Robot 40.63%） |
+| 屬於哪條路線 | A＋中間表徵 | 延伸：情境內系統辨識 | A |
 
 ## 一、它要解決什麼問題
 
@@ -113,6 +126,7 @@
 | **B 借用 LLM** | 把觀測（關鍵點或物體位姿）與動作寫成數字文字，讓現成 LLM 續寫 | [KAT](https://arxiv.org/abs/2403.19578)、[RoboPrompt](https://arxiv.org/abs/2410.12782) | 文字化的關鍵點、位姿、關鍵幀動作 | 完全不用訓練 | 每次推論要好幾秒，只能出關鍵幀，做不了高頻控制 |
 | **C 檢索增強** | 從使用者的示範庫找最相近的片段放進 context，再跟模型輸出插值 | [REGENT](https://arxiv.org/abs/2412.04759)、[RICL](https://arxiv.org/abs/2508.02062)、[ICI-VLA](https://arxiv.org/abs/2609.07581) | 檢索出的短片段（影像、本體、動作 chunk） | 能裝在現成 VLA 上 | 要先做一次後訓練；context 變長、推論變慢 |
 | **D 規模湧現** | 大規模連續預訓練，示範（physical prompt）當提示 | [GEN-1.5](https://generalistai.com/blog/gen-1.5)、[Skild S1](https://www.skild.ai/blogs/s1) | 手持夾爪示範、機器人軌跡、人類第一人稱影片 | 可做長任務、跨形體 | 只有官方部落格，無法重現 |
+| **延伸：情境內系統辨識** | context 放的不是示範，而是機器人自己試動的紀錄，用來推出相機視角、身體等系統設定 | [ICWM](https://arxiv.org/abs/2606.26025) | （起始畫面、動作、結束畫面）轉移 | 不用示範、不用獎勵就能適應新視角 | 絕對成功率仍低，部署前要先試探 |
 
 ### 幾個反覆出現的技術要點
 
@@ -352,7 +366,7 @@
 - **換 LLM**：GPT-4o 56.3%、GPT-4 Turbo 51.8%、Qwen2-7B 48.8%、GPT-4o mini 44.8%、Llama3-8B 28.3%。
 - **局限**：LLM 每幾秒才出一次動作，做不到 10 Hz 以上的控制；每個物體只用一個位姿，沒有形狀資訊（[論文](https://arxiv.org/abs/2410.12782)）。
 
-### 3.6 Instant Policy（2024，ICLR 2025 oral）：用模擬「偽示範」無限量訓練
+### 3.6 Instant Policy（2024，ICLR 2025 oral）：用模擬「偽示範」無限量訓練 {#instant-policy}
 
 <figure class="dg">
 <svg viewBox="0 0 800 208" role="img" aria-label="Instant Policy：示範與當下都畫成圖，用圖擴散生成動作">
@@ -397,11 +411,49 @@
 <figcaption>來源：<a href="https://arxiv.org/abs/2411.12633">Instant Policy（arXiv:2411.12633）</a>，Imperial College London，ICLR 2025 oral。</figcaption>
 </figure>
 
-- **資料的巧思**：訓練資料不是真實示範，而是在模擬裡隨機放兩個 ShapeNet 物體、隨機產生 2～6 個路徑點，讓虛擬夾爪走一遍；邊訓練邊生成，作者稱「幾乎無限」。訓練 250 萬步，一張 RTX 3080-ti 約 5 天。
-- **成績**：RLBench 24 個任務，只用偽示範訓練就平均 0.71，對照 BC-Z 0.36、Vid2Robot 0.38；真機 Sawyer 16 個任務 88.75%，對照 Vid2Robot 40.63%。新形狀物體：示範 1→4 條，成功率 40%→90%。
-- **延伸**：把人手關鍵點映射成夾爪位姿，人手示範在簡單任務可用；用 Sentence-BERT 對齊語言，可做定性的零示範語言控制。
-- **參數量**：規模實驗有 69M／117M／178M 三個版本，主模型大小論文未明寫。
-- **局限**：要分割好的點雲、沒有顏色語意；只適合短、近似馬可夫的任務；對示範品質敏感；精度不夠做高接觸任務（[論文](https://arxiv.org/abs/2411.12633)）。
+**一句話**：把「示範＋當下＋要預測的動作」全部畫成一張圖，用圖擴散模型一次生成未來 8 步夾爪動作；訓練資料全部是模擬裡隨機生成的「偽示範」，測試時給 1～2 條真實示範就能做新任務。
+
+**資料：為什麼偽示範就夠**
+
+- 在模擬裡隨機放兩個 ShapeNet 物體，隨機產生 2～6 個「以物體為中心」的路徑點，讓虛擬 Robotiq 2F-85 夾爪走一遍（約一半樣本是抓取／放置型路徑，其餘完全隨機），用三台模擬深度相機拍點雲。
+- 作者的想法是：模型要學的不是「某個任務」，而是「**怎麼把示範裡夾爪和物體的相對幾何關係，搬到新場景**」，所以任務語意不重要，幾何多樣就好。
+- 邊訓練邊生成，每個樣本大約只看一次；250 萬步約等於 70 萬條不重複軌跡。訓練時每個樣本放 1～5 條示範。另加 30% 軌跡局部擾動、10% 夾爪狀態翻轉，模擬示範的雜訊與恢復動作。
+
+**模型：三段式圖網路**
+
+| 子網路 | 做什麼 |
+|---|---|
+| 幾何編碼器（凍結） | 預訓練佔用網路（occupancy network）的編碼器，把 2,048 點的點雲壓成 16 個節點、每個 512 維特徵 |
+| σ 局部編碼 | 在每個時間點的局部圖上，把點雲資訊傳給 6 個夾爪關鍵點節點 |
+| φ 情境聚合 | 沿示範時間軸傳遞資訊，把「該怎麼做」匯聚到當下的夾爪節點（資訊瓶頸） |
+| ψ 動作預測 | 從瓶頸傳到「假設夾爪已經移動後」的動作節點，輸出每個節點的去噪方向 |
+
+三個子網路都是 2 層、隱藏維度 1024、16 頭的異質圖 Transformer。作者實驗發現，拆成三段比一個大網路好很多。動作的平移與旋轉分開去噪，最後用 SVD 把節點位移對齊回一個 SE(3) 變換。
+
+**消融：哪些設計最關鍵**（相對基準的成功率變化，[論文 Table 2](https://proceedings.iclr.cc/paper_files/paper/2025/file/5692c7dbc4abcaa50f9ce609819212e5-Paper-Conference.pdf)）
+
+| 改動 | 成功率變化 | 解讀 |
+|---|---|---|
+| 示範只取 1 個路徑點（L=1） | −71% | 示範必須保留過程，不能只給終點 |
+| 只預測 1 步（T=1） | −52% | 一次預測多步很重要 |
+| 不用擴散，直接回歸 | −29% | 擴散處理多種可能的動作 |
+| 推論只去噪 1 步／2 步 | −16%／−2% | 2 步就夠，推論可以很快 |
+| 示範從 2 條減為 1 條 | −12% | 多 1 條示範幫助大，再多則持平 |
+
+**成績**
+
+| 設定 | Instant Policy | BC-Z | Vid2Robot | GPT2 式 |
+|---|---|---|---|---|
+| RLBench 24 任務，只用偽示範 | **0.71** | 0.36 | 0.38 | 0.34 |
+| 再加 12 個 RLBench 任務各 20 條示範：見過的任務 | **0.97** | 0.59 | 0.60 | 0.65 |
+| 同上：沒見過的任務 | **0.82** | 0.43 | 0.37 | 0.31 |
+| 真機 Sawyer 16 任務（開氣炸鍋、掛線、開收銀機等） | **88.75%** | 34.38% | 40.63% | 36.88% |
+
+（基線都是作者用同樣資料重新實作的版本。）新形狀物體：示範 1→2→3→4 條，成功率 40%→52.5%→85%→90%，作者稱為湧現行為。
+
+- **規模**：69M→117M 參數明顯變好，178M 只小幅提升；作者認為下一步要的是更多樣的資料。主模型大小論文未明寫。
+- **延伸**：用 MediaPipe 把人手關鍵點映射成夾爪位姿，人手示範在簡單抓放可用；用 Sentence-BERT 把語言對齊到瓶頸，可做零示範的語言控制。兩者都只有定性結果。
+- **局限**：要分割好的點雲、沒有顏色與語意；只適合短、近似馬可夫的任務；對示範品質與降採樣敏感；沒有避障與完整手臂控制；精度不夠做高接觸任務（[論文](https://arxiv.org/abs/2411.12633)、[程式碼與影片](https://www.robot-learning.uk/instant-policy)）。
 
 ### 3.7 REGENT（2024，ICLR 2025 oral）與 RICL（2025）：把情境內學習裝到 VLA 上
 
@@ -503,11 +555,70 @@
 - **成績**（真實 GR1 人形，三個泛化難度 L1／L2／L3）：MimicDroid 0.53／0.23／0.08，Vid2Robot 0.28／0.08／0.00。模擬中也勝過 Vid2Robot、測試時微調（PEFT）與 H2R。
 - **局限**：最難的 L3 仍很低；情境示範超過 3 條就不再進步（作者歸因於訓練時的 context 長度）（[論文](https://arxiv.org/abs/2509.09769)、[專案頁](https://rpl.cs.utexas.edu/publications/2026/06/01/shah-icra26-mimicdroid/)）。
 
-### 3.9 ICLR 視覺推理（2026-03）：示範裡加「意圖」
+### 3.9 ICLR 視覺推理（2026-03）：示範裡加「意圖」 {#iclr-visual-reasoning}
 
-- **論文**：[In-Context Imitation Learning with Visual Reasoning（arXiv:2603.07530）](https://arxiv.org/abs/2603.07530)。注意它的縮寫也叫 ICLR，與會議同名。
-- **想法**：只看狀態–動作軌跡，模型不知道示範的「意圖」。它在每條示範加上**視覺推理軌跡**（第三人稱畫面上 5 個未來夾爪點連成的折線），模型先預測推理軌跡、再出 16 步動作；骨幹沿用 ICRT 的 Llama2 式 Transformer。這等於本站〈[VLA 流派怎麼分](vla-taxonomy.html)〉軸 C 的「中間表徵」。
-- **成績**（真機 Franka，12 個沒見過的任務）：抓取放置 60.00% vs ICRT 22.50%；戳 71.67% vs 48.33%。
+<figure class="dg">
+<svg viewBox="0 0 800 276" role="img" aria-label="ICLR（視覺推理）：示範裡多一條「意圖軌跡」，先推理再出動作">
+<text x="125" y="24" text-anchor="middle" class="h">資料</text>
+<rect class="n" x="10" y="40" width="231" height="70" rx="12"/>
+<text x="125" y="64" text-anchor="middle" class="b">提示示範 3 條</text>
+<text x="125" y="84" text-anchor="middle" class="s">影像＋狀態＋動作</text>
+<text x="125" y="102" text-anchor="middle" class="s">＋每步的推理軌跡</text>
+<rect class="n" x="10" y="126" width="231" height="70" rx="12"/>
+<text x="125" y="150" text-anchor="middle" class="b">推理軌跡怎麼來</text>
+<text x="125" y="170" text-anchor="middle" class="s">模擬：真值相機參數</text>
+<text x="125" y="188" text-anchor="middle" class="s">真機：Molmo2 VLM 標</text>
+<rect class="n" x="10" y="212" width="231" height="52" rx="12"/>
+<text x="125" y="236" text-anchor="middle" class="b">當下觀測</text>
+<text x="125" y="256" text-anchor="middle" class="s">影像＋本體狀態</text>
+<text x="400" y="24" text-anchor="middle" class="h">模型</text>
+<rect class="n" x="285" y="74" width="231" height="70" rx="12"/>
+<text x="400" y="98" text-anchor="middle" class="b">凍結 ViT＋MLP 編碼</text>
+<text x="400" y="118" text-anchor="middle" class="s">軌跡 = 5 個夾爪像素點</text>
+<text x="400" y="136" text-anchor="middle" class="s">攤平成向量再嵌入</text>
+<rect class="n vla" x="285" y="160" width="231" height="70" rx="12"/>
+<text x="400" y="184" text-anchor="middle" class="b vla">Llama2 式 Transformer</text>
+<text x="400" y="204" text-anchor="middle" class="s">沿用 ICRT</text>
+<text x="400" y="222" text-anchor="middle" class="s">L = L動作 + 0.3 L推理</text>
+<text x="675" y="24" text-anchor="middle" class="h">輸出</text>
+<rect class="n mix" x="559" y="74" width="231" height="70" rx="12"/>
+<text x="675" y="98" text-anchor="middle" class="b">① 推理軌跡</text>
+<text x="675" y="118" text-anchor="middle" class="s">未來 5 個夾爪點</text>
+<text x="675" y="136" text-anchor="middle" class="s">Dropout 版可跳過</text>
+<rect class="n key" x="559" y="160" width="231" height="70" rx="12"/>
+<text x="675" y="184" text-anchor="middle" class="b">② 16 步動作</text>
+<text x="675" y="204" text-anchor="middle" class="s">末端位姿增量</text>
+<text x="675" y="222" text-anchor="middle" class="s">真機 30 Hz</text>
+<path class="ar" d="M241,75 C262,75 262,109 283,109"/>
+<path class="ar dash" d="M125,126 V112"/>
+<path class="ar" d="M241,238 C262,238 262,109 283,109"/>
+<path class="ar vla" d="M400,144 V158"/>
+<path class="ar vla" d="M515,195 C536,195 536,109 557,109"/>
+<path class="ar vla" d="M675,144 V158"/>
+</svg>
+<figcaption>來源：<a href="https://arxiv.org/abs/2603.07530">ICLR: In-Context Imitation Learning with Visual Reasoning（arXiv:2603.07530）</a>；致謝提到 USC Physical Superintelligence Lab。</figcaption>
+</figure>
+
+- **論文**：[ICLR: In-Context Imitation Learning with Visual Reasoning（arXiv:2603.07530）](https://arxiv.org/abs/2603.07530)。注意它的縮寫也叫 ICLR，與會議同名。
+- **要解決的問題**：ICRT 這類方法只看「狀態–動作」軌跡。場景一亂（多個干擾物、多個容器），同一段動作可能對應好幾種目標，模型看不出示範的**意圖**。
+- **做法**：
+    1. 每條提示示範的每一步，都附上一條**視覺推理軌跡**：從當下到回合結束，均勻取 5 個未來夾爪位置，投影到第三人稱畫面成為 5 個像素點。軌跡是數值向量，不是文字，用 MLP 編成推理 token。
+    2. 骨幹沿用 ICRT（凍結 ViT＋Llama2 式因果 Transformer）；對題目軌跡先預測推理軌跡、再預測 16 步動作。loss = 動作 L1 ＋ 0.3 × 推理 L1。
+    3. 訓練時隨機遮掉 0～100% 的推理 token；「Dropout 版」推論時直接跳過推理，只出動作。
+    4. 推理軌跡的標籤：模擬用真值相機參數投影；真機用 Molmo2 VLM 標。
+- **測試設定**：LIBERO 每個沒見過的任務給 3 條示範（50 個初始化 × 3 個提示 = 150 回合）；真機 Franka 每個任務 3 條示範（無干擾、1 個干擾物、干擾容器），每回合隨機挑 1 條。真機 30 Hz。
+
+| 方法（成功率 %） | LIBERO-Object | LIBERO-90 廚房 | 客廳 | 書房 | LIBERO 平均 | 真機戳 | 真機抓放 |
+|---|---|---|---|---|---|---|---|
+| ICRT | 44.44 | 0.89 | 18.93 | 0.83 | 16.27 | 48.33 | 22.50 |
+| TO（提示不給軌跡、題目仍預測） | 54.44 | 12.11 | 12.80 | 29.33 | 27.17 | 51.67 | 40.83 |
+| **ICLR 完整版** | 70.00 | 20.00 | 11.20 | 32.17 | 33.34 | **71.67** | **60.00** |
+| **ICLR Dropout 版** | **70.89** | **60.22** | **38.93** | **46.17** | **54.05** | 65.00 | 46.67 |
+
+- **兩個重點結論**：①提示示範本身要帶軌跡（TO 明顯不如完整版），代表模型真的是從示範讀意圖；②模擬中 Dropout 版較好、真機則完整版較好，作者歸因於 LIBERO 訓練與測試差異較小。
+- **失敗分析**：各 20 次失敗中，軌跡預測錯佔 40%（抓放）與 45%（戳）；其餘多是抓不穩、戳偏，作者認為**低階執行比推理更是瓶頸**。
+- **局限**：只測兩類任務、一種推理表示；訓練仍需遙操作資料，人類影片與跨形體示範尚未做；雙手、靈巧手、長任務未涉及。
+- **在本站分類中的位置**：路線 A（元學習專用策略），再加上〈[VLA 流派怎麼分](vla-taxonomy.html)〉軸 C 的「中間表徵」（先出軌跡、再出動作）。
 
 ### 3.10 Behavior Prompting Policy（2026-06）：一條人類示範就當提示
 
@@ -559,6 +670,122 @@
 - **成績**：LIBERO 平均 97.7%；RoboTwin 2.0 平均 60.4%（比最強基線高 19.3 個百分點）；4 個真機任務 83.2%。
 - **未寫**：底座 VLM 名稱與參數量摘要未寫。
 
+### 3.12 In-Context World Modeling／ICWM（2026-06）：context 拿來認識「系統」，而不是指定任務 {#icwm}
+
+<figure class="dg">
+<svg viewBox="0 0 800 208" role="img" aria-label="ICWM：先隨機「試動」幾下，讓 VLA 從 context 推出相機與身體設定">
+<text x="91" y="24" text-anchor="middle" class="h">部署前：試探</text>
+<rect class="n mix" x="10" y="40" width="162" height="70" rx="12"/>
+<text x="91" y="64" text-anchor="middle" class="b">任務無關的試探動作</text>
+<text x="91" y="84" text-anchor="middle" class="s">在安全區隨機移動</text>
+<text x="91" y="102" text-anchor="middle" class="s">不碰任務物體</text>
+<rect class="n" x="10" y="126" width="162" height="70" rx="12"/>
+<text x="91" y="150" text-anchor="middle" class="b">記錄轉移</text>
+<text x="91" y="170" text-anchor="middle" class="s">（起始畫面、動作、</text>
+<text x="91" y="188" text-anchor="middle" class="s">結束畫面）×N</text>
+<text x="297" y="24" text-anchor="middle" class="h">context</text>
+<rect class="n" x="216" y="49" width="162" height="70" rx="12"/>
+<text x="297" y="73" text-anchor="middle" class="b">挑幾段當 context</text>
+<text x="297" y="93" text-anchor="middle" class="s">真機：收 20 段約 5～6 秒</text>
+<text x="297" y="111" text-anchor="middle" class="s">取 5 段放進輸入</text>
+<rect class="n" x="216" y="135" width="162" height="52" rx="12"/>
+<text x="297" y="159" text-anchor="middle" class="b">當下觀測＋指令</text>
+<text x="297" y="179" text-anchor="middle" class="s">影像＋語言</text>
+<text x="503" y="24" text-anchor="middle" class="h">模型</text>
+<rect class="n vla" x="422" y="74" width="162" height="88" rx="12"/>
+<text x="503" y="98" text-anchor="middle" class="b vla">VLA（同一組權重）</text>
+<text x="503" y="118" text-anchor="middle" class="s">先讀試探 → 推出設定 ψ</text>
+<text x="503" y="136" text-anchor="middle" class="s">再讀任務 → 出動作</text>
+<text x="503" y="154" text-anchor="middle" class="s">不更新權重</text>
+<text x="709" y="24" text-anchor="middle" class="h">輸出</text>
+<rect class="n key" x="628" y="83" width="162" height="70" rx="12"/>
+<text x="709" y="107" text-anchor="middle" class="b">連續動作</text>
+<text x="709" y="127" text-anchor="middle" class="s">適應新視角</text>
+<text x="709" y="145" text-anchor="middle" class="s">（與新形體）</text>
+<path class="ar" d="M91,110 V124"/>
+<path class="ar" d="M172,161 C193,161 193,84 214,84"/>
+<path class="ar vla" d="M378,84 C399,84 399,118 420,118"/>
+<path class="ar vla" d="M378,161 C399,161 399,118 420,118"/>
+<path class="ar vla" d="M584,118 C605,118 605,118 626,118"/>
+</svg>
+<figcaption>來源：<a href="https://arxiv.org/abs/2606.26025">In-Context World Modeling for Robotic Control（arXiv:2606.26025）</a>，復旦大學、上海創智學院、同濟大學（OpenMOSS，邱錫鵬組）。重點：context 告訴模型的是「這套系統怎麼動」，不是「要做什麼任務」。</figcaption>
+</figure>
+
+- **論文**：[In-Context World Modeling for Robotic Control（arXiv:2606.26025）](https://arxiv.org/abs/2606.26025)，Siyin Wang、邱錫鵬等；機構為復旦大學、上海創智學院、同濟大學（[alphaXiv 整理](https://www.alphaxiv.org/overview/2606.26025)）。
+- **要解決的問題**：VLA 只看當下畫面與指令，默認「相機擺位、機器人身體」跟訓練時一樣；相機一換角度，預訓練 VLA 在沒見過的視角常接近 0% 成功，每換一個環境就得重新收資料微調。
+- **核心想法：把「系統辨識」變成情境內學習**。
+    - 一般 ICIL：context 放**示範**，告訴模型「要做什麼任務」。
+    - ICWM：context 放**機器人自己隨便動幾下的紀錄**（起始畫面、動作、結束畫面），讓模型從「我這樣動，畫面會怎麼變」推出目前的相機視角、身體等**不隨時間變的系統設定 ψ**，再去做任務。
+    - 推出設定和輸出動作是**同一個 VLA、同一次前向**，不加額外網路，也不更新權重；論文說的「世界模型」是**隱式**的，沒有另外的前向／逆向動力學頭。
+- **資料與訓練**：
+    - 真機：UR5e＋Robotiq 夾爪＋12 台相機，6 台訓練、6 台留作零樣本測試；4 個任務各 100～150 條遙操作示範。
+    - 模擬：LIBERO-Long，8 個相機方位角訓練、6 個沒見過的方位角測試。
+    - 訓練時從所有任務與視角的「試探片段池」隨機抽 N 段，接在每條完整示範前面，用下一步動作預測訓練。
+    - 部署：真機收 20 段試探轉移（約 5～6 秒），挑 5 段當 context。
+- **成績**（LIBERO-Long，6 個沒見過的視角平均，[alphaXiv 整理](https://www.alphaxiv.org/overview/2606.26025)）：
+
+| 設定 | 成功率 |
+|---|---|
+| 多視角行為複製（MV，基線） | 19.8% |
+| **ICWM（正確 context）** | **25.0%**（相對提升 26.3%） |
+| ICWM 不給 context | 22.0% |
+| ICWM 給「錯的」context（偏 180° 視角拍的） | 18.9%（比不給還差） |
+| 消融：context 拿掉動作 token | 21.6% |
+| 消融：context 拿掉影像 token | 10.9% |
+
+- **怎麼解讀**：給錯 context 比不給還差、拿掉影像就崩，說明模型真的在讀「動作→畫面變化」來推系統設定。四種試探策略都勝過基線，所以關鍵是「轉移紀錄」這個格式，而不是某種特定動作。真機在 4 個任務上也是 ICWM 平均最好（數字在論文表格中，我讀到的版本未列出）。
+- **局限**：絕對成功率仍低（25%），135° 視角幾乎全滅（ICWM 2.2% vs MV 1.2%）；仍需在很多種設定上訓練；部署前多一個試探步驟；作者也承認結果只是「與推出系統設定一致」，不證明模型學到唯一的內部世界模型。
+- **未寫**：我能讀到的版本（arXiv 摘要、[alphaXiv](https://www.alphaxiv.org/overview/2606.26025) 與 [hyper.ai](https://hyper.ai/en/papers/2606.26025) 的全文整理）沒寫底座 VLA 名稱與參數量；arXiv 全文頁在整理時無法讀取。
+- **在本站分類中的位置**：不屬於前面四條「用示範指定任務」的路線，而是**情境內學習的另一個用途：情境內系統辨識**。它和世界模型的關係是「把世界模型該知道的系統動力學，用 context 臨時推出來」，可對照〈[世界模型四類與五種角色](world-model-roles.html)〉。
+
+### 3.13 延伸：Zero-WAM（2026-08）：情境內模仿＋世界–動作模型
+
+<figure class="dg">
+<svg viewBox="0 0 800 294" role="img" aria-label="Zero-WAM：人類影片當提示的世界–動作模型">
+<text x="125" y="24" text-anchor="middle" class="h">資料</text>
+<rect class="n" x="10" y="40" width="231" height="70" rx="12"/>
+<text x="125" y="64" text-anchor="middle" class="b">HumanGen</text>
+<text x="125" y="84" text-anchor="middle" class="s">74.2K 組人–機配對</text>
+<text x="125" y="102" text-anchor="middle" class="s">8.6K 任務，人影片為生成</text>
+<rect class="n" x="10" y="126" width="231" height="70" rx="12"/>
+<text x="125" y="150" text-anchor="middle" class="b">任務多樣的影片–動作</text>
+<text x="125" y="170" text-anchor="middle" class="s">5 個公開資料集</text>
+<text x="125" y="188" text-anchor="middle" class="s">6,000+ 任務</text>
+<rect class="n" x="10" y="212" width="231" height="70" rx="12"/>
+<text x="125" y="236" text-anchor="middle" class="b">測試提示</text>
+<text x="125" y="256" text-anchor="middle" class="s">一段人類影片</text>
+<text x="125" y="274" text-anchor="middle" class="s">或一句語言</text>
+<text x="400" y="24" text-anchor="middle" class="h">模型</text>
+<rect class="n wm" x="285" y="83" width="231" height="70" rx="12"/>
+<text x="400" y="107" text-anchor="middle" class="b">Wan 2.2 TI2V-5B 改造</text>
+<text x="400" y="127" text-anchor="middle" class="s">因果影片–動作模型</text>
+<text x="400" y="145" text-anchor="middle" class="s">影片、動作兩支 Transformer</text>
+<rect class="n" x="285" y="169" width="231" height="70" rx="12"/>
+<text x="400" y="193" text-anchor="middle" class="b">IFP 輔助頭（只訓練用）</text>
+<text x="400" y="213" text-anchor="middle" class="s">預測未來 4 段機器人影片</text>
+<text x="400" y="231" text-anchor="middle" class="s">逼模型看提示影片</text>
+<text x="675" y="24" text-anchor="middle" class="h">輸出</text>
+<rect class="n wm" x="559" y="101" width="231" height="52" rx="12"/>
+<text x="675" y="125" text-anchor="middle" class="b">下一段機器人影片</text>
+<text x="675" y="145" text-anchor="middle" class="s">自回歸預測</text>
+<rect class="n key" x="559" y="169" width="231" height="52" rx="12"/>
+<text x="675" y="193" text-anchor="middle" class="b">對齊的動作 chunk</text>
+<text x="675" y="213" text-anchor="middle" class="s">直接執行</text>
+<path class="ar dash" d="M241,75 C262,75 262,118 283,118"/>
+<path class="ar dash" d="M241,161 C262,161 262,118 283,118"/>
+<path class="ar" d="M241,247 C262,247 262,118 283,118"/>
+<path class="ar dash" d="M400,169 V155"/>
+<path class="ar wm" d="M515,118 C536,118 536,127 557,127"/>
+<path class="ar vla" d="M515,118 C536,118 536,195 557,195"/>
+</svg>
+<figcaption>來源：<a href="https://arxiv.org/abs/2608.26103">Zero-WAM（arXiv:2608.26103）</a>，Robbyant、港科大（廣州）、港科大。</figcaption>
+</figure>
+
+- **論文**：[Zero-WAM（arXiv:2608.26103）](https://arxiv.org/abs/2608.26103)，Robbyant、港科大（廣州）、港科大。
+- **為什麼放在這裡**：它把 ICIL 和世界模型直接結合，提示是一段**人類影片**，模型同時預測下一段**機器人影片**和對應的**動作**。
+- **防止忽略提示**：只靠動作 loss，模型容易無視提示影片；IFP（in-context future chunk prediction）輔助頭要求預測未來 4 段機器人影片，推論時拿掉。加了 IFP，7 個沒見過任務平均從 28.55% 升到 46.95%。
+- **成績**：RoboTwin 2.0 的 7 個沒見過任務平均 46.95%，對照 LingBot-VA 17.45%、WAN-Action 10.98%；真機雙臂 Franka：物體放容器 53.3% vs 43.3%、三物體依序操作 33.3% vs 10.0%、插兩根桌腳 16.7% vs 0.0%。
+
 ## 四、它跟 VLA 是什麼關係？
 
 | | 一般 VLA（語言條件） | VLA＋微調 | 情境內模仿（ICIL） |
@@ -574,7 +801,7 @@
     - 在現成 VLA 上後訓練：RICL（π0-FAST）、ICI-VLA；ICRT 也試過把骨幹換成 Llama2-7B。
     - 不特別訓練、靠規模湧現：Generalist 說 GEN-1.5「沒有為了情境內學習改架構，也沒用元學習或輔助目標」（[GEN-1.5](https://generalistai.com/blog/gen-1.5)）。
 3. **評測上的直接比較**：ICRT 在同一套真機任務上大幅勝過 OpenVLA、Octo；BPP 在 LIBERO 追平 π0.5。注意這些都是「新任務、不微調 VLA」的設定，對 VLA 本來就不利。
-4. **跟世界模型的關係**：ICIL 本身**不預測未來畫面**，所以不是世界模型；兩者是互補的「快速適應」手段：世界模型靠想像生成資料或在想像中 RL（見〈[訓練時 vs 推論時](train-vs-inference.html)〉），ICIL 靠讀示範。
+4. **跟世界模型的關係**：多數 ICIL 方法**不預測未來畫面**，所以不是世界模型；兩者原本是互補的「快速適應」手段：世界模型靠想像生成資料或在想像中 RL（見〈[訓練時 vs 推論時](train-vs-inference.html)〉），ICIL 靠讀示範。2026 年開始有兩種交會：[ICWM](#icwm) 用 context **隱式**推出系統動力學（相機、身體），等於「情境內的世界模型」；[Zero-WAM](https://arxiv.org/abs/2608.26103) 則把影片生成模型改成世界–動作模型，看人類影片後同時預測機器人影片與動作。
 
 ## 五、現在誰在做？
 
@@ -614,6 +841,8 @@
 | [MimicDroid](https://arxiv.org/abs/2509.09769) | 2025 | A | 最多 10 段影片 | 32 步 chunk | GR1 真機 L1 0.53（Vid2Robot 0.28） |
 | [ICLR 視覺推理](https://arxiv.org/abs/2603.07530) | 2026 | A | 數條 | 推理軌跡＋16 步 | 真機抓放 60.0%（ICRT 22.5%） |
 | [BPP](https://arxiv.org/abs/2606.30457) | 2026 | A | 1 | 擴散動作 | LIBERO 97.48%（π0.5 97.15%） |
+| [ICWM](https://arxiv.org/abs/2606.26025) | 2026 | 延伸 | 5 段試探轉移（非示範） | 連續動作 | LIBERO-Long 新視角 25.0%（MV 19.8%） |
+| [Zero-WAM](https://arxiv.org/abs/2608.26103) | 2026 | A＋世界模型 | 1 段人類影片 | 機器人影片＋動作 chunk | RoboTwin 2.0 新任務 46.95%（LingBot-VA 17.45%） |
 | [ICI-VLA](https://arxiv.org/abs/2609.07581) | 2026 | C | 檢索微示範 | 文字化動作 | LIBERO 97.7%、RoboTwin 2.0 60.4% |
 | [GEN-1.5](https://generalistai.com/blog/gen-1.5) 🎤 | 2026 | D | 1 段 3～12 秒 | 100 Hz 動作 | 10 任務一次示範 59% |
 | [Skild S1](https://www.skild.ai/blogs/s1) 🎤 | 2026 | D | 1 段人類影片 | 動作 | 沒見過的任務 66% |
@@ -645,6 +874,9 @@
 - [In-Context Imitation Learning with Visual Reasoning（arXiv:2603.07530）](https://arxiv.org/abs/2603.07530)
 - [Behavior Prompting Policy（arXiv:2606.30457）](https://arxiv.org/abs/2606.30457)
 - [ICI-VLA（arXiv:2609.07581）](https://arxiv.org/abs/2609.07581)
+- [In-Context World Modeling for Robotic Control／ICWM（arXiv:2606.26025）](https://arxiv.org/abs/2606.26025)
+- [Zero-WAM（arXiv:2608.26103）](https://arxiv.org/abs/2608.26103)
+- [Instant Policy 程式碼與影片](https://www.robot-learning.uk/instant-policy)
 
 **業界官方頁**
 
