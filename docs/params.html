@@ -32,8 +32,8 @@
 </header>
 <div class="shell">
   <aside class="side">
-    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li class="grp">入門總覽</li><li><a href="origins.html"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="training.html"><span class="num">02</span><span>訓練、資料與評估</span></a></li><li class="grp">VLA</li><li><a href="vla-architectures.html"><span class="num">03</span><span>VLA 主流架構</span></a></li><li><a href="vla-taxonomy.html"><span class="num">04</span><span>VLA 流派怎麼分</span></a></li><li class="grp">世界模型</li><li><a href="wm-architectures.html"><span class="num">05</span><span>世界模型路線與流派</span></a></li><li><a href="classic-world-models.html"><span class="num">06</span><span>經典世界模型論文精讀</span></a></li><li class="grp">綜合應用：VLA × 世界模型</li><li><a href="world-model-roles.html"><span class="num">07</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">08</span><span>訓練時 vs 推論時</span></a></li><li><a href="synthetic-data.html"><span class="num">09</span><span>具身基礎模型與合成資料</span></a></li><li><a href="wm-in-practice.html"><span class="num">10</span><span>世界模型代表作的實際應用</span></a></li><li><a href="industry.html"><span class="num">11</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html"><span class="num">12</span><span>案例：智平方</span></a></li><li class="grp">查詢工具</li><li><a href="params.html" class="on"><span class="num">13</span><span>參數量總表</span></a></li><li><a href="glossary.html"><span class="num">14</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">15</span><span>參考資料</span></a></li></ul>
-    <p class="side-note">整理日期：2026-10-21<br>面向技術人員的科普整理</p>
+    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li class="grp">入門總覽</li><li><a href="origins.html"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="training.html"><span class="num">02</span><span>訓練、資料與評估</span></a></li><li class="grp">VLA</li><li><a href="vla-architectures.html"><span class="num">03</span><span>VLA 主流架構</span></a></li><li><a href="vla-taxonomy.html"><span class="num">04</span><span>VLA 流派怎麼分</span></a></li><li class="grp">世界模型</li><li><a href="wm-architectures.html"><span class="num">05</span><span>世界模型路線與流派</span></a></li><li><a href="classic-world-models.html"><span class="num">06</span><span>經典世界模型論文精讀</span></a></li><li class="grp">綜合應用：VLA × 世界模型</li><li><a href="world-model-roles.html"><span class="num">07</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">08</span><span>訓練時 vs 推論時</span></a></li><li><a href="synthetic-data.html"><span class="num">09</span><span>具身基礎模型與合成資料</span></a></li><li><a href="wm-in-practice.html"><span class="num">10</span><span>世界模型代表作的實際應用</span></a></li><li><a href="industry.html"><span class="num">11</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html"><span class="num">12</span><span>案例：智平方</span></a></li><li><a href="tesla.html"><span class="num">13</span><span>案例：Tesla</span></a></li><li class="grp">查詢工具</li><li><a href="params.html" class="on"><span class="num">14</span><span>參數量總表</span></a></li><li><a href="glossary.html"><span class="num">15</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">16</span><span>參考資料</span></a></li></ul>
+    <p class="side-note">整理日期：2026-10-22<br>面向技術人員的科普整理</p>
   </aside>
   <main>
     <article class="doc">
@@ -84,7 +84,7 @@
 <figcaption>對數刻度：每一格差 10 倍。上排 VLA、下排世界模型，只畫官方公布數字的代表；Gemini Robotics、Veo、Genie 3、Sora、Tesla 等未公開的不在圖上。</figcaption></figure>
 
 <h2 id="vla">VLA 與相關策略模型<a class="headerlink" href="#vla" title="連到此段">#</a></h2>
-<p>共 53 個。</p>
+<p>共 55 個。</p>
 <div class="tbl"><table>
 <thead>
 <tr>
@@ -454,11 +454,25 @@
 <td><a class="ext" href="https://wayve.ai/thinking/lingo-2-driving-with-language/" target="_blank" rel="noopener">來源</a></td>
 </tr>
 <tr>
-<td>Tesla FSD / Optimus</td>
+<td>Tesla FSD（v12–v14.3）</td>
+<td>Tesla</td>
+<td>未公開（Musk 2025-08：新模型約前一版 10 倍參數；媒體稱 v14.3 約 1B，非官方）</td>
+<td>端到端：多鏡頭影片＋導航＋運動學＋音訊 → 2 個動作 token</td>
+<td><a class="ext" href="https://www.notateslaapp.com/news/2999/tesla-fsds-10x-parameter-update-many-new-features-release-in-september" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Tesla FSD V15（大模型）</td>
+<td>Tesla 2026</td>
+<td>未公開（Musk：「V15 會是大模型」；媒體稱約 10B，非官方）</td>
+<td>同一路線的放大版；Robotaxi 已在跑</td>
+<td><a class="ext" href="https://x.com/elonmusk/status/2042082006314709086" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Tesla Optimus 策略網路</td>
 <td>Tesla</td>
 <td>未公開</td>
-<td>端到端網路</td>
-<td><a class="ext" href="https://www.humanoidsdaily.com/feed/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus" target="_blank" rel="noopener">來源</a></td>
+<td>機器人上的單一多工神經網路，技能以自然語言呼叫</td>
+<td><a class="ext" href="https://x.com/_milankovac_/status/1925047791954612605" target="_blank" rel="noopener">來源</a></td>
 </tr>
 <tr>
 <td>LLaVA-1.5（VLM，附錄）</td>
@@ -470,7 +484,7 @@
 </tbody>
 </table></div>
 <h2 id="_2">世界模型與影片生成模型<a class="headerlink" href="#_2" title="連到此段">#</a></h2>
-<p>共 44 個。</p>
+<p>共 45 個。</p>
 <div class="tbl"><table>
 <thead>
 <tr>
@@ -777,11 +791,18 @@
 <td><a class="ext" href="https://www.36kr.com/p/3463098292770179" target="_blank" rel="noopener">來源</a></td>
 </tr>
 <tr>
-<td>華為 WE / 蔚來 NWM / Tesla 神經模擬器</td>
+<td>華為 WE / 蔚來 NWM</td>
 <td>—</td>
 <td>未公開</td>
 <td>只有發表會或演講</td>
 <td><a class="ext" href="https://www.humanoidsdaily.com/feed/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Tesla World Sim NN（神經世界模擬器）</td>
+<td>Tesla</td>
+<td>未公開</td>
+<td>狀態＋動作 → 下一刻 8 路鏡頭影片；評估、RL、對抗情境</td>
+<td><a class="ext" href="https://www.humanoidsdaily.com/news/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus" target="_blank" rel="noopener">來源</a></td>
 </tr>
 <tr>
 <td>OccWorld</td>
@@ -798,9 +819,9 @@
 <li><strong>媒體報導只在官方完全沒寫時列出，並明寫是媒體說法</strong>：目前只有 π0.7（<a class="ext" href="https://the-decoder.com/physical-intelligence-shows-robot-model-with-llm-like-generalization-flaws-included/" target="_blank" rel="noopener">The Decoder</a> 報導 Gemma 3 4B + 860M，<a class="ext" href="https://pi.website/blog/pi07" target="_blank" rel="noopener">官方頁</a>沒寫）。</li>
 <li><strong>論文前後不一致時照實寫</strong>：π0.5 的圖寫 Gemma 2B 與 2.6B 兩種；UniVLA 的動作頭在引言寫 10.8M、正文寫 12.6M，表中取正文。</li>
 </ul>
-      <nav class="pn"><a class="prev" href="ai2-robotics.html"><small>上一篇</small>案例：智平方</a><a class="next" href="glossary.html"><small>下一篇</small>名詞速查</a></nav>
+      <nav class="pn"><a class="prev" href="tesla.html"><small>上一篇</small>案例：Tesla</a><a class="next" href="glossary.html"><small>下一篇</small>名詞速查</a></nav>
       <footer class="foot">
-        內容整理自本專案的調研筆記與討論（2026-10-21）。數字取自論文或官方頁；查不到的標「未公開」。外部連結均開新分頁。
+        內容整理自本專案的調研筆記與討論（2026-10-22）。數字取自論文或官方頁；查不到的標「未公開」。外部連結均開新分頁。
       </footer>
     </article>
   </main>

@@ -275,7 +275,7 @@
 | [Gemini Robotics 團隊（arXiv:2512.10675）](https://arxiv.org/abs/2512.10675) | 以 **Veo** 為基礎做策略評估，涵蓋一般表現、分布外泛化與安全紅隊測試；用 8 個檢查點、1,600 次以上真機評估驗證它能排出策略的相對好壞 |
 | [Ctrl-World](https://arxiv.org/abs/2510.10125) | 在想像中評估 π0 系列；能反映「有沒有聽懂指令」，但會**低估**實際成功率 |
 | [GE-Sim](https://arxiv.org/abs/2508.05635) | 叢集平行化後，每小時可跑上千個 episode 的評估 |
-| 1X、Tesla、Waymo、理想 | 見 [08 業界產品盤點](industry.html)；Tesla 的神經模擬器同時用於 FSD 與 Optimus，細節未公開 |
+| 1X、Tesla、Waymo、理想 | 見 [08 業界產品盤點](industry.html)；Tesla 的神經模擬器同時用於 FSD 與 Optimus，整理見 [案例：Tesla](tesla.html) |
 
 ## 二、推論時：除了 VLA，世界模型有沒有上場？（I0–I3）
 

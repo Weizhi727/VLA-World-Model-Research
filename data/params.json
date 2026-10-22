@@ -518,13 +518,34 @@
    ]
   },
   {
-   "name": "Tesla FSD / Optimus",
+   "name": "Tesla FSD（v12–v14.3）",
+   "org": "Tesla",
+   "params": "未公開（Musk 2025-08：新模型約前一版 10 倍參數；媒體稱 v14.3 約 1B，非官方）",
+   "detail": "端到端：多鏡頭影片＋導航＋運動學＋音訊 → 2 個動作 token",
+   "src": "https://www.notateslaapp.com/news/2999/tesla-fsds-10x-parameter-update-many-new-features-release-in-september",
+   "alias": [
+    "Tesla",
+    "FSD"
+   ]
+  },
+  {
+   "name": "Tesla FSD V15（大模型）",
+   "org": "Tesla 2026",
+   "params": "未公開（Musk：「V15 會是大模型」；媒體稱約 10B，非官方）",
+   "detail": "同一路線的放大版；Robotaxi 已在跑",
+   "src": "https://x.com/elonmusk/status/2042082006314709086",
+   "alias": [
+    "V15"
+   ]
+  },
+  {
+   "name": "Tesla Optimus 策略網路",
    "org": "Tesla",
    "params": "未公開",
-   "detail": "端到端網路",
-   "src": "https://www.humanoidsdaily.com/feed/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus",
+   "detail": "機器人上的單一多工神經網路，技能以自然語言呼叫",
+   "src": "https://x.com/_milankovac_/status/1925047791954612605",
    "alias": [
-    "Tesla"
+    "Optimus"
    ]
   },
   {
@@ -978,7 +999,7 @@
    ]
   },
   {
-   "name": "華為 WE / 蔚來 NWM / Tesla 神經模擬器",
+   "name": "華為 WE / 蔚來 NWM",
    "org": "—",
    "params": "未公開",
    "detail": "只有發表會或演講",
@@ -986,6 +1007,17 @@
    "alias": [
     "華為",
     "蔚來"
+   ]
+  },
+  {
+   "name": "Tesla World Sim NN（神經世界模擬器）",
+   "org": "Tesla",
+   "params": "未公開",
+   "detail": "狀態＋動作 → 下一刻 8 路鏡頭影片；評估、RL、對抗情境",
+   "src": "https://www.humanoidsdaily.com/news/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus",
+   "alias": [
+    "World Sim NN",
+    "神經世界模擬器"
    ]
   },
   {
