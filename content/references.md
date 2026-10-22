@@ -72,6 +72,25 @@
 - [LAPA（arXiv:2410.11758）](https://arxiv.org/abs/2410.11758)
 - [UniVLA（arXiv:2505.06111）](https://arxiv.org/abs/2505.06111)
 
+### 情境內模仿學習（In-Context Imitation Learning）
+
+詳見〈[情境內模仿學習](in-context-imitation.html)〉。
+
+- [One-Shot Imitation Learning（arXiv:1703.07326）](https://arxiv.org/abs/1703.07326)
+- [Vid2Robot（arXiv:2403.12943）](https://arxiv.org/abs/2403.12943)
+- [Keypoint Action Tokens／KAT（arXiv:2403.19578）](https://arxiv.org/abs/2403.19578)
+- [ICRT（arXiv:2408.15980）](https://arxiv.org/abs/2408.15980)
+- [RoboPrompt（arXiv:2410.12782）](https://arxiv.org/abs/2410.12782)
+- [Instant Policy（arXiv:2411.12633）](https://arxiv.org/abs/2411.12633)
+- [REGENT（arXiv:2412.04759）](https://arxiv.org/abs/2412.04759)
+- [RICL（arXiv:2508.02062）](https://arxiv.org/abs/2508.02062)
+- [MimicDroid（arXiv:2509.09769）](https://arxiv.org/abs/2509.09769)
+- [In-Context Imitation Learning with Visual Reasoning（arXiv:2603.07530）](https://arxiv.org/abs/2603.07530)
+- [Behavior Prompting Policy（arXiv:2606.30457）](https://arxiv.org/abs/2606.30457)
+- [ICI-VLA（arXiv:2609.07581）](https://arxiv.org/abs/2609.07581)
+- [Skild AI S1 官方部落格](https://www.skild.ai/blogs/s1)
+- [Generalist GEN-1.5 官方部落格](https://generalistai.com/blog/gen-1.5)
+
 ## 世界模型
 
 ### 經典與潛空間路線

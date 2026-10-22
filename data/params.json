@@ -557,6 +557,137 @@
    "alias": [
     "LLaVA"
    ]
+  },
+  {
+   "name": "Vid2Robot",
+   "org": "Google DeepMind 2024",
+   "params": "論文未寫",
+   "detail": "ViT-B/16 + Perceiver Resampler + 交叉注意力；影片提示的情境內策略",
+   "src": "https://arxiv.org/abs/2403.12943",
+   "alias": [
+    "Vid2Robot"
+   ]
+  },
+  {
+   "name": "ICRT",
+   "org": "UC Berkeley 2024",
+   "params": "論文未給總數（Llama2 式 12 層、768 維）；另有 Llama2-7B＋LoRA 版",
+   "detail": "凍結 ViT-Base + 因果 Transformer，示範當提示",
+   "src": "https://arxiv.org/abs/2408.15980",
+   "alias": [
+    "ICRT"
+   ]
+  },
+  {
+   "name": "KAT（Keypoint Action Tokens）",
+   "org": "Imperial 2024",
+   "params": "無自有模型（用 GPT-4 Turbo，參數未公開）",
+   "detail": "DINO 關鍵點＋動作寫成文字給 LLM",
+   "src": "https://arxiv.org/abs/2403.19578",
+   "alias": [
+    "KAT"
+   ]
+  },
+  {
+   "name": "RoboPrompt",
+   "org": "UC Berkeley 2024",
+   "params": "無自有模型（預設 GPT-4 Turbo；另測 Qwen2-7B、Llama3-8B）",
+   "detail": "關鍵幀＋物體位姿文字提示",
+   "src": "https://arxiv.org/abs/2410.12782",
+   "alias": [
+    "RoboPrompt"
+   ]
+  },
+  {
+   "name": "Instant Policy",
+   "org": "Imperial 2024",
+   "params": "規模實驗 69M / 117M / 178M；主模型未明寫",
+   "detail": "異質圖 Transformer 擴散；模擬偽示範訓練",
+   "src": "https://arxiv.org/abs/2411.12633",
+   "alias": [
+    "Instant Policy"
+   ]
+  },
+  {
+   "name": "REGENT",
+   "org": "UPenn 2024",
+   "params": "138.6M（JAT/Gato 設定）；116M（ProcGen）",
+   "detail": "檢索 19 個鄰居的半參數式 Transformer",
+   "src": "https://arxiv.org/abs/2412.04759",
+   "alias": [
+    "REGENT"
+   ]
+  },
+  {
+   "name": "RICL-π0-FAST",
+   "org": "UPenn 2025",
+   "params": "論文未另列（以 π0-FAST 為底：PaliGemma，Gemma 3B LLM）",
+   "detail": "DINOv2 檢索 4 個鄰居＋動作插值",
+   "src": "https://arxiv.org/abs/2508.02062",
+   "alias": [
+    "RICL"
+   ]
+  },
+  {
+   "name": "MimicDroid",
+   "org": "UT Austin 2025",
+   "params": "正文未寫",
+   "detail": "人類 play 影片元訓練的人形情境內策略",
+   "src": "https://arxiv.org/abs/2509.09769",
+   "alias": [
+    "MimicDroid"
+   ]
+  },
+  {
+   "name": "ICLR（In-Context Imitation Learning with Visual Reasoning）",
+   "org": "2026",
+   "params": "論文未寫（沿用 ICRT 架構）",
+   "detail": "示範加視覺推理軌跡",
+   "src": "https://arxiv.org/abs/2603.07530",
+   "alias": [
+    "ICLR 視覺推理"
+   ]
+  },
+  {
+   "name": "Behavior Prompting Policy（BPP）",
+   "org": "Stanford 2026",
+   "params": "約 208M（提示編碼器 57M + U-Net 擴散解碼器 151M）",
+   "detail": "一條人類示範當行為提示",
+   "src": "https://arxiv.org/abs/2606.30457",
+   "alias": [
+    "BPP",
+    "Behavior Prompting Policy"
+   ]
+  },
+  {
+   "name": "ICI-VLA",
+   "org": "2026",
+   "params": "摘要未寫",
+   "detail": "檢索時空對齊的微示範＋Target Action Masking",
+   "src": "https://arxiv.org/abs/2609.07581",
+   "alias": [
+    "ICI-VLA"
+   ]
+  },
+  {
+   "name": "Skild AI S1",
+   "org": "Skild AI 2026",
+   "params": "未公開",
+   "detail": "官方稱從頭設計的情境內學習者；人類影片當提示",
+   "src": "https://www.skild.ai/blogs/s1",
+   "alias": [
+    "Skild S1"
+   ]
+  },
+  {
+   "name": "Generalist GEN-1.5",
+   "org": "Generalist AI 2026",
+   "params": "未公開",
+   "detail": "一段 3～12 秒示範的情境內學習；100 Hz 動作",
+   "src": "https://generalistai.com/blog/gen-1.5",
+   "alias": [
+    "GEN-1.5"
+   ]
   }
  ],
  "wm": [

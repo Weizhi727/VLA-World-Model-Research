@@ -32,7 +32,7 @@
 </header>
 <div class="shell">
   <aside class="side">
-    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li class="grp">入門總覽</li><li><a href="origins.html"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="training.html"><span class="num">02</span><span>訓練、資料與評估</span></a></li><li class="grp">VLA</li><li><a href="vla-architectures.html"><span class="num">03</span><span>VLA 主流架構</span></a></li><li><a href="vla-taxonomy.html"><span class="num">04</span><span>VLA 流派怎麼分</span></a></li><li class="grp">世界模型</li><li><a href="wm-architectures.html"><span class="num">05</span><span>世界模型路線與流派</span></a></li><li><a href="classic-world-models.html"><span class="num">06</span><span>經典世界模型論文精讀</span></a></li><li class="grp">綜合應用：VLA × 世界模型</li><li><a href="world-model-roles.html"><span class="num">07</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">08</span><span>訓練時 vs 推論時</span></a></li><li><a href="synthetic-data.html"><span class="num">09</span><span>具身基礎模型與合成資料</span></a></li><li><a href="wm-in-practice.html"><span class="num">10</span><span>世界模型代表作的實際應用</span></a></li><li><a href="industry.html"><span class="num">11</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html"><span class="num">12</span><span>案例：智平方</span></a></li><li><a href="tesla.html"><span class="num">13</span><span>案例：Tesla</span></a></li><li class="grp">查詢工具</li><li><a href="params.html" class="on"><span class="num">14</span><span>參數量總表</span></a></li><li><a href="glossary.html"><span class="num">15</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">16</span><span>參考資料</span></a></li></ul>
+    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li class="grp">入門總覽</li><li><a href="origins.html"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="training.html"><span class="num">02</span><span>訓練、資料與評估</span></a></li><li class="grp">VLA</li><li><a href="vla-architectures.html"><span class="num">03</span><span>VLA 主流架構</span></a></li><li><a href="vla-taxonomy.html"><span class="num">04</span><span>VLA 流派怎麼分</span></a></li><li><a href="in-context-imitation.html"><span class="num">05</span><span>情境內模仿學習</span></a></li><li class="grp">世界模型</li><li><a href="wm-architectures.html"><span class="num">06</span><span>世界模型路線與流派</span></a></li><li><a href="classic-world-models.html"><span class="num">07</span><span>經典世界模型論文精讀</span></a></li><li class="grp">綜合應用：VLA × 世界模型</li><li><a href="world-model-roles.html"><span class="num">08</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">09</span><span>訓練時 vs 推論時</span></a></li><li><a href="synthetic-data.html"><span class="num">10</span><span>具身基礎模型與合成資料</span></a></li><li><a href="wm-in-practice.html"><span class="num">11</span><span>世界模型代表作的實際應用</span></a></li><li><a href="industry.html"><span class="num">12</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html"><span class="num">13</span><span>案例：智平方</span></a></li><li><a href="tesla.html"><span class="num">14</span><span>案例：Tesla</span></a></li><li class="grp">查詢工具</li><li><a href="params.html" class="on"><span class="num">15</span><span>參數量總表</span></a></li><li><a href="glossary.html"><span class="num">16</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">17</span><span>參考資料</span></a></li></ul>
     <p class="side-note">整理日期：2026-10-22<br>面向技術人員的科普整理</p>
   </aside>
   <main>
@@ -84,7 +84,7 @@
 <figcaption>對數刻度：每一格差 10 倍。上排 VLA、下排世界模型，只畫官方公布數字的代表；Gemini Robotics、Veo、Genie 3、Sora、Tesla 等未公開的不在圖上。</figcaption></figure>
 
 <h2 id="vla">VLA 與相關策略模型<a class="headerlink" href="#vla" title="連到此段">#</a></h2>
-<p>共 55 個。</p>
+<p>共 68 個。</p>
 <div class="tbl"><table>
 <thead>
 <tr>
@@ -480,6 +480,97 @@
 <td>7B、13B</td>
 <td>CLIP ViT-L + MLP + Vicuna</td>
 <td><a class="ext" href="https://arxiv.org/abs/2310.03744" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Vid2Robot</td>
+<td>Google DeepMind 2024</td>
+<td>論文未寫</td>
+<td>ViT-B/16 + Perceiver Resampler + 交叉注意力；影片提示的情境內策略</td>
+<td><a class="ext" href="https://arxiv.org/abs/2403.12943" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>ICRT</td>
+<td>UC Berkeley 2024</td>
+<td>論文未給總數（Llama2 式 12 層、768 維）；另有 Llama2-7B＋LoRA 版</td>
+<td>凍結 ViT-Base + 因果 Transformer，示範當提示</td>
+<td><a class="ext" href="https://arxiv.org/abs/2408.15980" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>KAT（Keypoint Action Tokens）</td>
+<td>Imperial 2024</td>
+<td>無自有模型（用 GPT-4 Turbo，參數未公開）</td>
+<td>DINO 關鍵點＋動作寫成文字給 LLM</td>
+<td><a class="ext" href="https://arxiv.org/abs/2403.19578" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>RoboPrompt</td>
+<td>UC Berkeley 2024</td>
+<td>無自有模型（預設 GPT-4 Turbo；另測 Qwen2-7B、Llama3-8B）</td>
+<td>關鍵幀＋物體位姿文字提示</td>
+<td><a class="ext" href="https://arxiv.org/abs/2410.12782" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Instant Policy</td>
+<td>Imperial 2024</td>
+<td>規模實驗 69M / 117M / 178M；主模型未明寫</td>
+<td>異質圖 Transformer 擴散；模擬偽示範訓練</td>
+<td><a class="ext" href="https://arxiv.org/abs/2411.12633" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>REGENT</td>
+<td>UPenn 2024</td>
+<td>138.6M（JAT/Gato 設定）；116M（ProcGen）</td>
+<td>檢索 19 個鄰居的半參數式 Transformer</td>
+<td><a class="ext" href="https://arxiv.org/abs/2412.04759" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>RICL-π0-FAST</td>
+<td>UPenn 2025</td>
+<td>論文未另列（以 π0-FAST 為底：PaliGemma，Gemma 3B LLM）</td>
+<td>DINOv2 檢索 4 個鄰居＋動作插值</td>
+<td><a class="ext" href="https://arxiv.org/abs/2508.02062" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>MimicDroid</td>
+<td>UT Austin 2025</td>
+<td>正文未寫</td>
+<td>人類 play 影片元訓練的人形情境內策略</td>
+<td><a class="ext" href="https://arxiv.org/abs/2509.09769" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>ICLR（In-Context Imitation Learning with Visual Reasoning）</td>
+<td>2026</td>
+<td>論文未寫（沿用 ICRT 架構）</td>
+<td>示範加視覺推理軌跡</td>
+<td><a class="ext" href="https://arxiv.org/abs/2603.07530" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Behavior Prompting Policy（BPP）</td>
+<td>Stanford 2026</td>
+<td>約 208M（提示編碼器 57M + U-Net 擴散解碼器 151M）</td>
+<td>一條人類示範當行為提示</td>
+<td><a class="ext" href="https://arxiv.org/abs/2606.30457" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>ICI-VLA</td>
+<td>2026</td>
+<td>摘要未寫</td>
+<td>檢索時空對齊的微示範＋Target Action Masking</td>
+<td><a class="ext" href="https://arxiv.org/abs/2609.07581" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Skild AI S1</td>
+<td>Skild AI 2026</td>
+<td>未公開</td>
+<td>官方稱從頭設計的情境內學習者；人類影片當提示</td>
+<td><a class="ext" href="https://www.skild.ai/blogs/s1" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Generalist GEN-1.5</td>
+<td>Generalist AI 2026</td>
+<td>未公開</td>
+<td>一段 3～12 秒示範的情境內學習；100 Hz 動作</td>
+<td><a class="ext" href="https://generalistai.com/blog/gen-1.5" target="_blank" rel="noopener">來源</a></td>
 </tr>
 </tbody>
 </table></div>
