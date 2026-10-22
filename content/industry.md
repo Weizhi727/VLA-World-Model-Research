@@ -141,6 +141,7 @@
     3. 生成對抗性極端情境；
     4. 大規模 RL。同一個模擬器也用於 Optimus。
 - [演講整理報導](https://www.humanoidsdaily.com/feed/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus)
+- **完整案例**：產品對照、參數量、車隊資料、Cortex 算力與「策略和世界模型怎麼接」，見 [案例：Tesla](tesla.html)。
 
 ### Waymo：EMMA + Waymo World Model 📄🎤🔒
 

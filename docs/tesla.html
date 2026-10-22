@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>案例：Tesla · VLA × 世界模型 調研</title>
+<meta name="description" content="FSD、Optimus 與神經世界模擬器：用了什麼、多大、資料從哪來、怎麼接">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body data-page="tesla">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead"/>
+    </marker>
+    <marker id="arr-wm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead wm"/>
+    </marker>
+    <marker id="arr-vla" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead vla"/>
+    </marker>
+  </defs>
+</svg>
+<header class="top">
+  <button class="menu" aria-label="開啟目錄" aria-expanded="false">☰</button>
+  <a class="brand" href="index.html"><span class="dot vla"></span><span class="dot wm"></span>VLA × 世界模型 調研</a>
+  <button class="theme" aria-label="切換深淺色">◐</button>
+</header>
+<div class="shell">
+  <aside class="side">
+    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li class="grp">入門總覽</li><li><a href="origins.html"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="training.html"><span class="num">02</span><span>訓練、資料與評估</span></a></li><li class="grp">VLA</li><li><a href="vla-architectures.html"><span class="num">03</span><span>VLA 主流架構</span></a></li><li><a href="vla-taxonomy.html"><span class="num">04</span><span>VLA 流派怎麼分</span></a></li><li class="grp">世界模型</li><li><a href="wm-architectures.html"><span class="num">05</span><span>世界模型路線與流派</span></a></li><li><a href="classic-world-models.html"><span class="num">06</span><span>經典世界模型論文精讀</span></a></li><li class="grp">綜合應用：VLA × 世界模型</li><li><a href="world-model-roles.html"><span class="num">07</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">08</span><span>訓練時 vs 推論時</span></a></li><li><a href="synthetic-data.html"><span class="num">09</span><span>具身基礎模型與合成資料</span></a></li><li><a href="wm-in-practice.html"><span class="num">10</span><span>世界模型代表作的實際應用</span></a></li><li><a href="industry.html"><span class="num">11</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html"><span class="num">12</span><span>案例：智平方</span></a></li><li><a href="tesla.html" class="on"><span class="num">13</span><span>案例：Tesla</span></a></li><li class="grp">查詢工具</li><li><a href="params.html"><span class="num">14</span><span>參數量總表</span></a></li><li><a href="glossary.html"><span class="num">15</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">16</span><span>參考資料</span></a></li></ul>
+    <p class="side-note">整理日期：2026-10-22<br>面向技術人員的科普整理</p>
+  </aside>
+  <main>
+    <article class="doc">
+      <h1 id="tesla">案例：Tesla<a class="headerlink" href="#tesla" title="連到此段">#</a></h1>
+<p class="lede">回答四個問題：Tesla 在哪個產品用了什麼模型？參數量多大？資料有多少、從哪裡來？VLA（策略）和世界模型是融合成一個、分開、還是別的接法？<b>只寫 Tesla 官方（財報、演講、官方活動頁、高層 X 貼文）或可靠媒體明寫的內容；查不到就寫「未公開」。</b>Tesla 沒有發表過 FSD 或 Optimus 的論文，所以技術細節幾乎都來自演講。整理日期 2026-10-22。</p>
+
+<h2 id="_1">重點先講<a class="headerlink" href="#_1" title="連到此段">#</a></h2>
+<div class="admonition key">
+<p class="admonition-title">六句話看懂 Tesla</p>
+<ol>
+<li><strong>兩個產品、一套方法</strong>：FSD（車）和 Optimus（人形機器人）都用「像素直接到動作」的端到端大模型，Tesla 在 CVPR 2026 直接說「我們不是在造一個駕駛產品，而是在為所有機器人構建一個統一的基礎模型」（<a class="ext" href="https://www.ofweek.com/auto/2026-06/ART-70109-8110-30689565.html" target="_blank" rel="noopener">OFweek 演講整理</a>）。</li>
+<li><strong>策略與世界模型是「分開的兩個網路，接成閉環」</strong>：Policy NN 負責開車／做事；World Sim NN 吃「目前狀態 + 動作」吐出下一刻的多鏡頭影片，再餵回 Policy。兩者用同一份車隊資料訓練，但<strong>車上只跑策略，世界模型留在雲端</strong>（<a class="ext" href="https://www.humanoidsdaily.com/news/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus" target="_blank" rel="noopener">ICCV 2025 報導</a>、<a class="ext" href="https://www.ofweek.com/auto/2026-06/ART-70109-8110-30689565.html" target="_blank" rel="noopener">CVPR 2026 整理</a>）。</li>
+<li><strong>世界模型的用途是「評估 + 強化學習 + 造對抗情境」</strong>，對應本站的 <a href="train-vs-inference.html#t4">T4 評估器</a> 與 <a href="train-vs-inference.html#t3">T3 想像中 RL</a>；推論時屬於 <a href="train-vs-inference.html#i0">I0 不參與</a>。</li>
+<li><strong>參數量官方從未給絕對數字</strong>：只有 Musk 的相對說法，「新 FSD 模型約 10 倍參數」（2025-08）與「V15 會是大模型」（2026-04）。媒體寫的「約 10 億／100 億」不是官方數字。Optimus 與世界模擬器的參數量都未公開。</li>
+<li><strong>資料靠車隊</strong>：約 130 萬輛具監督式 FSD 能力的車、FSD 累計里程接近 120 億英里（2026 Q2）。Optimus 則從遙操作與動作捕捉，改成<strong>員工戴 5 鏡頭頭盔與背包錄製第一人稱影片</strong>。</li>
+<li><strong>它算不算 VLA？</strong> FSD 輸入有導航與指令、輸出 2 個動作 token，語言只當旁路的「解釋」輸出，比較接近本站說的 WA（World Action）派；Optimus 能用自然語言（語音／文字）叫出技能，按定義就是 VLA。</li>
+</ol>
+</div>
+<h2 id="tesla_1">一張圖看懂：Tesla 的整體架構<a class="headerlink" href="#tesla_1" title="連到此段">#</a></h2>
+<figure class="dg">
+<svg viewBox="0 0 800 420" role="img" aria-label="Tesla 的資料、策略網路與世界模擬器閉環">
+<text x="110" y="26" text-anchor="middle" class="h">資料從哪來</text>
+<text x="400" y="26" text-anchor="middle" class="h">雲端訓練（Cortex 叢集）</text>
+<text x="690" y="26" text-anchor="middle" class="h">部署（AI4 晶片）</text>
+<rect class="n" x="15" y="50" width="190" height="96" rx="12"/>
+<text x="110" y="78" text-anchor="middle" class="b">車隊</text>
+<text x="110" y="100" text-anchor="middle" class="s">約 130 萬輛車</text>
+<text x="110" y="118" text-anchor="middle" class="s">累計近 120 億英里</text>
+<text x="110" y="136" text-anchor="middle" class="s">觸發器撈長尾片段</text>
+<rect class="n" x="15" y="170" width="190" height="96" rx="12"/>
+<text x="110" y="198" text-anchor="middle" class="b">Optimus 資料</text>
+<text x="110" y="220" text-anchor="middle" class="s">5 鏡頭頭盔＋背包錄影</text>
+<text x="110" y="238" text-anchor="middle" class="s">（早期：遙操作、動捕）</text>
+<text x="110" y="256" text-anchor="middle" class="s">Optimus Academy</text>
+<rect class="n vla" x="280" y="50" width="240" height="96" rx="12"/>
+<text x="400" y="80" text-anchor="middle" class="b vla">Policy NN（策略）</text>
+<text x="400" y="104" text-anchor="middle" class="s">影片＋導航＋運動學＋音訊</text>
+<text x="400" y="124" text-anchor="middle" class="s">→ 動作（車：轉向、加速度）</text>
+<rect class="n wm" x="280" y="230" width="240" height="96" rx="12"/>
+<text x="400" y="260" text-anchor="middle" class="b wm">World Sim NN（世界模擬器）</text>
+<text x="400" y="284" text-anchor="middle" class="s">目前狀態＋動作</text>
+<text x="400" y="304" text-anchor="middle" class="s">→ 下一刻多鏡頭影片、運動學</text>
+<path class="ar vla" d="M360,146 V228"/>
+<text x="352" y="192" text-anchor="end" class="s vla">動作</text>
+<path class="ar wm" d="M440,228 V148"/>
+<text x="448" y="192" class="s wm">下一刻狀態</text>
+<path class="ar" d="M205,98 H278"/>
+<path class="ar" d="M205,218 C240,218 240,110 278,110"/>
+<path class="ar dash" d="M205,120 C245,120 245,270 278,270"/>
+<text x="110" y="296" text-anchor="middle" class="s">虛線：同一份資料</text>
+<text x="110" y="314" text-anchor="middle" class="s">也拿來訓練世界模擬器</text>
+<rect class="n key" x="280" y="350" width="240" height="56" rx="10"/>
+<text x="400" y="374" text-anchor="middle" class="b">閉環用途</text>
+<text x="400" y="394" text-anchor="middle" class="s">評估・回歸測試・對抗情境・RL</text>
+<path class="ar" d="M400,326 V348"/>
+<rect class="n vla" x="590" y="50" width="195" height="70" rx="12"/>
+<text x="688" y="80" text-anchor="middle" class="b">FSD／Robotaxi</text>
+<text x="688" y="102" text-anchor="middle" class="s">只跑策略，36 Hz</text>
+<rect class="n vla" x="590" y="140" width="195" height="70" rx="12"/>
+<text x="688" y="170" text-anchor="middle" class="b">Optimus</text>
+<text x="688" y="192" text-anchor="middle" class="s">同一套方法，同一顆 AI4</text>
+<path class="ar vla" d="M520,85 H588"/>
+<path class="ar vla" d="M520,120 C555,120 555,175 588,175"/>
+<rect class="n ghost" x="590" y="250" width="195" height="76" rx="12"/>
+<text x="688" y="280" text-anchor="middle" class="b">世界模擬器不上車</text>
+<text x="688" y="302" text-anchor="middle" class="s">推論時 = I0</text>
+</svg>
+<figcaption>策略和世界模擬器是兩個網路，在雲端接成閉環；車和機器人上只部署策略。資料來源：ICCV 2025 演講（<a class="ext" href="https://x.com/aelluswamy/status/1981644831790379245" target="_blank" rel="noopener">Ashok Elluswamy X 貼文</a>、<a class="ext" href="https://www.humanoidsdaily.com/news/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus" target="_blank" rel="noopener">Humanoids Daily</a>）、CVPR 2026 演講（<a class="ext" href="https://www.youtube.com/watch?v=2V0ddkF1Svo" target="_blank" rel="noopener">錄影</a>、<a class="ext" href="https://www.ofweek.com/auto/2026-06/ART-70109-8110-30689565.html" target="_blank" rel="noopener">OFweek 整理</a>）、<a class="ext" href="https://www.aol.com/tesla-shifted-optimus-training-strategy-092502010.html" target="_blank" rel="noopener">Business Insider</a>、<a class="ext" href="https://notateslaapp.com/news/4481/summary-of-teslas-2026-q2-earnings-call-cybercab-fsd-ai4-and-more" target="_blank" rel="noopener">2026 Q2 財報會議整理</a>。</figcaption>
+</figure>
+
+<h2 id="_2">一、哪個產品用了什麼？<a class="headerlink" href="#_2" title="連到此段">#</a></h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>產品</th>
+<th>用的模型</th>
+<th>屬於哪一類</th>
+<th>世界模型的角色</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>FSD (Supervised) v12 起</strong></td>
+<td>單一端到端網路，取代 v11 的 30 萬行以上 C++ 規則</td>
+<td>端到端策略（像素 → 控制）</td>
+<td>雲端評估、RL（車上不跑）</td>
+<td><a class="ext" href="https://evannex.com/blogs/news/tesla-ceo-elon-musk-test-drives-fsd-v12-in-livestream" target="_blank" rel="noopener">v12 直播報導</a></td>
+</tr>
+<tr>
+<td><strong>FSD v13</strong></td>
+<td>同一路線，資料量增加 4.2 倍、輸入影片解析度更高、控制延遲減半</td>
+<td>同上</td>
+<td>同上</td>
+<td><a class="ext" href="https://www.sec.gov/Archives/edgar/data/1318605/000162828025002993/exhibit991.htm" target="_blank" rel="noopener">2024 Q4 財報</a></td>
+</tr>
+<tr>
+<td><strong>FSD v14</strong>（2025-10 起）</td>
+<td>把 Robotaxi 用的大部分模型帶到一般車主；v14.3 加入「推理」、MLIR 重寫的編譯器與 runtime</td>
+<td>同上，多了語言推理旁路</td>
+<td>同上</td>
+<td><a class="ext" href="https://www.sec.gov/Archives/edgar/data/1318605/000162828025045861/exhibit991.htm" target="_blank" rel="noopener">2025 Q3 財報</a>、<a class="ext" href="https://www.notateslaapp.com/news/3925/tesla-releases-fsd-143-fleet-learning-20-faster-reactions-and-more" target="_blank" rel="noopener">v14.3 報導</a></td>
+</tr>
+<tr>
+<td><strong>FSD v14 Lite</strong></td>
+<td>把 AI4 上的駕駛行為蒸餾到 HW3（AI3）的算力限制內</td>
+<td>蒸餾版策略</td>
+<td>—</td>
+<td><a class="ext" href="https://notateslaapp.com/news/4481/summary-of-teslas-2026-q2-earnings-call-cybercab-fsd-ai4-and-more" target="_blank" rel="noopener">2026 Q2 財報會議整理</a></td>
+</tr>
+<tr>
+<td><strong>Robotaxi</strong>（奧斯汀等）</td>
+<td>Ashok 稱已在跑 <strong>FSD V15</strong></td>
+<td>同上</td>
+<td>同上</td>
+<td><a class="ext" href="https://notateslaapp.com/news/4481/summary-of-teslas-2026-q2-earnings-call-cybercab-fsd-ai4-and-more" target="_blank" rel="noopener">2026 Q2 財報會議整理</a></td>
+</tr>
+<tr>
+<td><strong>Optimus</strong></td>
+<td>「機器人上的單一神經網路（多工）」，技能用自然語言（語音／文字）呼叫</td>
+<td><strong>VLA</strong>（視覺＋語言 → 動作）</td>
+<td>用同一套世界模擬器生成工廠、室內的動作條件影片</td>
+<td><a class="ext" href="https://x.com/_milankovac_/status/1925047791954612605" target="_blank" rel="noopener">Milan Kovac X 貼文</a>、<a class="ext" href="https://www.notateslaapp.com/news/2761/teslas-optimus-is-now-learning-by-watching-first-person-today-third-person-tomorrow-video" target="_blank" rel="noopener">Not a Tesla App</a>、<a class="ext" href="https://www.humanoidsdaily.com/news/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus" target="_blank" rel="noopener">Humanoids Daily</a></td>
+</tr>
+<tr>
+<td><strong>World Sim NN</strong></td>
+<td>神經網路影片生成引擎，可同時生成 8 路鏡頭畫面、接近即時</td>
+<td><strong>影片生成類世界模型</strong>（見 <a href="wm-architectures.html">世界模型路線與流派</a>）</td>
+<td>主角</td>
+<td><a class="ext" href="https://www.nextbigfuture.com/2025/10/tesla-vp-ashok-describes-technology-of-fsd.html" target="_blank" rel="noopener">NextBigFuture</a>、<a class="ext" href="https://wallstreetcn.com/articles/3757967" target="_blank" rel="noopener">華爾街見聞</a></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>「Drive in Video Generation」</strong>：CVPR 2026 的 Tesla 攤位讓參觀者在 AI 生成的世界裡「開車」，也就是讓人親手操作 World Sim NN（<a class="ext" href="https://www.tesla.com/event/tesla-x-cvpr-2026" target="_blank" rel="noopener">Tesla 官方活動頁</a>）。</p>
+<h2 id="20-token-2-token">二、策略網路：20 億個 token 進、2 個 token 出<a class="headerlink" href="#20-token-2-token" title="連到此段">#</a></h2>
+<figure class="dg">
+<svg viewBox="0 0 800 360" role="img" aria-label="FSD 策略網路的輸入、輸出與旁路輸出">
+<text x="120" y="26" text-anchor="middle" class="h">輸入（約 20 億 token）</text>
+<text x="400" y="26" text-anchor="middle" class="h">端到端大模型</text>
+<text x="680" y="26" text-anchor="middle" class="h">輸出</text>
+<rect class="n" x="15" y="45" width="210" height="64" rx="10"/>
+<text x="120" y="72" text-anchor="middle" class="b">多鏡頭影片</text>
+<text x="120" y="93" text-anchor="middle" class="s">7 路 × 36 FPS × 5 MP × 30 秒</text>
+<rect class="n" x="15" y="121" width="210" height="44" rx="10"/>
+<text x="120" y="148" text-anchor="middle" class="b">導航地圖與指令</text>
+<rect class="n" x="15" y="177" width="210" height="44" rx="10"/>
+<text x="120" y="204" text-anchor="middle" class="b">運動學 100 Hz</text>
+<rect class="n" x="15" y="233" width="210" height="44" rx="10"/>
+<text x="120" y="260" text-anchor="middle" class="b">音訊 48 kHz</text>
+<path class="ar" d="M225,77 H298"/><path class="ar" d="M225,143 H298"/><path class="ar" d="M225,199 H298"/><path class="ar" d="M225,255 H298"/>
+<rect class="n vla" x="300" y="45" width="200" height="232" rx="14"/>
+<text x="400" y="140" text-anchor="middle" class="b vla">Policy NN</text>
+<text x="400" y="164" text-anchor="middle" class="s">以 36 Hz 執行</text>
+<text x="400" y="184" text-anchor="middle" class="s">參數量：未公開</text>
+<rect class="n key" x="575" y="45" width="210" height="80" rx="12"/>
+<text x="680" y="76" text-anchor="middle" class="b">2 個動作 token</text>
+<text x="680" y="100" text-anchor="middle" class="s">轉向、加速度 → 控制車輛</text>
+<path class="ar vla" d="M500,85 H573"/>
+<rect class="n ghost" x="575" y="150" width="210" height="190" rx="12"/>
+<text x="680" y="176" text-anchor="middle" class="b">旁路輸出（不控制車）</text>
+<text x="680" y="200" text-anchor="middle" class="s">3D 佔據與流</text>
+<text x="680" y="220" text-anchor="middle" class="s">車、行人等物體</text>
+<text x="680" y="240" text-anchor="middle" class="s">車道、號誌、限速</text>
+<text x="680" y="260" text-anchor="middle" class="s">生成式 3D 高斯</text>
+<text x="680" y="280" text-anchor="middle" class="s">自然語言決策理由</text>
+<text x="680" y="310" text-anchor="middle" class="s">用途：除錯、安全檢查</text>
+<path class="ar dash" d="M500,220 H573"/>
+</svg>
+<figcaption>20 億 token 是 Tesla 投影片的估算：7 × 36 × 500 萬像素 × 30 秒，以 5×5 像素為一塊。旁路輸出可以「被提示」才產生，用來解釋與除錯，不直接開車。資料來源：<a class="ext" href="https://www.ofweek.com/auto/2026-06/ART-70109-8110-30689565.html" target="_blank" rel="noopener">CVPR 2026 演講整理</a>、<a class="ext" href="https://www.nextbigfuture.com/2025/10/tesla-vp-ashok-describes-technology-of-fsd.html" target="_blank" rel="noopener">ICCV 2025 演講整理</a>。</figcaption>
+</figure>
+
+<ul>
+<li><strong>為什麼這樣設計</strong>：Ashok 在 2023 年的 v12 直播中說，v11 有 30 萬行以上 C++，v12 幾乎全部拿掉，「沒有一行程式碼寫著這裡有圓環」（<a class="ext" href="https://evannex.com/blogs/news/tesla-ceo-elon-musk-test-drives-fsd-v12-in-livestream" target="_blank" rel="noopener">v12 直播報導</a>）。</li>
+<li><strong>語言在哪裡</strong>：ICCV 2025 演講提到工程師可以用自然語言問模型「為什麼這樣決定」；CVPR 2026 展示了施工改道的思維鏈推理範例；v14.3 發布說明寫了「reasoning」並計畫擴到所有駕駛行為（<a class="ext" href="https://www.nextbigfuture.com/2025/10/tesla-vp-ashok-describes-technology-of-fsd.html" target="_blank" rel="noopener">NextBigFuture</a>、<a class="ext" href="https://www.ofweek.com/auto/2026-06/ART-70109-8110-30689565.html" target="_blank" rel="noopener">OFweek</a>、<a class="ext" href="https://www.notateslaapp.com/news/3925/tesla-releases-fsd-143-fleet-learning-20-faster-reactions-and-more" target="_blank" rel="noopener">v14.3 報導</a>）。<strong>語言推理是否進入控制迴路、用多少延遲：未公開。</strong></li>
+<li><strong>旁路輸出是不是訓練目標</strong>：Tesla 只說模型「可以被提示輸出」這些東西；它們是否同時當輔助 loss 使用，未公開。</li>
+</ul>
+<h2 id="world-sim-nn">三、世界模型：World Sim NN<a class="headerlink" href="#world-sim-nn" title="連到此段">#</a></h2>
+<figure class="dg">
+<svg viewBox="0 0 800 250" role="img" aria-label="World Sim NN 的閉環與四種用途">
+<rect class="n vla" x="40" y="40" width="200" height="80" rx="12"/>
+<text x="140" y="74" text-anchor="middle" class="b vla">Policy NN</text>
+<text x="140" y="98" text-anchor="middle" class="s">待評估的新版策略</text>
+<rect class="n wm" x="40" y="150" width="200" height="80" rx="12"/>
+<text x="140" y="184" text-anchor="middle" class="b wm">World Sim NN</text>
+<text x="140" y="208" text-anchor="middle" class="s">狀態 t ＋ 動作 → 狀態 t+1</text>
+<path class="ar vla" d="M100,120 V148"/><path class="ar wm" d="M180,148 V122"/>
+<text x="92" y="139" text-anchor="end" class="s">動作</text>
+<text x="188" y="139" class="s">8 路影片</text>
+<path class="ar" d="M240,135 H318"/>
+<rect class="n key" x="320" y="20" width="215" height="96" rx="10"/>
+<text x="428" y="46" text-anchor="middle" class="b">① 閉環評估</text>
+<text x="428" y="68" text-anchor="middle" class="s">開環 loss 和實車表現</text>
+<text x="428" y="86" text-anchor="middle" class="s">相關性不高</text>
+<rect class="n key" x="560" y="20" width="215" height="96" rx="10"/>
+<text x="668" y="46" text-anchor="middle" class="b">② 重播歷史問題</text>
+<text x="668" y="68" text-anchor="middle" class="s">從真實紀錄「分岔」，</text>
+<text x="668" y="86" text-anchor="middle" class="s">驗證新版有沒有修好</text>
+<rect class="n key" x="320" y="134" width="215" height="96" rx="10"/>
+<text x="428" y="160" text-anchor="middle" class="b">③ 注入對抗情境</text>
+<text x="428" y="182" text-anchor="middle" class="s">行人衝出、車輛切入</text>
+<text x="428" y="200" text-anchor="middle" class="s">等長尾案例</text>
+<rect class="n key" x="560" y="134" width="215" height="96" rx="10"/>
+<text x="668" y="160" text-anchor="middle" class="b">④ 大規模 RL</text>
+<text x="668" y="182" text-anchor="middle" class="s">目標「超越人類」；</text>
+<text x="668" y="200" text-anchor="middle" class="s">細節未公開</text>
+</svg>
+<figcaption>資料來源：ICCV 2025 演講（<a class="ext" href="https://www.humanoidsdaily.com/news/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus" target="_blank" rel="noopener">Humanoids Daily</a>、<a class="ext" href="https://www.nextbigfuture.com/2025/10/tesla-vp-ashok-describes-technology-of-fsd.html" target="_blank" rel="noopener">NextBigFuture</a>）、CVPR 2026 演講（<a class="ext" href="https://www.ofweek.com/auto/2026-06/ART-70109-8110-30689565.html" target="_blank" rel="noopener">OFweek</a>）。</figcaption>
+</figure>
+
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>公開資訊</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>輸入 → 輸出</td>
+<td>目前狀態 + 策略動作 → 下一刻狀態：鏡頭畫面、導航、運動學、音訊</td>
+<td><a class="ext" href="https://www.ofweek.com/auto/2026-06/ART-70109-8110-30689565.html" target="_blank" rel="noopener">OFweek</a></td>
+</tr>
+<tr>
+<td>鏡頭與長度</td>
+<td>同時生成 8 路鏡頭；媒體報導可一次生成長達 6 分鐘的影片</td>
+<td><a class="ext" href="https://www.nextbigfuture.com/2025/10/tesla-vp-ashok-describes-technology-of-fsd.html" target="_blank" rel="noopener">NextBigFuture</a>、<a class="ext" href="https://wallstreetcn.com/articles/3757967" target="_blank" rel="noopener">華爾街見聞</a></td>
+</tr>
+<tr>
+<td>速度</td>
+<td>「接近即時」、壓縮算力後可即時執行；精確延遲未公開</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>訓練資料</td>
+<td>與策略同一份車隊資料；用「便宜易得的狀態-動作資料」，不需要人工精細標註</td>
+<td><a class="ext" href="https://www.humanoidsdaily.com/news/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus" target="_blank" rel="noopener">Humanoids Daily</a>、<a class="ext" href="https://medium.com/@byaman019/a-peek-into-teslas-autonomous-future-core-tech-revealed-by-vp-ashok-elluswamy-at-iccv-2025-906df7ae95de" target="_blank" rel="noopener">Medium 整理</a></td>
+</tr>
+<tr>
+<td>Optimus 版本</td>
+<td>生成 Optimus 在工廠走路、轉彎的畫面，同時 4 路機器人視角；動作條件影片生成用於導航</td>
+<td><a class="ext" href="https://www.humanoidsdaily.com/news/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus" target="_blank" rel="noopener">Humanoids Daily</a>、<a class="ext" href="https://www.nextbigfuture.com/2025/10/tesla-vp-ashok-describes-technology-of-fsd.html" target="_blank" rel="noopener">NextBigFuture</a></td>
+</tr>
+<tr>
+<td>獎勵怎麼算</td>
+<td>演講提到生成式世界模擬器裡的獎勵與懲罰，細節未公開</td>
+<td><a class="ext" href="https://podwise.ai/episodes/7101406" target="_blank" rel="noopener">Matroid 演講大綱</a></td>
+</tr>
+<tr>
+<td>參數量、架構</td>
+<td><strong>未公開</strong>（沒說是擴散還是自迴歸）</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<div class="admonition warning">
+<p class="admonition-title">「一天學 500 年駕駛經驗」怎麼看</p>
+<p>中文媒體報導 Tesla 稱 AI「一天之內能學習相當於人類 500 年的駕駛經驗」（<a class="ext" href="https://wallstreetcn.com/articles/3757967" target="_blank" rel="noopener">華爾街見聞</a>），但該報導沒有附演講原文，也沒說是指車隊資料量還是模擬器吞吐量。本站把它當媒體轉述，不當正式數據。</p>
+</div>
+<h2 id="_3">四、參數量<a class="headerlink" href="#_3" title="連到此段">#</a></h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>官方說法</th>
+<th>媒體說法（非官方）</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FSD v12／v13</td>
+<td>未公開</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>FSD v14</td>
+<td>未公開絕對數字；Musk 2025-08：「正在訓練約 <strong>10 倍參數</strong>的新 FSD 模型，並大幅改善影片壓縮 loss」</td>
+<td>—</td>
+<td><a class="ext" href="https://www.notateslaapp.com/news/2999/tesla-fsds-10x-parameter-update-many-new-features-release-in-september" target="_blank" rel="noopener">Musk 貼文報導</a></td>
+</tr>
+<tr>
+<td>FSD v14.3</td>
+<td>Musk 2026-04：「小模型進步太快，大模型還沒追上」</td>
+<td>約 10 億參數的「小模型」</td>
+<td><a class="ext" href="https://x.com/elonmusk/status/2042082006314709086" target="_blank" rel="noopener">Musk X 貼文</a>、<a class="ext" href="https://www.notateslaapp.com/news/3933/elon-musk-fsd-10x-parameter-upgrade-now-coming-with-v15" target="_blank" rel="noopener">Not a Tesla App</a></td>
+</tr>
+<tr>
+<td>FSD V15</td>
+<td>Musk：「V15 會是大模型」</td>
+<td>約 100 億參數（「10 倍」大模型）</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>Optimus 策略</td>
+<td>未公開</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>World Sim NN</td>
+<td>未公開</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>注意</strong>：有部落格寫「上兆參數」，那是作者估計，不採用。v14 的「10 倍」與 v15 的「大模型」可能指同一個模型（原本預計 2025 年推出，後來延到 V15），Musk 沒有說明兩者關係。</p>
+<h2 id="_4">五、資料：有多少、從哪裡來<a class="headerlink" href="#_4" title="連到此段">#</a></h2>
+<h3 id="fsd">車（FSD）<a class="headerlink" href="#fsd" title="連到此段">#</a></h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>指標</th>
+<th>數字</th>
+<th>時間</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FSD 累計里程</td>
+<td>超過 30 億英里</td>
+<td>2025-01</td>
+<td><a class="ext" href="https://www.sec.gov/Archives/edgar/data/1318605/000162828025002993/exhibit991.htm" target="_blank" rel="noopener">2024 Q4 財報</a></td>
+</tr>
+<tr>
+<td>FSD 累計里程</td>
+<td>超過 108 億英里（其中城市道路約 40.7 億）</td>
+<td>2026-06（CVPR 投影片）</td>
+<td><a class="ext" href="https://www.ofweek.com/auto/2026-06/ART-70109-8110-30689565.html" target="_blank" rel="noopener">OFweek</a></td>
+</tr>
+<tr>
+<td>FSD 累計里程</td>
+<td>接近 120 億英里；歐洲超過 5,000 萬公里</td>
+<td>2026-07（Q2 財報會議）</td>
+<td><a class="ext" href="https://notateslaapp.com/news/4481/summary-of-teslas-2026-q2-earnings-call-cybercab-fsd-ai4-and-more" target="_blank" rel="noopener">Not a Tesla App</a></td>
+</tr>
+<tr>
+<td>具監督式 FSD 能力的車</td>
+<td>約 130 萬輛</td>
+<td>2026-06</td>
+<td><a class="ext" href="https://www.ofweek.com/auto/2026-06/ART-70109-8110-30689565.html" target="_blank" rel="noopener">OFweek</a></td>
+</tr>
+<tr>
+<td>v13 訓練資料</td>
+<td>比前一版多 4.2 倍（絕對量未公開）</td>
+<td>2025-01</td>
+<td><a class="ext" href="https://www.sec.gov/Archives/edgar/data/1318605/000162828025002993/exhibit991.htm" target="_blank" rel="noopener">2024 Q4 財報</a></td>
+</tr>
+<tr>
+<td>訓練資料總量（小時、片段數）</td>
+<td><strong>未公開</strong></td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>怎麼撈</strong>：車上有「觸發器」，只把罕見片段（複雜路口、不尋常的用路人）傳回來，不是全部上傳（<a class="ext" href="https://www.nextbigfuture.com/2025/10/tesla-vp-ashok-describes-technology-of-fsd.html" target="_blank" rel="noopener">NextBigFuture</a>）；v14.3 說明也提到用車隊收集「少見事件」與「困難的 RL 範例」（<a class="ext" href="https://www.notateslaapp.com/news/3925/tesla-releases-fsd-143-fleet-learning-20-faster-reactions-and-more" target="_blank" rel="noopener">v14.3 報導</a>）。</li>
+<li><strong>官方自稱</strong>：「世界上最大的具身 AI 資料集」（<a class="ext" href="https://www.tesla.com/event/tesla-x-cvpr-2026" target="_blank" rel="noopener">Tesla CVPR 2026 活動頁</a>）。</li>
+<li><strong>公開影片</strong>：Musk 說進中國市場的版本用了網路上公開的亞洲街道影片訓練（<a class="ext" href="https://www.aol.com/tesla-shifted-optimus-training-strategy-092502010.html" target="_blank" rel="noopener">Business Insider</a>）。</li>
+</ul>
+<h3 id="optimus">機器人（Optimus）<a class="headerlink" href="#optimus" title="連到此段">#</a></h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>時期</th>
+<th>怎麼收資料</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2024</td>
+<td>「資料收集員」穿動作捕捉衣、戴 VR 頭盔做遙操作</td>
+<td><a class="ext" href="https://www.aol.com/tesla-shifted-optimus-training-strategy-092502010.html" target="_blank" rel="noopener">Business Insider</a></td>
+</tr>
+<tr>
+<td>2025-05</td>
+<td>公布從<strong>第一人稱人類影片</strong>學會吸塵、煮菜、倒垃圾；下一步要學第三人稱網路影片並轉成第一人稱視角</td>
+<td><a class="ext" href="https://www.notateslaapp.com/news/2761/teslas-optimus-is-now-learning-by-watching-first-person-today-third-person-tomorrow-video" target="_blank" rel="noopener">Not a Tesla App</a></td>
+</tr>
+<tr>
+<td>2025-06 起</td>
+<td>改以影片為主：員工戴 <strong>5 個自製鏡頭的頭盔與背包</strong>錄自己做事（撿東西、摺 T 恤），以便更快擴大資料量</td>
+<td><a class="ext" href="https://www.aol.com/tesla-shifted-optimus-training-strategy-092502010.html" target="_blank" rel="noopener">Business Insider</a></td>
+</tr>
+<tr>
+<td>2026</td>
+<td>Fremont 生產的 Optimus V3 早期機台進「Optimus Academy」收集訓練資料</td>
+<td><a class="ext" href="https://notateslaapp.com/news/4481/summary-of-teslas-2026-q2-earnings-call-cybercab-fsd-ai4-and-more" target="_blank" rel="noopener">2026 Q2 財報會議整理</a></td>
+</tr>
+<tr>
+<td>—</td>
+<td>資料總量（小時數、示範數）</td>
+<td><strong>未公開</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>Musk 在 2025-01 財報會議說，Optimus 的訓練需求「最終可能至少是車的 10 倍」（<a class="ext" href="https://www.aol.com/tesla-shifted-optimus-training-strategy-092502010.html" target="_blank" rel="noopener">Business Insider</a>）。</p>
+<h2 id="dojo-cortexnvidia-gpu">六、算力：Dojo 停了，改用 Cortex（NVIDIA GPU）<a class="headerlink" href="#dojo-cortexnvidia-gpu" title="連到此段">#</a></h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>時間</th>
+<th>事件</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2024 Q4</td>
+<td>Cortex 完工：德州超級工廠約 5 萬張 H100，「幫助實現 FSD v13」；2024 年訓練算力增加 400% 以上</td>
+<td><a class="ext" href="https://www.sec.gov/Archives/edgar/data/1318605/000162828025002993/exhibit991.htm" target="_blank" rel="noopener">2024 Q4 財報</a></td>
+</tr>
+<tr>
+<td>2025 Q2</td>
+<td>加 1.6 萬張 H200，Cortex 達 6.7 萬 H100 等效</td>
+<td><a class="ext" href="https://techcrunch.com/2025/09/02/tesla-dojo-the-rise-and-fall-of-elon-musks-ai-supercomputer/" target="_blank" rel="noopener">TechCrunch</a></td>
+</tr>
+<tr>
+<td>2025-08</td>
+<td><strong>Dojo 專案關閉、團隊解散</strong>；Musk 稱它是「演化上的死胡同」</td>
+<td><a class="ext" href="https://techcrunch.com/2025/08/11/elon-musk-confirms-shutdown-of-tesla-dojo-an-evolutionary-dead-end" target="_blank" rel="noopener">TechCrunch</a></td>
+</tr>
+<tr>
+<td>2025 Q3</td>
+<td>Cortex 達 <strong>8.1 萬 H100 等效</strong></td>
+<td><a class="ext" href="https://www.sec.gov/Archives/edgar/data/1318605/000162828025045861/exhibit991.htm" target="_blank" rel="noopener">2025 Q3 財報</a></td>
+</tr>
+<tr>
+<td>2026 Q2</td>
+<td>Cortex 1 約 90 MW、新的 Cortex 2 約 115 MW，同時訓練車隊與 Optimus</td>
+<td><a class="ext" href="https://notateslaapp.com/news/4481/summary-of-teslas-2026-q2-earnings-call-cybercab-fsd-ai4-and-more" target="_blank" rel="noopener">2026 Q2 財報會議整理</a></td>
+</tr>
+<tr>
+<td>推論端</td>
+<td><strong>AI4</strong> 同時用在 FSD 與 Optimus，兩台電腦互相校驗；AI5「希望明年量產」；AI6 由 Samsung 代工（165 億美元合約）</td>
+<td><a class="ext" href="https://www.ofweek.com/auto/2026-06/ART-70109-8110-30689565.html" target="_blank" rel="noopener">OFweek</a>、<a class="ext" href="https://notateslaapp.com/news/4481/summary-of-teslas-2026-q2-earnings-call-cybercab-fsd-ai4-and-more" target="_blank" rel="noopener">2026 Q2 財報會議整理</a>、<a class="ext" href="https://techcrunch.com/2025/09/02/tesla-dojo-the-rise-and-fall-of-elon-musks-ai-supercomputer/" target="_blank" rel="noopener">TechCrunch</a></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_5">七、融合還是分開？放進本站的分類<a class="headerlink" href="#_5" title="連到此段">#</a></h2>
+<div class="admonition key">
+<p class="admonition-title">答案：分開訓練的兩個網路，用閉環接起來；部署時只有策略</p>
+<ul>
+<li><strong>不是融合</strong>：Tesla 沒有讓策略「先想像未來畫面再出動作」（那是 <a href="train-vs-inference.html#i2">I2</a>，例如 1X），也沒有用世界模型在車上預演挑動作（<a href="train-vs-inference.html#i3-vla">I3</a>）。</li>
+<li><strong>也不是完全無關</strong>：兩者吃同一份車隊資料，World Sim NN 的唯一任務就是當 Policy NN 的「考場與練習場」。</li>
+<li><strong>最接近</strong>：本站 <a href="train-vs-inference.html#t4">T4 評估器</a> + <a href="train-vs-inference.html#t3">T3 想像中 RL</a> + 用世界模型「造」長尾情境（與 <a href="train-vs-inference.html#t2">T2 資料工廠</a> 相近，但 Tesla 只說用在測試與 RL，沒說把生成影片當模仿學習資料）。</li>
+</ul>
+</div>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>本站代號</th>
+<th>Tesla 有沒有</th>
+<th>根據</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T1 預訓練／輔助目標</td>
+<td>未公開（旁路輸出存在，但沒說是不是訓練目標）</td>
+<td><a class="ext" href="https://www.nextbigfuture.com/2025/10/tesla-vp-ashok-describes-technology-of-fsd.html" target="_blank" rel="noopener">NextBigFuture</a></td>
+</tr>
+<tr>
+<td>T2 資料工廠</td>
+<td>部分：生成對抗與長尾情境</td>
+<td><a class="ext" href="https://www.nextbigfuture.com/2025/10/tesla-vp-ashok-describes-technology-of-fsd.html" target="_blank" rel="noopener">NextBigFuture</a></td>
+</tr>
+<tr>
+<td>T3 想像中 RL</td>
+<td>✅ 明說「大規模 RL」</td>
+<td><a class="ext" href="https://www.humanoidsdaily.com/news/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus" target="_blank" rel="noopener">Humanoids Daily</a></td>
+</tr>
+<tr>
+<td>T4 評估器</td>
+<td>✅ 主要用途，CVPR 2026 稱評估是「最難的一題」</td>
+<td><a class="ext" href="https://www.ofweek.com/auto/2026-06/ART-70109-8110-30689565.html" target="_blank" rel="noopener">OFweek</a></td>
+</tr>
+<tr>
+<td>I0 推論不參與</td>
+<td>✅ 車上只跑 Policy NN</td>
+<td>同上</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>跟其他公司比</strong>：Waymo 也把世界模型（基於 Genie 3）當模擬器，Gemini Robotics 用 Veo 當評估器，路線最接近 Tesla；字節 GR-2、智元 GE 則把世界模型直接當 VLA 的預訓練骨幹，Tesla 沒有公開這樣做。詳見 <a href="wm-in-practice.html">世界模型代表作的實際應用</a> 與 <a href="industry.html">業界產品盤點</a>。</p>
+<h2 id="_6">八、還不知道的事<a class="headerlink" href="#_6" title="連到此段">#</a></h2>
+<ul>
+<li>FSD、Optimus、World Sim NN 的<strong>參數量、層數、架構</strong>（Transformer？擴散？）都未公開。</li>
+<li>訓練資料<strong>總時數、片段數</strong>、資料配比未公開。</li>
+<li>RL 的<strong>獎勵設計與演算法</strong>未公開。</li>
+<li>Optimus 和 FSD 是「同一個模型、不同頭」還是「同一架構、各自訓練」：Tesla 只說「同一套方法、同一套世界模擬器、同一顆晶片」，沒有更細的說明。</li>
+</ul>
+<h2 id="_7">主要來源<a class="headerlink" href="#_7" title="連到此段">#</a></h2>
+<ul>
+<li>演講：<a class="ext" href="https://x.com/aelluswamy/status/1981644831790379245" target="_blank" rel="noopener">ICCV 2025 Ashok Elluswamy（X 貼文）</a>、<a class="ext" href="https://cvpr2026.wad.vision/" target="_blank" rel="noopener">CVPR 2026 WAD 議程</a>、<a class="ext" href="https://www.youtube.com/watch?v=2V0ddkF1Svo" target="_blank" rel="noopener">CVPR 2026 錄影</a>、<a class="ext" href="https://www.tesla.com/event/tesla-x-cvpr-2026" target="_blank" rel="noopener">Tesla × CVPR 2026 官方活動頁</a></li>
+<li>財報：<a class="ext" href="https://www.sec.gov/Archives/edgar/data/1318605/000162828025002993/exhibit991.htm" target="_blank" rel="noopener">2024 Q4 更新</a>、<a class="ext" href="https://www.sec.gov/Archives/edgar/data/1318605/000162828025045861/exhibit991.htm" target="_blank" rel="noopener">2025 Q3 更新</a>、<a class="ext" href="https://notateslaapp.com/news/4481/summary-of-teslas-2026-q2-earnings-call-cybercab-fsd-ai4-and-more" target="_blank" rel="noopener">2026 Q2 財報會議整理</a></li>
+<li>演講整理與報導：<a class="ext" href="https://www.humanoidsdaily.com/news/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus" target="_blank" rel="noopener">Humanoids Daily</a>、<a class="ext" href="https://www.nextbigfuture.com/2025/10/tesla-vp-ashok-describes-technology-of-fsd.html" target="_blank" rel="noopener">NextBigFuture</a>、<a class="ext" href="https://www.ofweek.com/auto/2026-06/ART-70109-8110-30689565.html" target="_blank" rel="noopener">OFweek（CVPR 2026 全文詳解）</a>、<a class="ext" href="https://www.aol.com/tesla-shifted-optimus-training-strategy-092502010.html" target="_blank" rel="noopener">Business Insider（Optimus 訓練改變）</a>、<a class="ext" href="https://techcrunch.com/2025/09/02/tesla-dojo-the-rise-and-fall-of-elon-musks-ai-supercomputer/" target="_blank" rel="noopener">TechCrunch（Dojo）</a></li>
+</ul>
+<!-- params:auto -->
+
+<h2 id="_8">本頁提到的模型參數量<a class="headerlink" href="#_8" title="連到此段">#</a></h2>
+<p>只列官方論文、官方頁或官方模型卡寫明的數字；查不到的標「未公開」，不推測。完整清單見 <a href="params.html">參數量總表</a>。</p>
+<p><strong>VLA</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>參數量</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gemini Robotics（1.0 / 1.5 / 2 / On-Device）</td>
+<td>未公開</td>
+<td><a class="ext" href="https://arxiv.org/abs/2510.03342" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR-2</td>
+<td>預設 230M（可訓練 95M）；規模實驗可訓練 30M–719M</td>
+<td><a class="ext" href="https://arxiv.org/abs/2410.06158" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Tesla FSD（v12–v14.3）</td>
+<td>未公開（Musk 2025-08：新模型約前一版 10 倍參數；媒體稱 v14.3 約 1B，非官方）</td>
+<td><a class="ext" href="https://www.notateslaapp.com/news/2999/tesla-fsds-10x-parameter-update-many-new-features-release-in-september" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Tesla FSD V15（大模型）</td>
+<td>未公開（Musk：「V15 會是大模型」；媒體稱約 10B，非官方）</td>
+<td><a class="ext" href="https://x.com/elonmusk/status/2042082006314709086" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Tesla Optimus 策略網路</td>
+<td>未公開</td>
+<td><a class="ext" href="https://x.com/_milankovac_/status/1925047791954612605" target="_blank" rel="noopener">來源</a></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>世界模型</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>參數量</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Genie 2 / Genie 3</td>
+<td>未公開</td>
+<td><a class="ext" href="https://deepmind.google/discover/blog/genie-3-a-new-frontier-for-world-models/" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Veo</td>
+<td>未公開</td>
+<td><a class="ext" href="https://arxiv.org/abs/2512.10675" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Tesla World Sim NN（神經世界模擬器）</td>
+<td>未公開</td>
+<td><a class="ext" href="https://www.humanoidsdaily.com/news/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus" target="_blank" rel="noopener">來源</a></td>
+</tr>
+</tbody>
+</table></div>
+      <nav class="pn"><a class="prev" href="ai2-robotics.html"><small>上一篇</small>案例：智平方</a><a class="next" href="params.html"><small>下一篇</small>參數量總表</a></nav>
+      <footer class="foot">
+        內容整理自本專案的調研筆記與討論（2026-10-22）。數字取自論文或官方頁；查不到的標「未公開」。外部連結均開新分頁。
+      </footer>
+    </article>
+  </main>
+  <nav class="toc" aria-label="本頁目錄">
+    <p class="toc-h">本頁目錄</p>
+    <ul><li><a href="#_1">重點先講</a></li><li><a href="#tesla_1">一張圖看懂：Tesla 的整體架構</a></li><li><a href="#_2">一、哪個產品用了什麼？</a></li><li><a href="#20-token-2-token">二、策略網路：20 億個 token 進、2 個 token 出</a></li><li><a href="#world-sim-nn">三、世界模型：World Sim NN</a></li><li><a href="#_3">四、參數量</a></li><li><a href="#_4">五、資料：有多少、從哪裡來</a><ul><li><a href="#fsd">車（FSD）</a></li><li><a href="#optimus">機器人（Optimus）</a></li></ul></li><li><a href="#dojo-cortexnvidia-gpu">六、算力：Dojo 停了，改用 Cortex（NVIDIA GPU）</a></li><li><a href="#_5">七、融合還是分開？放進本站的分類</a></li><li><a href="#_6">八、還不知道的事</a></li><li><a href="#_7">主要來源</a></li><li><a href="#_8">本頁提到的模型參數量</a></li></ul>
+  </nav>
+</div>
+<script src="assets/site.js"></script>
+<script src="assets/search-index.js"></script>
+<script src="assets/qa.js"></script>
+</body>
+</html>

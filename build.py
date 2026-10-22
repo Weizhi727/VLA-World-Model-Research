@@ -18,7 +18,7 @@ CONTENT = ROOT / 'content'
 OUT = ROOT / 'docs'
 
 SITE_TITLE = 'VLA × 世界模型 調研'
-UPDATED = '2026-10-21'
+UPDATED = '2026-10-22'
 
 # 側欄分組：(分組名稱, [(slug, 標題, 一句話說明, 首頁卡片說明), ...])
 # 編號依這裡的順序自動產生；文中 [NN 標題](slug.html) 與 [NN](slug.html) 的 NN 也會在建置時改成最新編號。
@@ -57,6 +57,8 @@ GROUPS = [
          'π、Gemini Robotics、GR00T＋Cosmos、Figure、1X、Tesla、Waymo、華為、小鵬等。'),
         ('ai2-robotics', '案例：智平方', '產品分類、競品比較、類腦與 SNN',
          'GOVLA、FiS-VLA、Video2Act、NeuroVLA；與 π0、Helix、GR00T 比較；類腦與 SNN。'),
+        ('tesla', '案例：Tesla', 'FSD、Optimus 與神經世界模擬器：用了什麼、多大、資料從哪來、怎麼接',
+         'Policy NN 與 World Sim NN 的閉環；FSD v12–V15、Optimus 的參數量、車隊資料、Cortex 算力。'),
     ]),
     ('查詢工具', [
         ('params', '參數量總表', '所有出現過的 VLA 與世界模型，官方公布的參數量',
