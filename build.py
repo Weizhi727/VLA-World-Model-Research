@@ -18,7 +18,7 @@ CONTENT = ROOT / 'content'
 OUT = ROOT / 'docs'
 
 SITE_TITLE = 'VLA × 世界模型 調研'
-UPDATED = '2026-10-22'
+UPDATED = '2026-10-23'
 
 # 側欄分組：(分組名稱, [(slug, 標題, 一句話說明, 首頁卡片說明), ...])
 # 編號依這裡的順序自動產生；文中 [NN 標題](slug.html) 與 [NN](slug.html) 的 NN 也會在建置時改成最新編號。
@@ -51,6 +51,8 @@ GROUPS = [
          '每類的輸入輸出與用途；DreamGen、GR-2、VPP、WMPO、UniPi、Veo 評測。'),
         ('train-vs-inference', '訓練時 vs 推論時', '世界模型實際出現在哪裡、怎麼跟 VLA 接線、數據量與參數量',
          'T1–T4 與 I0–I3 各一張流程圖與連動卡：輸入輸出、世界模型的角色、數據量、參數量。'),
+        ('wm-types-training', '三類世界模型怎麼訓練 VLA', '影片生成、潛空間動力學、JEPA 各一張流程圖、一個實例，用車禍畫面逐步走一遍',
+         'DreamGen、comma.ai、GAIA-2、Think2Drive、VLA-JEPA、Drive-JEPA；車禍畫面的指令、模組、輸出與 VLA 學到什麼。'),
         ('synthetic-data', '具身基礎模型與合成資料', '「融合」是什麼意思、生成影片怎麼把關物理',
          '「機器人版 GPT」指什麼；生成影片的物理問題與四層把關。'),
         ('wm-in-practice', '世界模型代表作的實際應用', 'Cosmos、Wan、Veo、Genie、Dreamer、V-JEPA 被誰用；智平方、Helix、GR00T、GR-2 怎麼用',

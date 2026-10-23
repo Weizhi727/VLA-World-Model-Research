@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>三類世界模型怎麼訓練 VLA · VLA × 世界模型 調研</title>
+<meta name="description" content="影片生成、潛空間動力學、JEPA 各一張流程圖、一個實例，用車禍畫面逐步走一遍">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body data-page="wm-types-training">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead"/>
+    </marker>
+    <marker id="arr-wm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead wm"/>
+    </marker>
+    <marker id="arr-vla" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrhead vla"/>
+    </marker>
+  </defs>
+</svg>
+<header class="top">
+  <button class="menu" aria-label="開啟目錄" aria-expanded="false">☰</button>
+  <a class="brand" href="index.html"><span class="dot vla"></span><span class="dot wm"></span>VLA × 世界模型 調研</a>
+  <button class="theme" aria-label="切換深淺色">◐</button>
+</header>
+<div class="shell">
+  <aside class="side">
+    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li class="grp">入門總覽</li><li><a href="origins.html"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="training.html"><span class="num">02</span><span>訓練、資料與評估</span></a></li><li class="grp">VLA</li><li><a href="vla-architectures.html"><span class="num">03</span><span>VLA 主流架構</span></a></li><li><a href="vla-taxonomy.html"><span class="num">04</span><span>VLA 流派怎麼分</span></a></li><li><a href="in-context-imitation.html"><span class="num">05</span><span>情境內模仿學習</span></a></li><li class="grp">世界模型</li><li><a href="wm-architectures.html"><span class="num">06</span><span>世界模型路線與流派</span></a></li><li><a href="classic-world-models.html"><span class="num">07</span><span>經典世界模型論文精讀</span></a></li><li class="grp">綜合應用：VLA × 世界模型</li><li><a href="world-model-roles.html"><span class="num">08</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">09</span><span>訓練時 vs 推論時</span></a></li><li><a href="wm-types-training.html" class="on"><span class="num">10</span><span>三類世界模型怎麼訓練 VLA</span></a></li><li><a href="synthetic-data.html"><span class="num">11</span><span>具身基礎模型與合成資料</span></a></li><li><a href="wm-in-practice.html"><span class="num">12</span><span>世界模型代表作的實際應用</span></a></li><li><a href="industry.html"><span class="num">13</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html"><span class="num">14</span><span>案例：智平方</span></a></li><li><a href="tesla.html"><span class="num">15</span><span>案例：Tesla</span></a></li><li class="grp">查詢工具</li><li><a href="params.html"><span class="num">16</span><span>參數量總表</span></a></li><li><a href="glossary.html"><span class="num">17</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">18</span><span>參考資料</span></a></li></ul>
+    <p class="side-note">整理日期：2026-10-23<br>面向技術人員的科普整理</p>
+  </aside>
+  <main>
+    <article class="doc">
+      <h1 id="vla">三類世界模型怎麼訓練 VLA：用一個車禍畫面走一遍<a class="headerlink" href="#vla" title="連到此段">#</a></h1>
+<p class="lede">本站把世界模型分成 ①影片生成、②潛空間動力學、③JEPA、④3D 四類。這一頁只回答一件事：真實的 VLA（以及自駕的端到端駕駛模型）在訓練時，是怎麼用前三類世界模型的？每一類給一張流程圖、一個實際用過的例子，再拿同一個「車禍前 2 秒」的畫面逐步走一遍：指令是什麼、進哪個模組、輸出什麼、VLA 最後學到什麼。數字都回到論文或官方頁核對過，查不到的標「未寫」或「未公開」。</p>
+
+<div class="admonition key">
+<p class="admonition-title">重點先講</p>
+<ol>
+<li><strong>三類的差別在「世界模型預測什麼」</strong>：①預測<strong>未來的畫面</strong>（看得到的影片）；②預測<strong>精簡的潛狀態＋獎勵＋會不會出事</strong>；③預測<strong>未來的「表徵」</strong>（一組向量，不畫出畫面）。</li>
+<li><strong>所以給 VLA 的東西也不同</strong>：<ul>
+<li>① 給 <strong>新資料</strong> 和 <strong>練習場</strong>：生成罕見危險場景的影片當訓練資料，或讓 VLA 在生成的世界裡自己開、自己犯錯。</li>
+<li>② 給 <strong>想像中的試錯</strong>：便宜、快，一張 GPU 三天就能讓策略在「腦中」撞幾萬次車、學會避開。</li>
+<li>③ 給 <strong>更會預判的眼睛</strong>：當預訓練或輔助損失，逼 VLA 的視覺特徵先學會「下一秒會怎樣」。</li>
+</ul>
+</li>
+<li><strong>實際例子</strong>：① <a class="ext" href="https://arxiv.org/abs/2505.12705" target="_blank" rel="noopener">DreamGen</a> → GR00T N1／N1.5（機器人）、<a class="ext" href="https://arxiv.org/abs/2504.19077" target="_blank" rel="noopener">comma.ai</a> → openpilot（自駕，已上線）、<a class="ext" href="https://arxiv.org/abs/2503.20523" target="_blank" rel="noopener">GAIA-2</a> 造危險場景；② <a class="ext" href="https://arxiv.org/abs/2402.16720" target="_blank" rel="noopener">Think2Drive</a>（CARLA，「Accident」事故車場景成功率 0.81）；③ <a class="ext" href="https://arxiv.org/abs/2602.10098" target="_blank" rel="noopener">VLA-JEPA</a>（機器人）、<a class="ext" href="https://arxiv.org/abs/2601.22032" target="_blank" rel="noopener">Drive-JEPA</a>（自駕，小鵬合著）。</li>
+<li><strong>車禍畫面的「指令」通常不是「避開車禍」</strong>。自駕模型拿到的是導航指令，例如 <a class="ext" href="https://arxiv.org/abs/2406.15349" target="_blank" rel="noopener">NAVSIM</a> 只給「左轉／直行／右轉」三選一；危險要靠模型自己從畫面看出來。世界模型那一側的「條件」才是重點：可以是文字（GAIA-2 的 CLIP 文字條件）、自車動作（速度、曲率、油門煞車），或乾脆不給（JEPA 自監督）。</li>
+<li><strong>三類幾乎都只在訓練時出現</strong>。訓練完部署到車上或機器人上的只有 VLA／駕駛策略本身（對應 <a href="train-vs-inference.html">09 訓練時 vs 推論時</a> 的 I0）。</li>
+</ol>
+</div>
+<h2 id="_1">一張圖：同一個車禍畫面，送進三種世界模型<a class="headerlink" href="#_1" title="連到此段">#</a></h2>
+<figure class="dg">
+<svg viewBox="0 0 800 380" role="img" aria-label="同一個車禍畫面送進三種世界模型，各自輸出什麼、VLA 學到什麼">
+<text x="285" y="16" text-anchor="middle" class="h">世界模型</text>
+<text x="495" y="16" text-anchor="middle" class="h">輸出</text>
+<text x="705" y="16" text-anchor="middle" class="h">VLA 從中學到</text>
+<rect class="n key" x="10" y="140" width="150" height="100" rx="10"/>
+<text x="85" y="172" text-anchor="middle" class="b">車禍前 2 秒</text>
+<text x="85" y="194" text-anchor="middle" class="s">前視鏡頭畫面</text>
+<text x="85" y="214" text-anchor="middle" class="s">＋導航指令「直行」</text>
+<rect class="n wm" x="200" y="30" width="170" height="96" rx="10"/>
+<text x="285" y="58" text-anchor="middle" class="b wm">① 影片生成</text>
+<text x="285" y="80" text-anchor="middle" class="s">GAIA-2、comma.ai</text>
+<text x="285" y="100" text-anchor="middle" class="s">＋自車動作、文字條件</text>
+<rect class="n" x="410" y="30" width="170" height="96" rx="10"/>
+<text x="495" y="64" text-anchor="middle" class="b">未來幾秒的影片</text>
+<text x="495" y="88" text-anchor="middle" class="s">「撞上」和「及時煞停」</text>
+<text x="495" y="106" text-anchor="middle" class="s">可以各生成一版</text>
+<rect class="n vla" x="620" y="30" width="170" height="96" rx="10"/>
+<text x="705" y="64" text-anchor="middle" class="b vla">新資料＋練習場</text>
+<text x="705" y="88" text-anchor="middle" class="s">罕見危險場景該怎麼開</text>
+<text x="705" y="106" text-anchor="middle" class="s">開偏了怎麼救回來</text>
+<rect class="n wm" x="200" y="142" width="170" height="96" rx="10"/>
+<text x="285" y="170" text-anchor="middle" class="b wm">② 潛空間動力學</text>
+<text x="285" y="192" text-anchor="middle" class="s">Think2Drive（RSSM）</text>
+<text x="285" y="212" text-anchor="middle" class="s">＋策略想試的動作</text>
+<rect class="n" x="410" y="142" width="170" height="96" rx="10"/>
+<text x="495" y="176" text-anchor="middle" class="b">下一個潛狀態</text>
+<text x="495" y="200" text-anchor="middle" class="s">＋獎勵</text>
+<text x="495" y="218" text-anchor="middle" class="s">＋這一步撞了沒</text>
+<rect class="n vla" x="620" y="142" width="170" height="96" rx="10"/>
+<text x="705" y="176" text-anchor="middle" class="b vla">想像中試錯</text>
+<text x="705" y="200" text-anchor="middle" class="s">「直開會撞」→</text>
+<text x="705" y="218" text-anchor="middle" class="s">提早變道或煞車</text>
+<rect class="n wm" x="200" y="254" width="170" height="96" rx="10"/>
+<text x="285" y="282" text-anchor="middle" class="b wm">③ JEPA</text>
+<text x="285" y="304" text-anchor="middle" class="s">Drive-JEPA、VLA-JEPA</text>
+<text x="285" y="324" text-anchor="middle" class="s">把未來遮住，不給動作</text>
+<rect class="n" x="410" y="254" width="170" height="96" rx="10"/>
+<text x="495" y="288" text-anchor="middle" class="b">未來的表徵向量</text>
+<text x="495" y="312" text-anchor="middle" class="s">不畫出畫面</text>
+<text x="495" y="330" text-anchor="middle" class="s">只和真實未來比對</text>
+<rect class="n vla" x="620" y="254" width="170" height="96" rx="10"/>
+<text x="705" y="288" text-anchor="middle" class="b vla">會預判的視覺特徵</text>
+<text x="705" y="312" text-anchor="middle" class="s">前車在減速、距離在縮</text>
+<text x="705" y="330" text-anchor="middle" class="s">再接規劃頭學開車</text>
+<path class="ar" d="M160,190 H180 V78 H198"/>
+<path class="ar" d="M160,190 H198"/>
+<path class="ar" d="M160,190 H180 V302 H198"/>
+<path class="ar wm" d="M370,78 H408"/>
+<path class="ar wm" d="M370,190 H408"/>
+<path class="ar wm" d="M370,302 H408"/>
+<path class="ar vla" d="M580,78 H618"/>
+<path class="ar vla" d="M580,190 H618"/>
+<path class="ar vla" d="M580,302 H618"/>
+<text x="400" y="372" text-anchor="middle" class="s">三條路都只在訓練時跑；部署到車上的只有右邊學好的 VLA／駕駛策略</text>
+</svg>
+<figcaption>左邊是同一筆輸入。①要「條件」才能生成指定的未來；②要「策略想試的動作」才能往下推演；③不需要動作，只把未來遮住讓模型猜表徵。</figcaption>
+</figure>
+
+<div class="admonition note">
+<p class="admonition-title">先對齊：車禍畫面的「指令」到底是什麼</p>
+<ul>
+<li><strong>給 VLA（駕駛模型）的指令</strong>：導航層級的指令，不是「避開事故」。NAVSIM 把導航目標寫成三選一的 one-hot：左轉、直行、右轉（<a class="ext" href="https://arxiv.org/abs/2406.15349" target="_blank" rel="noopener">arXiv:2406.15349</a>）；CARLA 則給要跟的路線。帶自然語言的駕駛 VLA（例如 <a class="ext" href="https://arxiv.org/abs/2402.12289" target="_blank" rel="noopener">DriveVLM</a>、<a class="ext" href="https://arxiv.org/abs/2511.00088" target="_blank" rel="noopener">Alpamayo-R1</a>）也是把導航意圖寫成文字，危險必須從畫面看出來。</li>
+<li><strong>給世界模型的條件</strong>：這才是「指定要生成什麼未來」的地方。①可以給文字（「雨天、前車急煞」）、他車的 3D 框、自車要怎麼開；②給策略想試的動作；③什麼都不給，是自監督。</li>
+<li>下面三段的車禍例子是<strong>把論文公開的介面代入同一個場景</strong>：輸入格式、模組、輸出規格都來自論文，「車禍前 2 秒」這個場景是我們假設的示範。</li>
+</ul>
+</div>
+<h2 id="1-vla">① 影片生成世界模型：給 VLA「新資料」和「練習場」<a class="headerlink" href="#1-vla" title="連到此段">#</a></h2>
+<p>影片世界模型把畫面壓進 VAE／tokenizer 的潛空間，用擴散或 flow matching 生成未來幾秒，最後解碼回看得到的影片。它對 VLA 的用法有兩種：</p>
+<ul>
+<li><strong>資料工廠（T2）</strong>：生成 VLA 沒見過的場景或動作的影片，補上動作標籤，當成新訓練資料。</li>
+<li><strong>練習場（T3）</strong>：讓 VLA 在生成的世界裡自己出動作、看後果，用強化學習或 on-policy 學習更新。</li>
+</ul>
+<h3 id="dreamgen-gr00t-n1">流程圖：DreamGen 怎麼幫 GR00T N1 造資料<a class="headerlink" href="#dreamgen-gr00t-n1" title="連到此段">#</a></h3>
+<figure class="dg">
+<svg viewBox="0 0 800 250" role="img" aria-label="DreamGen：影片世界模型當資料工廠訓練 VLA">
+<rect class="n" x="10" y="20" width="145" height="70" rx="10"/>
+<text x="82" y="50" text-anchor="middle" class="b">少量真機示範</text>
+<text x="82" y="72" text-anchor="middle" class="s">GR1：2,884 條抓放</text>
+<rect class="n key" x="10" y="120" width="145" height="70" rx="10"/>
+<text x="82" y="150" text-anchor="middle" class="b">初始畫面</text>
+<text x="82" y="172" text-anchor="middle" class="s">＋新指令「Pour water」</text>
+<rect class="n wm" x="190" y="20" width="150" height="170" rx="10"/>
+<text x="265" y="80" text-anchor="middle" class="b wm">影片世界模型</text>
+<text x="265" y="104" text-anchor="middle" class="s">WAN2.1</text>
+<text x="265" y="124" text-anchor="middle" class="s">LoRA 微調（rank 4）</text>
+<text x="265" y="144" text-anchor="middle" class="s">先學這台機器人</text>
+<text x="265" y="162" text-anchor="middle" class="s">長什麼樣、怎麼動</text>
+<rect class="n" x="375" y="120" width="120" height="70" rx="10"/>
+<text x="435" y="150" text-anchor="middle" class="b">想像影片</text>
+<text x="435" y="172" text-anchor="middle" class="s">沒有動作標籤</text>
+<rect class="n mix" x="525" y="120" width="120" height="70" rx="10"/>
+<text x="585" y="150" text-anchor="middle" class="b mix">IDM 補動作</text>
+<text x="585" y="172" text-anchor="middle" class="s">兩幀 → 中間動作</text>
+<rect class="n vla" x="675" y="120" width="115" height="70" rx="10"/>
+<text x="732" y="150" text-anchor="middle" class="b vla">VLA 混訓</text>
+<text x="732" y="172" text-anchor="middle" class="s">GR00T N1、π0</text>
+<path class="ar" d="M155,55 H188"/>
+<path class="ar" d="M155,155 H188"/>
+<path class="ar wm" d="M340,155 H373"/>
+<path class="ar" d="M495,155 H523"/>
+<path class="ar vla" d="M645,155 H673"/>
+<text x="400" y="222" text-anchor="middle" class="s">想像影片＋偽動作＝「神經軌跡」，和真機資料 1:1 混在一起訓練 VLA；世界模型本身不上機器人</text>
+</svg>
+<figcaption>依 <a class="ext" href="https://arxiv.org/abs/2505.12705" target="_blank" rel="noopener">DreamGen（arXiv:2505.12705）</a> 與<a class="ext" href="https://research.nvidia.com/labs/gear/dreamgen" target="_blank" rel="noopener">官方頁</a>的四步驟：微調影片模型 → 用初始畫面＋語言指令生成影片 → IDM 或潛在動作模型補動作 → 用神經軌跡訓練策略。「Pour water」是官方頁列出的新行為之一。</figcaption>
+</figure>
+
+<p><strong>實例卡：<a class="ext" href="https://arxiv.org/abs/2505.12705" target="_blank" rel="noopener">DreamGen</a>（NVIDIA，2025）</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>世界模型</td>
+<td><strong>WAN2.1</strong>，LoRA（rank 4）微調；論文沒寫用 1.3B 還是 14B 版</td>
+</tr>
+<tr>
+<td>世界模型的輸入</td>
+<td>一張初始畫面＋一句語言指令，例如官方頁的「Pour water」「Iron shirt」「Water flowers」「Fold Towel」</td>
+</tr>
+<tr>
+<td>世界模型的輸出</td>
+<td>機器人執行該指令的影片，<strong>沒有動作</strong></td>
+</tr>
+<tr>
+<td>動作從哪來</td>
+<td>逆動力學模型（IDM）：看前後兩幀，推回中間的動作 chunk；或用 LAPA 潛在動作</td>
+</tr>
+<tr>
+<td>訓練哪些 VLA</td>
+<td>Diffusion Policy、π0、GR00T N1；神經軌跡沒有本體感覺，訓練時狀態設 0</td>
+</tr>
+<tr>
+<td>數據量</td>
+<td>GR1 人形只用 <strong>2,884 條</strong>抓放示範；RoboCasa 生成 <strong>24 萬條</strong>神經軌跡（1,500 張 L40 跑 54 小時）</td>
+</tr>
+<tr>
+<td>VLA 學到什麼</td>
+<td><strong>示範裡沒有的新動作與新環境</strong>：只用一個抓放任務的遙操作資料，人形機器人學會 <strong>22 種新行為</strong>；進入 GR00T N1.5 預訓練後，12 個新動詞成功率 13.1% → 38.3%（<a class="ext" href="https://research.nvidia.com/labs/gear/gr00t-n1_5/" target="_blank" rel="noopener">GR00T N1.5 官方頁</a>）</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>實例卡：<a class="ext" href="https://arxiv.org/abs/2504.19077" target="_blank" rel="noopener">comma.ai 世界模型</a> → openpilot（自駕，練習場用法，已上線）</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>世界模型</td>
+<td>Stable Diffusion 的影像 VAE（8×8 壓縮、4 通道潛在）＋ <strong>3D DiT</strong>（250M／<strong>500M 主力</strong>／1B），每個時間步用 15 步 Euler 取樣</td>
+</tr>
+<tr>
+<td>輸入</td>
+<td>過去約 <strong>2 秒</strong>、5 Hz、128×256 的前視畫面＋自車位姿；還有「未來錨定」：給 1 秒後的目標位姿，讓預測的軌跡會往正確狀態收斂</td>
+</tr>
+<tr>
+<td>輸出</td>
+<td>下一幀（潛在）＋ Plan Head 預測的 10 秒軌跡</td>
+</tr>
+<tr>
+<td>駕駛策略</td>
+<td>只看相機；FastViT 特徵＋小型 Transformer，輸出想要的<strong>曲率與加速度</strong></td>
+</tr>
+<tr>
+<td>怎麼學</td>
+<td>策略在世界模型裡 <strong>on-policy</strong> 開車：策略出動作 → 世界模型生成下一幀 → 再出動作……；IMPALA 式平行 actor</td>
+</tr>
+<tr>
+<td>數據量</td>
+<td>10 萬／20 萬／40 萬段、每段 1 分鐘的行車資料</td>
+</tr>
+<tr>
+<td>VLA 學到什麼</td>
+<td><strong>開偏了怎麼救回來</strong>（離線模仿學不到）：MetaDrive 車道維持測試 24/24 通過，純離線訓練只有 5/24；變換車道 19/20 vs 8/20</td>
+</tr>
+<tr>
+<td>上線情況</td>
+<td>約 500 位使用者、兩個月、40,026 趟行程，世界模型版策略的啟用里程比例 52.49%，比舊方法 48.10% 高</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="1">車禍畫面走一遍（①）<a class="headerlink" href="#1" title="連到此段">#</a></h3>
+<p>假設手上有一段真實行車記錄：<strong>雨天市區，前車突然急煞，自車來不及停而追撞</strong>。下面用 GAIA-2 的條件介面、comma.ai 的訓練迴圈來走。</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>步驟</th>
+<th>具體內容</th>
+<th>根據</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>0. 原始輸入</strong></td>
+<td>追撞前 <strong>2 秒</strong>的前視畫面。comma.ai 的規格是 5 Hz、128×256，所以是 10 幀；GAIA-2 可吃最多 5 個鏡頭、448×960</td>
+<td><a class="ext" href="https://arxiv.org/abs/2504.19077" target="_blank" rel="noopener">comma.ai</a>、<a class="ext" href="https://arxiv.org/abs/2503.20523" target="_blank" rel="noopener">GAIA-2</a></td>
+</tr>
+<tr>
+<td><strong>1. 指令／條件</strong></td>
+<td>給駕駛模型的指令：導航「直行」。給世界模型的條件：①文字「雨天、傍晚、市區、前車急煞」（CLIP 文字嵌入）；②前車的 3D 框（位置、方向、尺寸、類別），讓它在 1 秒內停住；③<strong>自車動作</strong>：速度與曲率。自車動作做兩版：<strong>A 版</strong>照原紀錄不煞車，<strong>B 版</strong>提早 0.8 秒減速</td>
+<td>GAIA-2 的條件包含自車速度與曲率、他車 3D 框、天氣與時段等中繼資料、CLIP 文字</td>
+</tr>
+<tr>
+<td><strong>2. 進哪個模組</strong></td>
+<td>影像先進 <strong>VAE／tokenizer</strong> 壓成潛在（GAIA-2 時間 8 倍、空間 32 倍壓縮，約 400 倍；comma.ai 用 SD VAE）→ <strong>時空 Transformer 骨幹</strong>（GAIA-2 8.4B、flow matching；comma.ai 500M DiT）一邊看條件一邊生成未來的潛在 → <strong>解碼器</strong>還原成影片</td>
+<td>GAIA-2、comma.ai</td>
+</tr>
+<tr>
+<td><strong>3. 輸出</strong></td>
+<td>兩段未來數秒的影片：<strong>A 版</strong>看到車頭越來越近、撞上；<strong>B 版</strong>看到距離縮小但停住。comma.ai 的模型還會輸出一條 10 秒的軌跡</td>
+<td>同上</td>
+</tr>
+<tr>
+<td><strong>4. 怎麼變成 VLA 的訓練訊號</strong></td>
+<td><strong>資料工廠</strong>：B 版影片配上已知的自車動作（減速曲線），就是一筆「看到這種畫面 → 該這樣開」的新訓練樣本，可以大量改天氣、車型、距離。<strong>練習場</strong>：不預先指定動作，改成讓駕駛策略自己出曲率與加速度，世界模型生成下一幀再交回策略；開壞了，下一幀就是更糟的畫面。<strong>考官</strong>：同一場景生成上百種變化，數策略撞了幾次</td>
+<td>DreamGen（資料）、comma.ai（on-policy）、GAIA-2 官方定位：用可控、可重複的合成場景補真實資料並壓力測試（<a class="ext" href="https://www.autonomousvehicleinternational.com/news/ai-sensor-fusion/wayve-launches-gaia-2-video-generative-world-model-for-synthetic-data-generation.html" target="_blank" rel="noopener">Wayve 新聞稿報導</a>）</td>
+</tr>
+<tr>
+<td><strong>5. VLA 學到什麼</strong></td>
+<td>①<strong>罕見危險場景的對應</strong>：真實資料裡追撞極少，世界模型能把一個事故片段擴寫成很多變體；②<strong>從自己的錯誤中恢復</strong>：on-policy 時會遇到「自己造成的」偏離狀態，學會拉回來；③<strong>因果感</strong>：前車煞燈亮、距離縮短 → 自己要減速</td>
+<td>Wayve 引用美國資料：平均約每 53.5 萬英里才一次事故，所以靠實車收集不到</td>
+</tr>
+</tbody>
+</table></div>
+<div class="admonition warn">
+<p class="admonition-title">影片世界模型的代價</p>
+<p>生成的影片<strong>物理不一定對</strong>（車可能穿模、煞車距離不合理），VLA 可能學到假的規律。comma.ai 為此加了約 700 bits 的資訊瓶頸，避免策略去鑽模擬器瑕疵的漏洞；更多把關方法見 <a href="synthetic-data.html">11 具身基礎模型與合成資料</a>。生成也很貴：GAIA-2 訓練用了 256 張 H100。</p>
+</div>
+<h2 id="2-vla">② 潛空間動力學世界模型：讓 VLA「在腦中試錯」<a class="headerlink" href="#2-vla" title="連到此段">#</a></h2>
+<p>這一類（Dreamer、RSSM、TD-MPC2）不追求畫得像，只學一個<strong>精簡的潛狀態</strong>怎麼隨動作變化，外加預測<strong>獎勵</strong>和<strong>這一回合是否結束</strong>（例如撞車）。因為全在小向量上算，想像一步非常便宜，適合大量做強化學習。</p>
+<h3 id="think2drive">流程圖：Think2Drive 怎麼在潛空間學開車<a class="headerlink" href="#think2drive" title="連到此段">#</a></h3>
+<figure class="dg">
+<svg viewBox="0 0 800 270" role="img" aria-label="Think2Drive：在潛空間世界模型裡想像並訓練駕駛策略">
+<text x="400" y="16" text-anchor="middle" class="s">部署到模擬器收更多真實互動（佔少數）</text>
+<path class="ar dash" d="M722,40 V24 H82 V48"/>
+<rect class="n" x="10" y="50" width="145" height="70" rx="10"/>
+<text x="82" y="80" text-anchor="middle" class="b">CARLA 模擬器</text>
+<text x="82" y="102" text-anchor="middle" class="s">39 種情境</text>
+<rect class="n" x="10" y="170" width="145" height="70" rx="10"/>
+<text x="82" y="200" text-anchor="middle" class="b">重放緩衝區</text>
+<text x="82" y="222" text-anchor="middle" class="s">撞車片段優先重放</text>
+<rect class="n wm" x="190" y="40" width="255" height="210" rx="10"/>
+<text x="317" y="66" text-anchor="middle" class="b wm">潛空間世界模型（RSSM）</text>
+<text x="205" y="94" class="s">編碼器：BEV → 潛狀態 z</text>
+<text x="205" y="118" class="s">序列模型（GRU）：記憶 h</text>
+<text x="205" y="142" class="s">動力學：(h, z, 動作) → 下一個 z</text>
+<text x="205" y="166" class="s">獎勵頭 → r</text>
+<text x="205" y="190" class="s">結束頭 → 這一步撞了沒</text>
+<text x="205" y="214" class="s">解碼器：重建 BEV（只幫忙學表徵）</text>
+<rect class="n key" x="480" y="40" width="140" height="210" rx="10"/>
+<text x="550" y="120" text-anchor="middle" class="b key">想像 15 步</text>
+<text x="550" y="146" text-anchor="middle" class="s">不碰模擬器</text>
+<text x="550" y="168" text-anchor="middle" class="s">全在潛空間跑</text>
+<rect class="n vla" x="655" y="40" width="135" height="210" rx="10"/>
+<text x="722" y="120" text-anchor="middle" class="b vla">駕駛策略</text>
+<text x="722" y="146" text-anchor="middle" class="s">actor-critic</text>
+<text x="722" y="168" text-anchor="middle" class="s">30 種離散動作</text>
+<text x="722" y="190" text-anchor="middle" class="s">油門／煞車／方向</text>
+<path class="ar" d="M82,120 V168"/>
+<path class="ar" d="M155,205 H188"/>
+<path class="ar wm" d="M445,145 H478"/>
+<path class="ar vla" d="M620,130 H653"/>
+<path class="ar vla dash" d="M653,170 H622"/>
+<text x="637" y="264" text-anchor="middle" class="s">策略出動作 ⇄ 世界模型推演</text>
+</svg>
+<figcaption>依 <a class="ext" href="https://arxiv.org/abs/2402.16720" target="_blank" rel="noopener">Think2Drive（ECCV 2024，arXiv:2402.16720）</a>：DreamerV3 式 RSSM；策略只在潛空間想像中學，想像長度 15 步，之後的回報交給 critic 估；撞車等「結束」片段優先重放；單張 A6000 約 3 天。輸入規格見<a class="ext" href="https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/06129-supp.pdf" target="_blank" rel="noopener">補充材料</a>。</figcaption>
+</figure>
+
+<p><strong>實例卡：<a class="ext" href="https://arxiv.org/abs/2402.16720" target="_blank" rel="noopener">Think2Drive</a>（上海交大等，ECCV 2024）</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>世界模型</td>
+<td>DreamerV3 式 <strong>RSSM</strong>：編碼器、GRU 序列模型、動力學預測器，加上獎勵頭、結束頭、重建解碼器；參數量論文未寫</td>
+</tr>
+<tr>
+<td>輸入</td>
+<td><strong>不是相機畫面</strong>，而是特權資訊畫成的鳥瞰圖：<strong>128×128、34 通道</strong>（道路、路線、自車、車道線、他車、行人、緊急車輛、障礙物、紅綠燈、停止標誌），取過去 4 個時間點</td>
+</tr>
+<tr>
+<td>動作</td>
+<td><strong>30 種離散動作</strong>，每種是油門、煞車、方向盤的一個組合</td>
+</tr>
+<tr>
+<td>怎麼學</td>
+<td>世界模型用真實互動資料學；策略（actor-critic）只在想像中學，想像 15 步；撞車等結束片段優先重放；從簡單情境逐步加難</td>
+</tr>
+<tr>
+<td>算力</td>
+<td>單張 A6000 約 <strong>3 天</strong></td>
+</tr>
+<tr>
+<td>VLA 學到什麼</td>
+<td>39 種 CARLA v2 情境的處理方式：<strong>Accident（多台事故車擋住部分車道，必須變換車道）成功率 0.81</strong>、AccidentTwoWays 0.61、HardBrake（前車突然減速）1.0、HighwayCutIn 1.0；CornerCaseRepository 駕駛分數 <strong>83.8</strong>，無模型 RL 基線 Roach 只有 57.5</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2">車禍畫面走一遍（②）<a class="headerlink" href="#2" title="連到此段">#</a></h3>
+<p>場景換成 CARLA 的 <strong>Accident 情境</strong>：前方車道上停著幾台事故車，自車必須變換車道繞過去（<a class="ext" href="https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/06129-supp.pdf" target="_blank" rel="noopener">Think2Drive 補充材料</a>的定義）。</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>步驟</th>
+<th>具體內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>0. 原始輸入</strong></td>
+<td>不是照片，而是 <strong>128×128×34 的鳥瞰圖</strong>：一層畫道路、一層畫要走的路線、一層畫自車、幾層畫事故車（障礙物）的位置與動態，取過去 4 個時間點</td>
+</tr>
+<tr>
+<td><strong>1. 指令／條件</strong></td>
+<td>沒有文字指令；「目標」由兩樣東西表達：鳥瞰圖裡的<strong>路線層</strong>（要往哪裡開）和<strong>獎勵</strong>（沿路線前進、不撞、不偏離）。世界模型的條件是<strong>策略想試的動作</strong>，例如「油門 0.5、方向 0」</td>
+</tr>
+<tr>
+<td><strong>2. 進哪個模組</strong></td>
+<td><strong>編碼器</strong>把鳥瞰圖壓成潛狀態 z → <strong>GRU 序列模型</strong>更新記憶 h → <strong>動力學預測器</strong>由 (h, z, 動作) 推出下一個 z → <strong>獎勵頭</strong>給分、<strong>結束頭</strong>判斷這一步會不會撞上</td>
+</tr>
+<tr>
+<td><strong>3. 輸出</strong></td>
+<td>每想像一步得到：下一個潛狀態、預測獎勵、預測「回合結束」的機率。連續想像 15 步，就是一條「如果我一直直開會怎樣」的推演</td>
+</tr>
+<tr>
+<td><strong>4. 怎麼變成 VLA 的訓練訊號</strong></td>
+<td>例如策略試「直開」：假設想像到第 8 步，結束頭說撞了，之後沒有獎勵 → 回報很低。再試「打方向變道」：15 步都沒結束、沿路線前進 → 回報高。critic 學會估每個潛狀態的價值，actor 往高回報的動作更新。<strong>整個過程不用真的撞一次車</strong></td>
+</tr>
+<tr>
+<td><strong>5. VLA 學到什麼</strong></td>
+<td>一條「看到前方有事故車 → 提早減速、確認旁邊車道 → 變道」的<strong>決策策略</strong>。它學的是<strong>後果</strong>（撞了就結束），不是模仿某個人的開法</td>
+</tr>
+</tbody>
+</table></div>
+<div class="admonition wm">
+<p class="admonition-title">② 在大型 VLA 上還少見，原因與現況</p>
+<ul>
+<li><strong>原因</strong>：RSSM 這類模型要從頭在單一任務上學，吃不到網路影片的常識，也很難處理高解析度相機畫面；Think2Drive 就是靠特權鳥瞰圖繞開這個問題。</li>
+<li><strong>大型 VLA 做「想像中 RL」時，目前多半用 ① 的影片世界模型</strong>：<a class="ext" href="https://arxiv.org/abs/2511.09515" target="_blank" rel="noopener">WMPO</a>（OpenSora 改的像素級影片擴散）、<a class="ext" href="https://arxiv.org/abs/2510.00406" target="_blank" rel="noopener">VLA-RFT</a>（138M 自回歸）、<a class="ext" href="https://arxiv.org/abs/2510.10125" target="_blank" rel="noopener">Ctrl-World</a>（SVD 初始化）。細節見 <a href="train-vs-inference.html">09 訓練時 vs 推論時</a> 的 T3。</li>
+<li><strong>潛空間 RL 正在往駕駛與 VLA 擴散</strong>：<a class="ext" href="https://arxiv.org/abs/2603.24587" target="_blank" rel="noopener">DreamerAD（arXiv:2603.24587）</a> 在潛空間預測下一幀、用 GRPO 做 RL，NAVSIM v2 EPDMS 87.7；<a class="ext" href="https://arxiv.org/abs/2609.24033" target="_blank" rel="noopener">Imagine-RL（arXiv:2609.24033）</a> 凍結 π0，只在不重建像素的潛空間世界模型裡訓練一個小 actor，對 π0 平均相對提升約 60%。</li>
+<li>機器人上，Dreamer 式模型目前主要出現在 <a class="ext" href="https://arxiv.org/abs/2206.14176" target="_blank" rel="noopener">DayDreamer</a>（真機直接學，非 VLA）和 <a class="ext" href="https://arxiv.org/abs/2502.01828" target="_blank" rel="noopener">FOREWARN</a>（推論時預演候選動作，再由 VLM 挑）。</li>
+</ul>
+</div>
+<h2 id="3-jepa-vla">③ JEPA 世界模型：給 VLA「更會預判的眼睛」<a class="headerlink" href="#3-jepa-vla" title="連到此段">#</a></h2>
+<p>JEPA 也預測未來，但<strong>只在表徵空間比對</strong>：把未來遮起來，讓模型猜「未來的表徵應該是什麼向量」，再和老師編碼器看真實未來後給出的向量比對。它不畫畫面、不需要動作標籤，所以能吃大量<strong>沒有動作的影片</strong>（人類影片、行車影片）。對 VLA 的用法主要是<strong>預訓練或輔助損失（T1）</strong>。</p>
+<h3 id="vla-jepa-jepa-vla">流程圖：VLA-JEPA 怎麼把 JEPA 接進 VLA 訓練<a class="headerlink" href="#vla-jepa-jepa-vla" title="連到此段">#</a></h3>
+<figure class="dg">
+<svg viewBox="0 0 800 280" role="img" aria-label="VLA-JEPA：用 JEPA 目標預訓練 VLA">
+<text x="490" y="14" text-anchor="middle" class="s">梯度只回傳給學生（VLM＋預測器），老師凍結</text>
+<path class="ar dash" d="M700,100 V22 H280 V38"/>
+<rect class="n key" x="10" y="40" width="150" height="80" rx="10"/>
+<text x="85" y="72" text-anchor="middle" class="b">當前畫面 t0</text>
+<text x="85" y="96" text-anchor="middle" class="s">＋語言指令</text>
+<rect class="n" x="10" y="170" width="150" height="80" rx="10"/>
+<text x="85" y="202" text-anchor="middle" class="b">真實的未來幀</text>
+<text x="85" y="226" text-anchor="middle" class="s">只給老師看</text>
+<rect class="n vla" x="195" y="40" width="170" height="100" rx="10"/>
+<text x="280" y="68" text-anchor="middle" class="b vla">VLM 學生</text>
+<text x="280" y="90" text-anchor="middle" class="s">Qwen3-VL-2B</text>
+<text x="280" y="110" text-anchor="middle" class="s">＋潛在動作 token</text>
+<text x="280" y="128" text-anchor="middle" class="s">→ 另接 flow matching 動作頭</text>
+<rect class="n wm" x="400" y="40" width="170" height="100" rx="10"/>
+<text x="485" y="74" text-anchor="middle" class="b wm">預測器</text>
+<text x="485" y="96" text-anchor="middle" class="s">自回歸 Transformer</text>
+<text x="485" y="116" text-anchor="middle" class="s">→ 預測未來的表徵</text>
+<rect class="n" x="195" y="170" width="170" height="80" rx="10"/>
+<text x="280" y="202" text-anchor="middle" class="b">凍結的 V-JEPA 2</text>
+<text x="280" y="226" text-anchor="middle" class="s">老師 → 目標表徵</text>
+<rect class="n key" x="610" y="100" width="180" height="90" rx="10"/>
+<text x="700" y="136" text-anchor="middle" class="b key">潛空間回歸損失</text>
+<text x="700" y="160" text-anchor="middle" class="s">預測向量 vs 目標向量</text>
+<path class="ar" d="M160,80 H193"/>
+<path class="ar vla" d="M365,90 H398"/>
+<path class="ar wm" d="M570,90 H590 V130 H608"/>
+<path class="ar" d="M160,210 H193"/>
+<path class="ar" d="M365,210 H590 V160 H608"/>
+</svg>
+<figcaption>依 <a class="ext" href="https://arxiv.org/abs/2602.10098" target="_blank" rel="noopener">VLA-JEPA（arXiv:2602.10098）</a>：學生只看當前畫面與指令，從不看未來；老師是凍結的 V-JEPA 2 編碼器。人類影片（沒有動作）只算這條潛空間損失；機器人資料再加上 flow matching 動作損失。整張圖不生成任何畫面。</figcaption>
+</figure>
+
+<p><strong>實例卡：<a class="ext" href="https://arxiv.org/abs/2602.10098" target="_blank" rel="noopener">VLA-JEPA</a>（中國科大等，2026-02）</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VLA 骨幹</td>
+<td><strong>Qwen3-VL-2B</strong>；動作頭是 conditional flow matching</td>
+</tr>
+<tr>
+<td>世界模型的角色</td>
+<td>老師：<strong>凍結的 V-JEPA 2 編碼器</strong>把真實未來幀編成目標向量；學生的預測器（自回歸 Transformer）要從「當前畫面＋潛在動作 token」猜出這些向量</td>
+</tr>
+<tr>
+<td>預訓練資料</td>
+<td>人類影片 <strong>Something-Something-v2 約 22 萬段</strong>（沒有動作，只算世界模型損失）＋ 機器人 <strong>DROID 約 7.6 萬條</strong>（加算動作損失）</td>
+</tr>
+<tr>
+<td>微調資料</td>
+<td>LIBERO 約 2,000 條示範；SimplerEnv 用 Fractal 與 BridgeV2；真機 3 個抓放任務共 100 條示範</td>
+</tr>
+<tr>
+<td>成果</td>
+<td>LIBERO 平均 <strong>97.2%</strong>（π0.5 96.9%、OpenVLA-OFT 97.1%）；LIBERO-Plus（加干擾的強韌性測試）<strong>79.5%</strong>，拿掉人類影片只剩 62.9%</td>
+</tr>
+<tr>
+<td>VLA 學到什麼</td>
+<td><strong>從沒有動作的人類影片學到「世界接下來會怎樣」</strong>，在畫面被干擾時特別有用（LIBERO-Plus 多 16.6 個百分點）</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>實例卡：<a class="ext" href="https://arxiv.org/abs/2601.22032" target="_blank" rel="noopener">Drive-JEPA</a>（Virginia Tech、小鵬汽車等，2026-01）</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>世界模型</td>
+<td>從 V-JEPA 2 權重出發的 <strong>ViT-L 編碼器（307M）</strong>，再用 V-JEPA 目標在行車影片上繼續預訓練</td>
+</tr>
+<tr>
+<td>預訓練資料</td>
+<td>約 <strong>208 小時</strong>前視行車影片（CoVLA、DrivingDojo、OpenScene），每段 8 幀、2 Hz、512×256；8 張 H800 約 3 天</td>
+</tr>
+<tr>
+<td>接上的駕駛模型</td>
+<td>規劃器以編碼器特徵為基礎，產生 32 條候選軌跡並逐步修正（完整版另用 BEV 特徵）；訓練目標除了人類軌跡，還有模擬器評分後的多條「老師軌跡」</td>
+</tr>
+<tr>
+<td>成果</td>
+<td>NAVSIM v1 <strong>93.3 PDMS</strong>、v2 <strong>87.8 EPDMS</strong>；只用影片特徵、不用感知模組的版本 89.0 PDMS，比先前最佳（Epona 86.1）高約 3 分</td>
+</tr>
+<tr>
+<td>VLA 學到什麼</td>
+<td><strong>從沒有標註的行車影片學到車流怎麼動</strong>，讓後面的規劃器少靠人工標註的感知結果</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3">車禍畫面走一遍（③）<a class="headerlink" href="#3" title="連到此段">#</a></h3>
+<p>同一段「雨天前車急煞、自車追撞」的影片，這次用 Drive-JEPA 的格式（8 幀、2 Hz，約 4 秒）。</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>步驟</th>
+<th>具體內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>0. 原始輸入</strong></td>
+<td>8 幀前視畫面（512×256）。前 4 幀是「前車煞燈亮、距離縮短」，後 4 幀是「撞上」</td>
+</tr>
+<tr>
+<td><strong>1. 指令／條件</strong></td>
+<td><strong>預訓練階段不需要任何指令或動作標籤</strong>，這是 JEPA 能吃大量影片的原因。只有在接 VLA 做下游訓練時，才會加上導航指令「直行」（VLA-JEPA 的機器人版則是語言指令）</td>
+</tr>
+<tr>
+<td><strong>2. 進哪個模組</strong></td>
+<td>先<strong>遮罩</strong>：把後 4 幀（或影片中的時空區塊）遮掉 → <strong>學生編碼器</strong>只看沒遮的部分 → <strong>預測器</strong>猜被遮部分的表徵；同時<strong>老師編碼器</strong>（EMA 或凍結）看完整影片，給出被遮部分的真實表徵</td>
+</tr>
+<tr>
+<td><strong>3. 輸出</strong></td>
+<td><strong>不是影片</strong>，而是一組向量：每個被遮的影像小塊一個（ViT-L 每個向量 1,024 維）。模型不需要畫出撞擊瞬間的碎玻璃，只要猜對「這一塊的語意與運動是什麼」</td>
+</tr>
+<tr>
+<td><strong>4. 怎麼變成 VLA 的訓練訊號</strong></td>
+<td>預測向量與老師向量的差距就是損失，梯度回傳到學生編碼器。要猜對「後 4 幀前車會停在自車正前方、距離變 0」，編碼器<strong>被迫把前車的相對速度、煞燈、距離編進特徵裡</strong>。預訓練完，規劃器接在這個編碼器上，用人類軌跡和模擬器評分的軌跡學開車</td>
+</tr>
+<tr>
+<td><strong>5. VLA 學到什麼</strong></td>
+<td>一雙<strong>會預判的眼睛</strong>：特徵裡已經帶有「前車在減速、快撞了」的訊號，規劃頭更容易學會提早減速。雨滴、反光這類<strong>無法預測的細節會被自動忽略</strong>，因為猜它們沒有好處</td>
+</tr>
+</tbody>
+</table></div>
+<div class="admonition warn">
+<p class="admonition-title">JEPA 的限制</p>
+<p>JEPA 學到的是<strong>特徵</strong>，不是可以操控的模擬器：它不能幫你生成「如果我提早煞車會怎樣」的新影片，也不能當練習場讓策略試錯。要做反事實推演，得在 JEPA 表徵上再訓一個「以動作為條件」的預測器，例如 <a class="ext" href="https://arxiv.org/abs/2506.09985" target="_blank" rel="noopener">V-JEPA 2-AC</a>（300M 預測器，只用 62 小時 DROID 機器人影片），但它目前用在推論時的規劃（I3），不是拿來訓練 VLA。</p>
+</div>
+<h2 id="4-3d4d">④ 3D／4D 世界模型（簡述）<a class="headerlink" href="#4-3d4d" title="連到此段">#</a></h2>
+<p>這一類預測未來的 3D 佔據（occupancy）、點雲或高斯場景，例如 <a class="ext" href="https://arxiv.org/abs/2311.16038" target="_blank" rel="noopener">OccWorld（arXiv:2311.16038）</a> 在 3D 佔據空間裡同時預測場景演變與自車軌跡。自駕上常見於<strong>同時學預測與規劃</strong>（類似 T1）；機器人上多用於造多視角一致的模擬場景。用車禍畫面來說，它輸出的不是影片，而是「下一秒哪些立體格子會被前車佔住」，VLA 從中學到的是<strong>幾何上的碰撞風險</strong>。</p>
+<h2 id="_2">三類並排：同一個問題問六次<a class="headerlink" href="#_2" title="連到此段">#</a></h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th></th>
+<th>① 影片生成</th>
+<th>② 潛空間動力學</th>
+<th>③ JEPA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>世界模型預測什麼</td>
+<td>未來的畫面（像素或影片潛在，再解碼）</td>
+<td>精簡潛狀態＋獎勵＋會不會結束</td>
+<td>未來的表徵向量，不重建畫面</td>
+</tr>
+<tr>
+<td>車禍畫面進去後輸出</td>
+<td>「撞上」與「及時煞停」兩段影片</td>
+<td>每一步的潛狀態、分數、撞了沒</td>
+<td>被遮住那幾秒的特徵向量</td>
+</tr>
+<tr>
+<td>需要什麼條件</td>
+<td>文字、他車框、自車動作</td>
+<td>策略想試的動作</td>
+<td>都不用（自監督）</td>
+</tr>
+<tr>
+<td>給 VLA 的東西</td>
+<td>新資料（T2）、練習場（T3）、考官（T4）</td>
+<td>想像中的回報，用來做 RL（T3）</td>
+<td>預訓練或輔助損失的梯度（T1）</td>
+</tr>
+<tr>
+<td>VLA 學到什麼</td>
+<td>罕見危險場景的開法、偏離後怎麼救</td>
+<td>依「後果」做決策：提早變道、煞車</td>
+<td>會預判的視覺特徵</td>
+</tr>
+<tr>
+<td>實際例子</td>
+<td>DreamGen → GR00T N1／N1.5；comma.ai → openpilot；GAIA-2</td>
+<td>Think2Drive；DreamerAD；DayDreamer</td>
+<td>VLA-JEPA；Drive-JEPA；JEPA-VLA</td>
+</tr>
+<tr>
+<td>世界模型規模</td>
+<td>大：GAIA-2 8.4B、comma.ai 500M、Wan 2.1 1.3B／14B</td>
+<td>小且快：DreamerV3 12M–400M、單張 GPU 3 天</td>
+<td>中：V-JEPA 2 編碼器 300M–1B</td>
+</tr>
+<tr>
+<td>主要代價</td>
+<td>貴、慢、物理可能錯</td>
+<td>吃不到網路常識，難處理真實相機畫面</td>
+<td>只給特徵，不能當模擬器</td>
+</tr>
+<tr>
+<td>推論時在嗎</td>
+<td>通常不在（I1、I2 是例外）</td>
+<td>不在</td>
+<td>編碼器通常留下當 VLA 的眼睛；預測器拿掉</td>
+</tr>
+</tbody>
+</table></div>
+<div class="admonition key">
+<p class="admonition-title">怎麼選</p>
+<ul>
+<li><strong>資料不夠、危險場景收不到</strong> → ① 當資料工廠（DreamGen、GAIA-2）。</li>
+<li><strong>想讓策略從後果學、又不能真撞</strong> → 高解析度相機用 ① 當練習場（comma.ai、WMPO）；有結構化輸入（鳥瞰圖、狀態）可用 ② 走快速 RL（Think2Drive）。</li>
+<li><strong>有大量沒標註的影片，想讓 VLA 的眼睛更懂動態</strong> → ③ 當預訓練目標（VLA-JEPA、Drive-JEPA）。</li>
+<li>三者不互斥：一個團隊可以用 ③ 預訓練編碼器、① 造資料、再用 ① 或 ② 做 RL。Tesla 的 Policy NN＋World Sim NN 閉環就是 ① 同時當考官與練習場的例子，見 <a href="tesla.html">案例：Tesla</a>。</li>
+</ul>
+</div>
+<h2 id="_3">參考資料<a class="headerlink" href="#_3" title="連到此段">#</a></h2>
+<ul>
+<li>① 影片生成：<a class="ext" href="https://arxiv.org/abs/2505.12705" target="_blank" rel="noopener">DreamGen（arXiv:2505.12705）</a>、<a class="ext" href="https://research.nvidia.com/labs/gear/dreamgen" target="_blank" rel="noopener">DreamGen 官方頁</a>、<a class="ext" href="https://research.nvidia.com/labs/gear/gr00t-n1_5/" target="_blank" rel="noopener">GR00T N1.5 官方頁</a>、<a class="ext" href="https://arxiv.org/abs/2504.19077" target="_blank" rel="noopener">comma.ai：Learning to Drive from a World Model（arXiv:2504.19077）</a>、<a class="ext" href="https://arxiv.org/abs/2503.20523" target="_blank" rel="noopener">GAIA-2（arXiv:2503.20523）</a>、<a class="ext" href="https://www.autonomousvehicleinternational.com/news/ai-sensor-fusion/wayve-launches-gaia-2-video-generative-world-model-for-synthetic-data-generation.html" target="_blank" rel="noopener">Wayve GAIA-2 發布報導</a>、<a class="ext" href="https://arxiv.org/abs/2511.09515" target="_blank" rel="noopener">WMPO（arXiv:2511.09515）</a>、<a class="ext" href="https://arxiv.org/abs/2510.00406" target="_blank" rel="noopener">VLA-RFT（arXiv:2510.00406）</a>、<a class="ext" href="https://arxiv.org/abs/2510.10125" target="_blank" rel="noopener">Ctrl-World（arXiv:2510.10125）</a></li>
+<li>② 潛空間動力學：<a class="ext" href="https://arxiv.org/abs/2402.16720" target="_blank" rel="noopener">Think2Drive（arXiv:2402.16720）</a>、<a class="ext" href="https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/06129-supp.pdf" target="_blank" rel="noopener">Think2Drive 補充材料</a>、<a class="ext" href="https://arxiv.org/abs/2301.04104" target="_blank" rel="noopener">DreamerV3（arXiv:2301.04104）</a>、<a class="ext" href="https://arxiv.org/abs/2603.24587" target="_blank" rel="noopener">DreamerAD（arXiv:2603.24587）</a>、<a class="ext" href="https://arxiv.org/abs/2609.24033" target="_blank" rel="noopener">Imagine-RL（arXiv:2609.24033）</a>、<a class="ext" href="https://arxiv.org/abs/2206.14176" target="_blank" rel="noopener">DayDreamer（arXiv:2206.14176）</a>、<a class="ext" href="https://arxiv.org/abs/2502.01828" target="_blank" rel="noopener">FOREWARN（arXiv:2502.01828）</a></li>
+<li>③ JEPA：<a class="ext" href="https://arxiv.org/abs/2602.10098" target="_blank" rel="noopener">VLA-JEPA（arXiv:2602.10098）</a>、<a class="ext" href="https://arxiv.org/abs/2601.22032" target="_blank" rel="noopener">Drive-JEPA（arXiv:2601.22032）</a>、<a class="ext" href="https://arxiv.org/abs/2506.09985" target="_blank" rel="noopener">V-JEPA 2（arXiv:2506.09985）</a>、<a class="ext" href="https://arxiv.org/abs/2602.11832" target="_blank" rel="noopener">JEPA-VLA（arXiv:2602.11832）</a></li>
+<li>指令格式：<a class="ext" href="https://arxiv.org/abs/2406.15349" target="_blank" rel="noopener">NAVSIM（arXiv:2406.15349）</a></li>
+<li>④ 3D：<a class="ext" href="https://arxiv.org/abs/2311.16038" target="_blank" rel="noopener">OccWorld（arXiv:2311.16038）</a></li>
+</ul>
+<!-- params:auto -->
+
+<h2 id="_4">本頁提到的模型參數量<a class="headerlink" href="#_4" title="連到此段">#</a></h2>
+<p>只列官方論文、官方頁或官方模型卡寫明的數字；查不到的標「未公開」，不推測。完整清單見 <a href="params.html">參數量總表</a>。</p>
+<p><strong>VLA</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>參數量</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Diffusion Policy</td>
+<td>論文有多種設定，無單一官方數字</td>
+<td><a class="ext" href="https://arxiv.org/abs/2303.04137" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>OpenVLA-OFT</td>
+<td>論文未另列（以 OpenVLA 7B 為底）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2502.19645" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>LAPA</td>
+<td>7B（LWM-Chat-1M）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2410.11758" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>π0</td>
+<td>約 3.3B（PaliGemma 3B + 動作專家約 300M）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2410.24164" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>π0.5</td>
+<td>VLM 2B（PaliGemma）+ 動作專家 300M；總數論文未寫</td>
+<td><a class="ext" href="https://arxiv.org/abs/2504.16054" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR00T N1</td>
+<td>約 2.2B（Eagle-2 VLM 1.34B + DiT 動作頭）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.14734" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GR00T N1.5</td>
+<td>3B（官方權重 GR00T-N1.5-3B）</td>
+<td><a class="ext" href="https://huggingface.co/nvidia/GR00T-N1.5-3B" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>DriveVLM</td>
+<td>9.6B（Qwen-VL）；車端版選用 4B 以下模型</td>
+<td><a class="ext" href="https://arxiv.org/abs/2402.12289" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Tesla FSD（v12–v14.3）</td>
+<td>未公開（Musk 2025-08：新模型約前一版 10 倍參數；媒體稱 v14.3 約 1B，非官方）</td>
+<td><a class="ext" href="https://www.notateslaapp.com/news/2999/tesla-fsds-10x-parameter-update-many-new-features-release-in-september" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>VLA-JEPA</td>
+<td>VLM 為 Qwen3-VL-2B；總數論文未寫</td>
+<td><a class="ext" href="https://arxiv.org/abs/2602.10098" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Drive-JEPA</td>
+<td>編碼器 ViT-L 307M；規劃器未另列</td>
+<td><a class="ext" href="https://arxiv.org/abs/2601.22032" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Think2Drive 駕駛策略</td>
+<td>論文未寫</td>
+<td><a class="ext" href="https://arxiv.org/abs/2402.16720" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>DreamerAD</td>
+<td>論文未寫（以 Epona 為底）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2603.24587" target="_blank" rel="noopener">來源</a></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>世界模型</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>參數量</th>
+<th>來源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DayDreamer</td>
+<td>論文未給總參數</td>
+<td><a class="ext" href="https://arxiv.org/abs/2206.14176" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>DreamerV3</td>
+<td>12M–400M（規模實驗）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2301.04104" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>TD-MPC2</td>
+<td>最大 317M</td>
+<td><a class="ext" href="https://arxiv.org/abs/2310.16828" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>FOREWARN</td>
+<td>世界模型未公開；挑選用 VLM 為 Llama-3.2-11B-Vision</td>
+<td><a class="ext" href="https://arxiv.org/abs/2502.01828" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>V-JEPA 2</td>
+<td>編碼器 300M / 600M / 1B；V-JEPA 2-AC 預測器 300M</td>
+<td><a class="ext" href="https://github.com/facebookresearch/vjepa2" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>GAIA-2</td>
+<td>世界模型 8.4B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.20523" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Wan 2.1</td>
+<td>1.3B、14B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2503.20314" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Stable Video Diffusion</td>
+<td>1.5B（依 VPP 論文）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2412.14803" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>comma.ai 世界模型</td>
+<td>250M / 500M（主力）/ 1B</td>
+<td><a class="ext" href="https://arxiv.org/abs/2504.19077" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Ctrl-World</td>
+<td>1.5B（SVD 初始化）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2510.10125" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>VLA-RFT 世界模型</td>
+<td>138M</td>
+<td><a class="ext" href="https://arxiv.org/abs/2510.00406" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>WMPO 世界模型</td>
+<td>未公開（OpenSora 骨幹）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2511.09515" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>小鵬世界基座模型</td>
+<td>72B（官方於 X9 發布會表示研發中）</td>
+<td><a class="ext" href="https://www.36kr.com/p/3463098292770179" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Tesla World Sim NN（神經世界模擬器）</td>
+<td>未公開</td>
+<td><a class="ext" href="https://www.humanoidsdaily.com/news/tesla-ai-chief-details-unified-world-simulator-for-fsd-and-optimus" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>OccWorld</td>
+<td>論文未寫</td>
+<td><a class="ext" href="https://arxiv.org/abs/2311.16038" target="_blank" rel="noopener">來源</a></td>
+</tr>
+</tbody>
+</table></div>
+      <nav class="pn"><a class="prev" href="train-vs-inference.html"><small>上一篇</small>訓練時 vs 推論時</a><a class="next" href="synthetic-data.html"><small>下一篇</small>具身基礎模型與合成資料</a></nav>
+      <footer class="foot">
+        內容整理自本專案的調研筆記與討論（2026-10-23）。數字取自論文或官方頁；查不到的標「未公開」。外部連結均開新分頁。
+      </footer>
+    </article>
+  </main>
+  <nav class="toc" aria-label="本頁目錄">
+    <p class="toc-h">本頁目錄</p>
+    <ul><li><a href="#_1">一張圖：同一個車禍畫面，送進三種世界模型</a></li><li><a href="#1-vla">① 影片生成世界模型：給 VLA「新資料」和「練習場」</a><ul><li><a href="#dreamgen-gr00t-n1">流程圖：DreamGen 怎麼幫 GR00T N1 造資料</a></li><li><a href="#1">車禍畫面走一遍（①）</a></li></ul></li><li><a href="#2-vla">② 潛空間動力學世界模型：讓 VLA「在腦中試錯」</a><ul><li><a href="#think2drive">流程圖：Think2Drive 怎麼在潛空間學開車</a></li><li><a href="#2">車禍畫面走一遍（②）</a></li></ul></li><li><a href="#3-jepa-vla">③ JEPA 世界模型：給 VLA「更會預判的眼睛」</a><ul><li><a href="#vla-jepa-jepa-vla">流程圖：VLA-JEPA 怎麼把 JEPA 接進 VLA 訓練</a></li><li><a href="#3">車禍畫面走一遍（③）</a></li></ul></li><li><a href="#4-3d4d">④ 3D／4D 世界模型（簡述）</a></li><li><a href="#_2">三類並排：同一個問題問六次</a></li><li><a href="#_3">參考資料</a></li><li><a href="#_4">本頁提到的模型參數量</a></li></ul>
+  </nav>
+</div>
+<script src="assets/site.js"></script>
+<script src="assets/search-index.js"></script>
+<script src="assets/qa.js"></script>
+</body>
+</html>

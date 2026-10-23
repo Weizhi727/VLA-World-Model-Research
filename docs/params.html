@@ -32,8 +32,8 @@
 </header>
 <div class="shell">
   <aside class="side">
-    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li class="grp">入門總覽</li><li><a href="origins.html"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="training.html"><span class="num">02</span><span>訓練、資料與評估</span></a></li><li class="grp">VLA</li><li><a href="vla-architectures.html"><span class="num">03</span><span>VLA 主流架構</span></a></li><li><a href="vla-taxonomy.html"><span class="num">04</span><span>VLA 流派怎麼分</span></a></li><li><a href="in-context-imitation.html"><span class="num">05</span><span>情境內模仿學習</span></a></li><li class="grp">世界模型</li><li><a href="wm-architectures.html"><span class="num">06</span><span>世界模型路線與流派</span></a></li><li><a href="classic-world-models.html"><span class="num">07</span><span>經典世界模型論文精讀</span></a></li><li class="grp">綜合應用：VLA × 世界模型</li><li><a href="world-model-roles.html"><span class="num">08</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">09</span><span>訓練時 vs 推論時</span></a></li><li><a href="synthetic-data.html"><span class="num">10</span><span>具身基礎模型與合成資料</span></a></li><li><a href="wm-in-practice.html"><span class="num">11</span><span>世界模型代表作的實際應用</span></a></li><li><a href="industry.html"><span class="num">12</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html"><span class="num">13</span><span>案例：智平方</span></a></li><li><a href="tesla.html"><span class="num">14</span><span>案例：Tesla</span></a></li><li class="grp">查詢工具</li><li><a href="params.html" class="on"><span class="num">15</span><span>參數量總表</span></a></li><li><a href="glossary.html"><span class="num">16</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">17</span><span>參考資料</span></a></li></ul>
-    <p class="side-note">整理日期：2026-10-22<br>面向技術人員的科普整理</p>
+    <ul class="nav"><li><a href="index.html"><span class="num">⌂</span><span>首頁</span></a></li><li class="grp">入門總覽</li><li><a href="origins.html"><span class="num">01</span><span>起源與歷史</span></a></li><li><a href="training.html"><span class="num">02</span><span>訓練、資料與評估</span></a></li><li class="grp">VLA</li><li><a href="vla-architectures.html"><span class="num">03</span><span>VLA 主流架構</span></a></li><li><a href="vla-taxonomy.html"><span class="num">04</span><span>VLA 流派怎麼分</span></a></li><li><a href="in-context-imitation.html"><span class="num">05</span><span>情境內模仿學習</span></a></li><li class="grp">世界模型</li><li><a href="wm-architectures.html"><span class="num">06</span><span>世界模型路線與流派</span></a></li><li><a href="classic-world-models.html"><span class="num">07</span><span>經典世界模型論文精讀</span></a></li><li class="grp">綜合應用：VLA × 世界模型</li><li><a href="world-model-roles.html"><span class="num">08</span><span>世界模型四類與五種角色</span></a></li><li><a href="train-vs-inference.html"><span class="num">09</span><span>訓練時 vs 推論時</span></a></li><li><a href="wm-types-training.html"><span class="num">10</span><span>三類世界模型怎麼訓練 VLA</span></a></li><li><a href="synthetic-data.html"><span class="num">11</span><span>具身基礎模型與合成資料</span></a></li><li><a href="wm-in-practice.html"><span class="num">12</span><span>世界模型代表作的實際應用</span></a></li><li><a href="industry.html"><span class="num">13</span><span>業界產品盤點</span></a></li><li><a href="ai2-robotics.html"><span class="num">14</span><span>案例：智平方</span></a></li><li><a href="tesla.html"><span class="num">15</span><span>案例：Tesla</span></a></li><li class="grp">查詢工具</li><li><a href="params.html" class="on"><span class="num">16</span><span>參數量總表</span></a></li><li><a href="glossary.html"><span class="num">17</span><span>名詞速查</span></a></li><li><a href="references.html"><span class="num">18</span><span>參考資料</span></a></li></ul>
+    <p class="side-note">整理日期：2026-10-23<br>面向技術人員的科普整理</p>
   </aside>
   <main>
     <article class="doc">
@@ -84,7 +84,7 @@
 <figcaption>對數刻度：每一格差 10 倍。上排 VLA、下排世界模型，只畫官方公布數字的代表；Gemini Robotics、Veo、Genie 3、Sora、Tesla 等未公開的不在圖上。</figcaption></figure>
 
 <h2 id="vla">VLA 與相關策略模型<a class="headerlink" href="#vla" title="連到此段">#</a></h2>
-<p>共 70 個。</p>
+<p>共 74 個。</p>
 <div class="tbl"><table>
 <thead>
 <tr>
@@ -586,6 +586,34 @@
 <td>人類影片提示的因果影片–動作模型</td>
 <td><a class="ext" href="https://arxiv.org/abs/2608.26103" target="_blank" rel="noopener">來源</a></td>
 </tr>
+<tr>
+<td>VLA-JEPA</td>
+<td>中國科大等 2026</td>
+<td>VLM 為 Qwen3-VL-2B；總數論文未寫</td>
+<td>JEPA 式潛空間預測（凍結 V-JEPA 2 當老師）+ flow matching 動作頭</td>
+<td><a class="ext" href="https://arxiv.org/abs/2602.10098" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Drive-JEPA</td>
+<td>Virginia Tech、小鵬等 2026</td>
+<td>編碼器 ViT-L 307M；規劃器未另列</td>
+<td>V-JEPA 2 初始化，行車影片繼續預訓練 + 多候選軌跡規劃器</td>
+<td><a class="ext" href="https://arxiv.org/abs/2601.22032" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>Think2Drive 駕駛策略</td>
+<td>上海交大 2024</td>
+<td>論文未寫</td>
+<td>actor-critic，30 種離散動作，只在潛空間想像中訓練</td>
+<td><a class="ext" href="https://arxiv.org/abs/2402.16720" target="_blank" rel="noopener">來源</a></td>
+</tr>
+<tr>
+<td>DreamerAD</td>
+<td>中科院自動化所等 2026</td>
+<td>論文未寫（以 Epona 為底）</td>
+<td>潛空間世界模型 + GRPO 強化學習（NAVSIM）</td>
+<td><a class="ext" href="https://arxiv.org/abs/2603.24587" target="_blank" rel="noopener">來源</a></td>
+</tr>
 </tbody>
 </table></div>
 <h2 id="_2">世界模型與影片生成模型<a class="headerlink" href="#_2" title="連到此段">#</a></h2>
@@ -926,7 +954,7 @@
 </ul>
       <nav class="pn"><a class="prev" href="tesla.html"><small>上一篇</small>案例：Tesla</a><a class="next" href="glossary.html"><small>下一篇</small>名詞速查</a></nav>
       <footer class="foot">
-        內容整理自本專案的調研筆記與討論（2026-10-22）。數字取自論文或官方頁；查不到的標「未公開」。外部連結均開新分頁。
+        內容整理自本專案的調研筆記與討論（2026-10-23）。數字取自論文或官方頁；查不到的標「未公開」。外部連結均開新分頁。
       </footer>
     </article>
   </main>
