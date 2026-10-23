@@ -38,8 +38,156 @@
   <main>
     <article class="doc">
       <h1 id="vla">三類世界模型怎麼訓練 VLA：用一個車禍畫面走一遍<a class="headerlink" href="#vla" title="連到此段">#</a></h1>
-<p class="lede">本站把世界模型分成 ①影片生成、②潛空間動力學、③JEPA、④3D 四類。這一頁只回答一件事：真實的 VLA（以及自駕的端到端駕駛模型）在訓練時，是怎麼用前三類世界模型的？每一類給一張流程圖、一個實際用過的例子，再拿同一個「車禍前 2 秒」的畫面逐步走一遍：指令是什麼、進哪個模組、輸出什麼、VLA 最後學到什麼。數字都回到論文或官方頁核對過，查不到的標「未寫」或「未公開」。</p>
+<p class="lede">本站把世界模型分成 ①影片生成、②潛空間動力學、③JEPA、④3D 四類。這一頁只回答一件事（先用「行人闖紅燈」的入門版講一遍，再進入細節）：真實的 VLA（以及自駕的端到端駕駛模型）在訓練時，是怎麼用前三類世界模型的？每一類給一張流程圖、一個實際用過的例子，再拿同一個「車禍前 2 秒」的畫面逐步走一遍：指令是什麼、進哪個模組、輸出什麼、VLA 最後學到什麼。數字都回到論文或官方頁核對過，查不到的標「未寫」或「未公開」。</p>
 
+<h2 id="_1">入門：用「行人闖紅燈」講一遍<a class="headerlink" href="#_1" title="連到此段">#</a></h2>
+<p>想讓車子學會一件事：<strong>有人闖紅燈衝出來，車子要自動減速或閃開</strong>。先看 VLA 本身吃什麼、吐什麼，再看三類世界模型各自怎麼幫它。</p>
+<h3 id="vla_1">先看 VLA：輸入與輸出<a class="headerlink" href="#vla_1" title="連到此段">#</a></h3>
+<figure class="dg">
+<svg viewBox="0 0 800 330" role="img" aria-label="駕駛 VLA 的輸入輸出，以及三類世界模型怎麼幫它">
+<rect class="n key" x="10" y="20" width="200" height="110" rx="10"/>
+<text x="110" y="46" text-anchor="middle" class="b">VLA 的輸入</text>
+<text x="25" y="72" class="s">① 最近約 2 秒的鏡頭畫面</text>
+<text x="25" y="94" class="s">② 自車狀態：車速、加速度</text>
+<text x="25" y="116" class="s">③ 導航指令：「直行」</text>
+<rect class="n vla" x="300" y="20" width="200" height="110" rx="10"/>
+<text x="400" y="66" text-anchor="middle" class="b vla">VLA（駕駛模型）</text>
+<text x="400" y="90" text-anchor="middle" class="s">車上真正在跑的只有它</text>
+<rect class="n" x="590" y="20" width="200" height="110" rx="10"/>
+<text x="690" y="46" text-anchor="middle" class="b">VLA 的輸出</text>
+<text x="605" y="72" class="s">未來幾秒要走的軌跡</text>
+<text x="605" y="94" class="s">或直接的控制量：</text>
+<text x="605" y="116" class="s">方向盤、油門、煞車</text>
+<path class="ar vla" d="M210,75 H298"/>
+<path class="ar vla" d="M500,75 H588"/>
+<rect class="n wm" x="10" y="190" width="240" height="110" rx="10"/>
+<text x="130" y="220" text-anchor="middle" class="b wm">① 影片生成</text>
+<text x="130" y="246" text-anchor="middle" class="s">生成「有人闖紅燈」的影片</text>
+<text x="130" y="270" text-anchor="middle" class="b">給 VLA：新教材</text>
+<rect class="n wm" x="280" y="190" width="240" height="110" rx="10"/>
+<text x="400" y="220" text-anchor="middle" class="b wm">② 潛空間動力學</text>
+<text x="400" y="246" text-anchor="middle" class="s">預測「這樣開會不會撞到」</text>
+<text x="400" y="270" text-anchor="middle" class="b">給 VLA：試錯的機會</text>
+<rect class="n wm" x="550" y="190" width="240" height="110" rx="10"/>
+<text x="670" y="220" text-anchor="middle" class="b wm">③ JEPA</text>
+<text x="670" y="246" text-anchor="middle" class="s">猜「接下來幾秒會怎樣」</text>
+<text x="670" y="270" text-anchor="middle" class="b">給 VLA：好眼力</text>
+<path class="ar wm dash" d="M130,190 V160 H360 V132"/>
+<path class="ar wm dash" d="M400,190 V132"/>
+<path class="ar wm dash" d="M670,190 V160 H440 V132"/>
+<text x="400" y="322" text-anchor="middle" class="s">虛線：訓練時三類世界模型從旁幫忙；部署到車上後，世界模型都拿掉</text>
+</svg>
+<figcaption>VLA 的輸入輸出以真實系統為例：comma.ai 的駕駛策略看最近約 2 秒的畫面，輸出方向盤曲率與加速度（<a class="ext" href="https://arxiv.org/abs/2504.19077" target="_blank" rel="noopener">arXiv:2504.19077</a>）；NAVSIM 基準給的導航指令是「左轉／直行／右轉」三選一，模型輸出未來幾秒的軌跡（<a class="ext" href="https://arxiv.org/abs/2406.15349" target="_blank" rel="noopener">arXiv:2406.15349</a>）。</figcaption>
+</figure>
+
+<div class="tbl"><table>
+<thead>
+<tr>
+<th></th>
+<th>具體內容（闖紅燈的例子）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>VLA 輸入</strong></td>
+<td>① 最近約 2 秒的前視鏡頭畫面（例如每秒 5 張，共 10 張）：畫面裡是一個路口，右邊人行道有個行人正要踏出來，行人號誌是紅燈；② 自車狀態：時速 40 公里；③ 導航指令：「直行」</td>
+</tr>
+<tr>
+<td><strong>VLA 輸出</strong></td>
+<td>未來幾秒的動作：例如「從時速 40 公里減速到 0，方向盤保持不動」，或寫成接下來幾秒的一串軌跡點</td>
+</tr>
+<tr>
+<td><strong>要學會的事</strong></td>
+<td>輸入畫面裡<strong>出現有人要闖紅燈的跡象</strong>時，輸出就要變成<strong>減速或閃避</strong>，而不是照導航指令繼續直行</td>
+</tr>
+</tbody>
+</table></div>
+<p>難處在於：真實行車資料裡，這種畫面非常少，也不可能找人真的去衝撞車子來收集資料。三類世界模型就是從不同角度補這個缺口。</p>
+<h3 id="1-vla">① 影片生成：幫 VLA「拍」出新教材<a class="headerlink" href="#1-vla" title="連到此段">#</a></h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th></th>
+<th>具體內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>世界模型輸入</strong></td>
+<td>一張真實的路口照片＋條件：文字「行人從右側闖紅燈走出」、行人的位置與走路方向、自車要做的動作「從時速 40 公里煞停」</td>
+</tr>
+<tr>
+<td><strong>世界模型輸出</strong></td>
+<td>一段幾秒的影片：行人走出來，畫面中的車子慢慢停在行人前面</td>
+</tr>
+<tr>
+<td><strong>交給 VLA 的東西</strong></td>
+<td>把影片切成一筆一筆的訓練資料。每一筆是：<strong>輸入</strong>＝影片中的某一張畫面（行人剛踏出）＋車速＋「直行」；<strong>正確答案</strong>＝當時應該做的動作（開始煞車）。因為煞車動作是生成時指定的，答案本來就知道</td>
+</tr>
+<tr>
+<td><strong>VLA 學到什麼</strong></td>
+<td>換天氣、換路口、換行人走的速度，就能生成上千筆。VLA 看多了就學會：<strong>畫面裡有人往馬路走，就要煞車</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-vla">② 潛空間動力學：讓 VLA 在腦中試錯<a class="headerlink" href="#2-vla" title="連到此段">#</a></h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th></th>
+<th>具體內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>世界模型輸入</strong></td>
+<td>不是照片，而是<strong>簡化過的路口狀態</strong>（行人在哪、往哪走、多快、燈號是什麼、自車在哪、多快）＋ VLA 這一步想做的動作，例如「繼續直行」</td>
+</tr>
+<tr>
+<td><strong>世界模型輸出</strong></td>
+<td>下一瞬間的狀態（行人和車子各移動到哪）、這一步的<strong>分數</strong>、以及<strong>有沒有撞到</strong></td>
+</tr>
+<tr>
+<td><strong>交給 VLA 的東西</strong></td>
+<td>一來一往的練習：VLA 看狀態 → 選動作 → 世界模型告訴它結果與分數 → VLA 再選下一個動作……。這時 VLA 的<strong>輸入</strong>是世界模型給的狀態，<strong>輸出</strong>是一個動作（繼續、減速、煞停、往左閃）</td>
+</tr>
+<tr>
+<td><strong>VLA 學到什麼</strong></td>
+<td>在腦中試幾萬次：「繼續直行 → 撞到 → 扣很多分」「提早減速 → 安全通過 → 加分」。VLA 從<strong>後果</strong>學會選煞車，不用真的撞一次人</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-jepa-vla">③ JEPA：先幫 VLA 練好眼力<a class="headerlink" href="#3-jepa-vla" title="連到此段">#</a></h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th></th>
+<th>具體內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>世界模型輸入</strong></td>
+<td>大量真實行車影片（不需要任何標註），把每段的<strong>後面幾秒遮起來</strong></td>
+</tr>
+<tr>
+<td><strong>世界模型輸出</strong></td>
+<td>對被遮住那幾秒的「猜測」：不是畫出畫面，而是一組代表「接下來會發生什麼」的特徵，例如「人會走到車道中間」</td>
+</tr>
+<tr>
+<td><strong>交給 VLA 的東西</strong></td>
+<td>練好的<strong>看圖模組</strong>（視覺編碼器）直接裝進 VLA 當它的眼睛。之後再用一般的示範資料訓練 VLA：<strong>輸入</strong>＝鏡頭畫面＋車速＋「直行」，<strong>輸出</strong>＝軌跡或煞車</td>
+</tr>
+<tr>
+<td><strong>VLA 學到什麼</strong></td>
+<td>為了猜準「接下來會怎樣」，模型必須注意「路邊那個人正往馬路走」。所以 VLA 的眼睛一開始就<strong>對行人的動向很敏感</strong>，只要少量示範就能學會「看到這種情況要煞車」</td>
+</tr>
+</tbody>
+</table></div>
+<div class="admonition key">
+<p class="admonition-title">一句話記住</p>
+<p><strong>① 給新教材、② 給試錯機會、③ 給好眼力。</strong> 三種都只在訓練時用；車上真正在跑的，只有吃「畫面＋車速＋導航指令」、吐「軌跡或方向盤油門煞車」的 VLA。下面的內容是同一套觀念的進階版：用真實論文的規格，把每一步拆得更細。</p>
+</div>
 <div class="admonition key">
 <p class="admonition-title">重點先講</p>
 <ol>
@@ -55,7 +203,7 @@
 <li><strong>三類幾乎都只在訓練時出現</strong>。訓練完部署到車上或機器人上的只有 VLA／駕駛策略本身（對應 <a href="train-vs-inference.html">09 訓練時 vs 推論時</a> 的 I0）。</li>
 </ol>
 </div>
-<h2 id="_1">一張圖：同一個車禍畫面，送進三種世界模型<a class="headerlink" href="#_1" title="連到此段">#</a></h2>
+<h2 id="_2">一張圖：同一個車禍畫面，送進三種世界模型<a class="headerlink" href="#_2" title="連到此段">#</a></h2>
 <figure class="dg">
 <svg viewBox="0 0 800 380" role="img" aria-label="同一個車禍畫面送進三種世界模型，各自輸出什麼、VLA 學到什麼">
 <text x="285" y="16" text-anchor="middle" class="h">世界模型</text>
@@ -123,7 +271,7 @@
 <li>下面三段的車禍例子是<strong>把論文公開的介面代入同一個場景</strong>：輸入格式、模組、輸出規格都來自論文，「車禍前 2 秒」這個場景是我們假設的示範。</li>
 </ul>
 </div>
-<h2 id="1-vla">① 影片生成世界模型：給 VLA「新資料」和「練習場」<a class="headerlink" href="#1-vla" title="連到此段">#</a></h2>
+<h2 id="1-vla_1">① 影片生成世界模型：給 VLA「新資料」和「練習場」<a class="headerlink" href="#1-vla_1" title="連到此段">#</a></h2>
 <p>影片世界模型把畫面壓進 VAE／tokenizer 的潛空間，用擴散或 flow matching 生成未來幾秒，最後解碼回看得到的影片。它對 VLA 的用法有兩種：</p>
 <ul>
 <li><strong>資料工廠（T2）</strong>：生成 VLA 沒見過的場景或動作的影片，補上動作標籤，當成新訓練資料。</li>
@@ -292,7 +440,7 @@
 <p class="admonition-title">影片世界模型的代價</p>
 <p>生成的影片<strong>物理不一定對</strong>（車可能穿模、煞車距離不合理），VLA 可能學到假的規律。comma.ai 為此加了約 700 bits 的資訊瓶頸，避免策略去鑽模擬器瑕疵的漏洞；更多把關方法見 <a href="synthetic-data.html">11 具身基礎模型與合成資料</a>。生成也很貴：GAIA-2 訓練用了 256 張 H100。</p>
 </div>
-<h2 id="2-vla">② 潛空間動力學世界模型：讓 VLA「在腦中試錯」<a class="headerlink" href="#2-vla" title="連到此段">#</a></h2>
+<h2 id="2-vla_1">② 潛空間動力學世界模型：讓 VLA「在腦中試錯」<a class="headerlink" href="#2-vla_1" title="連到此段">#</a></h2>
 <p>這一類（Dreamer、RSSM、TD-MPC2）不追求畫得像，只學一個<strong>精簡的潛狀態</strong>怎麼隨動作變化，外加預測<strong>獎勵</strong>和<strong>這一回合是否結束</strong>（例如撞車）。因為全在小向量上算，想像一步非常便宜，適合大量做強化學習。</p>
 <h3 id="think2drive">流程圖：Think2Drive 怎麼在潛空間學開車<a class="headerlink" href="#think2drive" title="連到此段">#</a></h3>
 <figure class="dg">
@@ -412,7 +560,7 @@
 <li>機器人上，Dreamer 式模型目前主要出現在 <a class="ext" href="https://arxiv.org/abs/2206.14176" target="_blank" rel="noopener">DayDreamer</a>（真機直接學，非 VLA）和 <a class="ext" href="https://arxiv.org/abs/2502.01828" target="_blank" rel="noopener">FOREWARN</a>（推論時預演候選動作，再由 VLM 挑）。</li>
 </ul>
 </div>
-<h2 id="3-jepa-vla">③ JEPA 世界模型：給 VLA「更會預判的眼睛」<a class="headerlink" href="#3-jepa-vla" title="連到此段">#</a></h2>
+<h2 id="3-jepa-vla_1">③ JEPA 世界模型：給 VLA「更會預判的眼睛」<a class="headerlink" href="#3-jepa-vla_1" title="連到此段">#</a></h2>
 <p>JEPA 也預測未來，但<strong>只在表徵空間比對</strong>：把未來遮起來，讓模型猜「未來的表徵應該是什麼向量」，再和老師編碼器看真實未來後給出的向量比對。它不畫畫面、不需要動作標籤，所以能吃大量<strong>沒有動作的影片</strong>（人類影片、行車影片）。對 VLA 的用法主要是<strong>預訓練或輔助損失（T1）</strong>。</p>
 <h3 id="vla-jepa-jepa-vla">流程圖：VLA-JEPA 怎麼把 JEPA 接進 VLA 訓練<a class="headerlink" href="#vla-jepa-jepa-vla" title="連到此段">#</a></h3>
 <figure class="dg">
@@ -557,7 +705,7 @@
 </div>
 <h2 id="4-3d4d">④ 3D／4D 世界模型（簡述）<a class="headerlink" href="#4-3d4d" title="連到此段">#</a></h2>
 <p>這一類預測未來的 3D 佔據（occupancy）、點雲或高斯場景，例如 <a class="ext" href="https://arxiv.org/abs/2311.16038" target="_blank" rel="noopener">OccWorld（arXiv:2311.16038）</a> 在 3D 佔據空間裡同時預測場景演變與自車軌跡。自駕上常見於<strong>同時學預測與規劃</strong>（類似 T1）；機器人上多用於造多視角一致的模擬場景。用車禍畫面來說，它輸出的不是影片，而是「下一秒哪些立體格子會被前車佔住」，VLA 從中學到的是<strong>幾何上的碰撞風險</strong>。</p>
-<h2 id="_2">三類並排：同一個問題問六次<a class="headerlink" href="#_2" title="連到此段">#</a></h2>
+<h2 id="_3">三類並排：同一個問題問六次<a class="headerlink" href="#_3" title="連到此段">#</a></h2>
 <div class="tbl"><table>
 <thead>
 <tr>
@@ -633,7 +781,7 @@
 <li>三者不互斥：一個團隊可以用 ③ 預訓練編碼器、① 造資料、再用 ① 或 ② 做 RL。Tesla 的 Policy NN＋World Sim NN 閉環就是 ① 同時當考官與練習場的例子，見 <a href="tesla.html">案例：Tesla</a>。</li>
 </ul>
 </div>
-<h2 id="_3">參考資料<a class="headerlink" href="#_3" title="連到此段">#</a></h2>
+<h2 id="_4">參考資料<a class="headerlink" href="#_4" title="連到此段">#</a></h2>
 <ul>
 <li>① 影片生成：<a class="ext" href="https://arxiv.org/abs/2505.12705" target="_blank" rel="noopener">DreamGen（arXiv:2505.12705）</a>、<a class="ext" href="https://research.nvidia.com/labs/gear/dreamgen" target="_blank" rel="noopener">DreamGen 官方頁</a>、<a class="ext" href="https://research.nvidia.com/labs/gear/gr00t-n1_5/" target="_blank" rel="noopener">GR00T N1.5 官方頁</a>、<a class="ext" href="https://arxiv.org/abs/2504.19077" target="_blank" rel="noopener">comma.ai：Learning to Drive from a World Model（arXiv:2504.19077）</a>、<a class="ext" href="https://arxiv.org/abs/2503.20523" target="_blank" rel="noopener">GAIA-2（arXiv:2503.20523）</a>、<a class="ext" href="https://www.autonomousvehicleinternational.com/news/ai-sensor-fusion/wayve-launches-gaia-2-video-generative-world-model-for-synthetic-data-generation.html" target="_blank" rel="noopener">Wayve GAIA-2 發布報導</a>、<a class="ext" href="https://arxiv.org/abs/2511.09515" target="_blank" rel="noopener">WMPO（arXiv:2511.09515）</a>、<a class="ext" href="https://arxiv.org/abs/2510.00406" target="_blank" rel="noopener">VLA-RFT（arXiv:2510.00406）</a>、<a class="ext" href="https://arxiv.org/abs/2510.10125" target="_blank" rel="noopener">Ctrl-World（arXiv:2510.10125）</a></li>
 <li>② 潛空間動力學：<a class="ext" href="https://arxiv.org/abs/2402.16720" target="_blank" rel="noopener">Think2Drive（arXiv:2402.16720）</a>、<a class="ext" href="https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/06129-supp.pdf" target="_blank" rel="noopener">Think2Drive 補充材料</a>、<a class="ext" href="https://arxiv.org/abs/2301.04104" target="_blank" rel="noopener">DreamerV3（arXiv:2301.04104）</a>、<a class="ext" href="https://arxiv.org/abs/2603.24587" target="_blank" rel="noopener">DreamerAD（arXiv:2603.24587）</a>、<a class="ext" href="https://arxiv.org/abs/2609.24033" target="_blank" rel="noopener">Imagine-RL（arXiv:2609.24033）</a>、<a class="ext" href="https://arxiv.org/abs/2206.14176" target="_blank" rel="noopener">DayDreamer（arXiv:2206.14176）</a>、<a class="ext" href="https://arxiv.org/abs/2502.01828" target="_blank" rel="noopener">FOREWARN（arXiv:2502.01828）</a></li>
@@ -643,7 +791,7 @@
 </ul>
 <!-- params:auto -->
 
-<h2 id="_4">本頁提到的模型參數量<a class="headerlink" href="#_4" title="連到此段">#</a></h2>
+<h2 id="_5">本頁提到的模型參數量<a class="headerlink" href="#_5" title="連到此段">#</a></h2>
 <p>只列官方論文、官方頁或官方模型卡寫明的數字；查不到的標「未公開」，不推測。完整清單見 <a href="params.html">參數量總表</a>。</p>
 <p><strong>VLA</strong></p>
 <div class="tbl"><table>
@@ -817,7 +965,7 @@
   </main>
   <nav class="toc" aria-label="本頁目錄">
     <p class="toc-h">本頁目錄</p>
-    <ul><li><a href="#_1">一張圖：同一個車禍畫面，送進三種世界模型</a></li><li><a href="#1-vla">① 影片生成世界模型：給 VLA「新資料」和「練習場」</a><ul><li><a href="#dreamgen-gr00t-n1">流程圖：DreamGen 怎麼幫 GR00T N1 造資料</a></li><li><a href="#1">車禍畫面走一遍（①）</a></li></ul></li><li><a href="#2-vla">② 潛空間動力學世界模型：讓 VLA「在腦中試錯」</a><ul><li><a href="#think2drive">流程圖：Think2Drive 怎麼在潛空間學開車</a></li><li><a href="#2">車禍畫面走一遍（②）</a></li></ul></li><li><a href="#3-jepa-vla">③ JEPA 世界模型：給 VLA「更會預判的眼睛」</a><ul><li><a href="#vla-jepa-jepa-vla">流程圖：VLA-JEPA 怎麼把 JEPA 接進 VLA 訓練</a></li><li><a href="#3">車禍畫面走一遍（③）</a></li></ul></li><li><a href="#4-3d4d">④ 3D／4D 世界模型（簡述）</a></li><li><a href="#_2">三類並排：同一個問題問六次</a></li><li><a href="#_3">參考資料</a></li><li><a href="#_4">本頁提到的模型參數量</a></li></ul>
+    <ul><li><a href="#_1">入門：用「行人闖紅燈」講一遍</a><ul><li><a href="#vla_1">先看 VLA：輸入與輸出</a></li><li><a href="#1-vla">① 影片生成：幫 VLA「拍」出新教材</a></li><li><a href="#2-vla">② 潛空間動力學：讓 VLA 在腦中試錯</a></li><li><a href="#3-jepa-vla">③ JEPA：先幫 VLA 練好眼力</a></li></ul></li><li><a href="#_2">一張圖：同一個車禍畫面，送進三種世界模型</a></li><li><a href="#1-vla_1">① 影片生成世界模型：給 VLA「新資料」和「練習場」</a><ul><li><a href="#dreamgen-gr00t-n1">流程圖：DreamGen 怎麼幫 GR00T N1 造資料</a></li><li><a href="#1">車禍畫面走一遍（①）</a></li></ul></li><li><a href="#2-vla_1">② 潛空間動力學世界模型：讓 VLA「在腦中試錯」</a><ul><li><a href="#think2drive">流程圖：Think2Drive 怎麼在潛空間學開車</a></li><li><a href="#2">車禍畫面走一遍（②）</a></li></ul></li><li><a href="#3-jepa-vla_1">③ JEPA 世界模型：給 VLA「更會預判的眼睛」</a><ul><li><a href="#vla-jepa-jepa-vla">流程圖：VLA-JEPA 怎麼把 JEPA 接進 VLA 訓練</a></li><li><a href="#3">車禍畫面走一遍（③）</a></li></ul></li><li><a href="#4-3d4d">④ 3D／4D 世界模型（簡述）</a></li><li><a href="#_3">三類並排：同一個問題問六次</a></li><li><a href="#_4">參考資料</a></li><li><a href="#_5">本頁提到的模型參數量</a></li></ul>
   </nav>
 </div>
 <script src="assets/site.js"></script>
