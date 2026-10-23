@@ -708,6 +708,46 @@
    "alias": [
     "Zero-WAM"
    ]
+  },
+  {
+   "name": "VLA-JEPA",
+   "org": "中國科大等 2026",
+   "params": "VLM 為 Qwen3-VL-2B；總數論文未寫",
+   "detail": "JEPA 式潛空間預測（凍結 V-JEPA 2 當老師）+ flow matching 動作頭",
+   "src": "https://arxiv.org/abs/2602.10098",
+   "alias": [
+    "VLA-JEPA"
+   ]
+  },
+  {
+   "name": "Drive-JEPA",
+   "org": "Virginia Tech、小鵬等 2026",
+   "params": "編碼器 ViT-L 307M；規劃器未另列",
+   "detail": "V-JEPA 2 初始化，行車影片繼續預訓練 + 多候選軌跡規劃器",
+   "src": "https://arxiv.org/abs/2601.22032",
+   "alias": [
+    "Drive-JEPA"
+   ]
+  },
+  {
+   "name": "Think2Drive 駕駛策略",
+   "org": "上海交大 2024",
+   "params": "論文未寫",
+   "detail": "actor-critic，30 種離散動作，只在潛空間想像中訓練",
+   "src": "https://arxiv.org/abs/2402.16720",
+   "alias": [
+    "Think2Drive"
+   ]
+  },
+  {
+   "name": "DreamerAD",
+   "org": "中科院自動化所等 2026",
+   "params": "論文未寫（以 Epona 為底）",
+   "detail": "潛空間世界模型 + GRPO 強化學習（NAVSIM）",
+   "src": "https://arxiv.org/abs/2603.24587",
+   "alias": [
+    "DreamerAD"
+   ]
   }
  ],
  "wm": [
